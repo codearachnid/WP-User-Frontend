@@ -23,6 +23,7 @@ if ( is_admin() ) {
     require_once 'admin/taxonomy.php';
     require_once 'admin/subscription.php';
     require_once 'admin/transaction.php';
+    require_once 'admin/forms.php';
 }
 
 require_once 'wpuf-dashboard.php';

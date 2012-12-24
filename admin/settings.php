@@ -37,6 +37,7 @@ class WPUF_Settings {
         //add_submenu_page( 'wpuf-admin-opt', 'Custom Taxonomies', 'Custom Taxonomies', 'activate_plugins', 'wpuf_custom_tax', 'wpuf_taxonomy_fields' );
         add_submenu_page( 'wpuf-admin-opt', __( 'Subscription', 'wpuf' ), __( 'Subscription', 'wpuf' ), 'activate_plugins', 'wpuf_subscription', 'wpuf_subscription_admin' );
         add_submenu_page( 'wpuf-admin-opt', __( 'Transaction', 'wpuf' ), __( 'Transaction', 'wpuf' ), 'activate_plugins', 'wpuf_transaction', 'wpuf_transaction' );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'activate_plugins', 'wpuf-settings', array($this, 'plugin_page') );
     }
 
     /**
