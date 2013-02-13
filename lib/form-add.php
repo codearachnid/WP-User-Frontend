@@ -231,14 +231,7 @@ class WPUF_Form_Add {
     }
 
     function enqueue_scripts() {
-        $path = plugins_url( 'wp-user-frontend' );
-        wp_enqueue_script( 'jquery-validate', $path . '/js/jquery.validate.min.js', array('jquery') );
-        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'jquery-validate') );
-
-        wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
-            'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'error_message' => __( 'Please fix the errors to proceed', 'wpuf' )
-        ) );
+        
     }
 
     function get_input_fields( $form_id ) {

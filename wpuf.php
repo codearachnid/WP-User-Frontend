@@ -117,35 +117,14 @@ class WP_User_Frontend {
         require_once ABSPATH . '/wp-admin/includes/template.php';
 
         // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
-        wp_enqueue_style( 'wpuf', $path . '/css/frontend-forms.css' );
+        wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
+        
+        wp_enqueue_script( 'plupload-handlers' );
+        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery') );
 
-        if ( has_shortcode( 'wpuf_addpost' ) || has_shortcode( 'wpuf_edit' ) ) {
-            wp_enqueue_script( 'plupload-handlers' );
-        }
-
-        wp_enqueue_script( 'wpuf', $path . '/js/wpuf.js', array('jquery') );
-
-        $posting_msg = wpuf_get_option( 'updating_label' );
-        $feat_img_enabled = ( wpuf_get_option( 'enable_featured_image' ) == 'yes') ? true : false;
-        wp_localize_script( 'wpuf', 'wpuf', array(
+        wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'postingMsg' => $posting_msg,
-            'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
-            'nonce' => wp_create_nonce( 'wpuf_nonce' ),
-            'featEnabled' => $feat_img_enabled,
-            'plupload' => array(
-                'runtimes' => 'html5,silverlight,flash,html4',
-                'browse_button' => 'wpuf-ft-upload-pickfiles',
-                'container' => 'wpuf-ft-upload-container',
-                'file_data_name' => 'wpuf_featured_img',
-                'max_file_size' => wp_max_upload_size() . 'b',
-                'url' => admin_url( 'admin-ajax.php' ) . '?action=wpuf_featured_img&nonce=' . wp_create_nonce( 'wpuf_featured_img' ),
-                'flash_swf_url' => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'silverlight_xap_url' => includes_url( 'js/plupload/plupload.silverlight.xap' ),
-                'filters' => array(array('title' => __( 'Allowed Files' ), 'extensions' => '*')),
-                'multipart' => true,
-                'urlstream_upload' => true,
-            )
+            'error_message' => __( 'Please fix the errors to proceed', 'wpuf' )
         ) );
     }
 

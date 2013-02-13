@@ -20,7 +20,7 @@ class WPUF_Uploader {
         require_once ABSPATH . '/wp-admin/includes/template.php';
 
         $path = plugins_url( 'wp-user-frontend' );
-        wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery') );
+        wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery', 'plupload-handlers') );
 
         wp_localize_script( 'wpuf-upload', 'wpuf_frontend_upload', array(
             'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
