@@ -10,11 +10,11 @@ class WPUF_Form_Add {
         add_shortcode( 'wpuf_form', array($this, 'add_post_shortcode') );
         add_shortcode( 'wpuf_edit', array($this, 'edit_post_shortcode') );
 
-        // scripts and styles
-        add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
-
         // ajax requests
         add_action( 'wp_ajax_wpuf_submit_post', array($this, 'submit_post') );
+
+        // form preview
+        add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
     }
 
     function submit_post() {
@@ -29,18 +29,6 @@ class WPUF_Form_Add {
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
         // var_dump($post_vars, $taxonomy_vars, $meta_vars);
 
-        if ( !$form_id && !$form_vars ) {
-            // die();
-        }
-
-        // sleep(3);
-        // echo json_encode( array(
-        //     'success' => false,
-        //     'error' => __( 'Something went wrong', 'wpuf' )
-        // ));
-
-        // print_r($_POST);
-        // die();
 
         //validate the form
         $errors = array();
@@ -220,18 +208,6 @@ class WPUF_Form_Add {
         ));
 
         exit;
-
-        // print_r( $_POST );
-        // print_r( $form_vars );
-        // print_r( $postarr );
-        // print_r( $meta_key_value );
-        // print_r( $multi_repeated );
-        // print_r( $files );
-        // die();
-    }
-
-    function enqueue_scripts() {
-
     }
 
     function get_input_fields( $form_id ) {
@@ -310,19 +286,19 @@ class WPUF_Form_Add {
      *
      * @param $atts
      */
-    function render_form( $form_id, $post_id = NULL) {
+    function render_form( $form_id, $post_id = NULL, $preview = false ) {
 
         $form_vars = get_post_meta( $form_id, $this->meta_key, true );
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
-        if ( isset( $_POST['submit'] ) ) {
-            var_dump( $_POST );
-        }
-
 
         if ( $form_vars ) {
             ?>
-            <form id="wpuf-form-add" action="" method="post">
+
+            <?php if ( !$preview ) { ?>
+                <form id="wpuf-form-add" action="" method="post">
+            <?php } ?>
+
                 <ul class="wpuf-form">
                     <?php
                     foreach ($form_vars as $key => $form_field) {
@@ -418,9 +394,59 @@ class WPUF_Form_Add {
                     </li>
                 </ul>
 
-            </form>
+            <?php if ( !$preview ) { ?>
+                </form>
+            <?php } ?>
+
             <?php
         } //endif
+    }
+
+    function preview_form() {
+        $form_id = isset( $_GET['form_id'] ) ? intval( $_GET['form_id'] ) : 0;
+
+        if ( $form_id ) {
+            ?>
+
+            <!doctype html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Form Preview</title>
+                <link rel="stylesheet" href="<?php echo plugins_url( '/css/frontend-forms.css', dirname( __FILE__ ) ); ?>">
+
+                <style type="text/css">
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        background: #eee;
+                    }
+
+                    .container {
+                        width: 700px;
+                        margin: 0 auto;
+                        margin-top: 20px;
+                        padding: 20px;
+                        background: #fff;
+                        border: 1px solid #DFDFDF;
+                        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                        box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <?php $this->render_form( $form_id, null, true ); ?>
+                </div>
+            </body>
+            </html>
+
+            <?php
+        } else {
+            wp_die( 'Error generating the form preview' );
+        }
+
+        exit;
     }
 
     function required_mark( $attr ) {
@@ -470,7 +496,7 @@ class WPUF_Form_Add {
         ?>
 
         <div class="wpuf-fields">
-            <input id="wpuf-<?php echo $attr['name']; ?>" type="text" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+            <input class="required" id="wpuf-<?php echo $attr['name']; ?>" type="text" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
 
