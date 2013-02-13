@@ -15,30 +15,20 @@ if ( !class_exists( 'WeDevs_Settings_API' ) ) {
 
 require_once 'wpuf-functions.php';
 require_once 'admin/settings-options.php';
-require_once 'admin/form-builder.php';
 
 if ( is_admin() ) {
     require_once 'admin/settings.php';
-    require_once 'admin/custom-fields.php';
-    require_once 'admin/taxonomy.php';
-    require_once 'admin/subscription.php';
-    require_once 'admin/transaction.php';
     require_once 'admin/forms.php';
 }
 
-require_once 'wpuf-dashboard.php';
-require_once 'wpuf-add-post.php';
-require_once 'wpuf-edit-post.php';
-require_once 'wpuf-editprofile.php';
-require_once 'wpuf-edit-user.php';
-require_once 'wpuf-ajax.php';
+require_once 'lib/form-add.php';
+require_once 'lib/upload.php';
 
-require_once 'wpuf-subscription.php';
-require_once 'wpuf-payment.php';
-require_once 'lib/attachment.php';
-require_once 'lib/gateway/paypal.php';
+ require_once 'wpuf-dashboard.php';
+ require_once 'wpuf-editprofile.php';
+ require_once 'wpuf-edit-user.php';
 
-class WPUF_Main {
+class WP_User_Frontend {
 
     function __construct() {
         register_activation_hook( __FILE__, array($this, 'install') );
@@ -126,7 +116,8 @@ class WPUF_Main {
 
         require_once ABSPATH . '/wp-admin/includes/template.php';
 
-        wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
+        // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
+        wp_enqueue_style( 'wpuf', $path . '/css/frontend-forms.css' );
 
         if ( has_shortcode( 'wpuf_addpost' ) || has_shortcode( 'wpuf_edit' ) ) {
             wp_enqueue_script( 'plupload-handlers' );
@@ -205,4 +196,4 @@ class WPUF_Main {
 
 }
 
-$wpuf = new WPUF_Main();
+$wpuf = new WP_User_Frontend();

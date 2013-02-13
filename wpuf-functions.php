@@ -473,16 +473,16 @@ function wpuf_get_pages() {
  * @return array
  */
 function wpuf_get_gateways( $context = 'admin' ) {
-    $gateways = WPUF_Payment::get_payment_gateways();
+//    $gateways = WPUF_Payment::get_payment_gateways();
     $return = array();
 
-    foreach ($gateways as $id => $gate) {
-        if ( $context == 'admin' ) {
-            $return[$id] = $gate['admin_label'];
-        } else {
-            $return[$id] = $gate['checkout_label'];
-        }
-    }
+//    foreach ($gateways as $id => $gate) {
+//        if ( $context == 'admin' ) {
+//            $return[$id] = $gate['admin_label'];
+//        } else {
+//            $return[$id] = $gate['checkout_label'];
+//        }
+//    }
 
     return $return;
 }
@@ -847,4 +847,20 @@ function wpuf_get_image_sizes() {
     }
 
     return $image_sizes;
+}
+
+
+function wpuf_allowed_extensions() {
+    $extesions = array(
+        'images' => array( 'ext' => 'jpg,jpeg,gif,png,bmp', 'label' => __( 'Images', 'wpuf' ) ),
+        'audio' => array( 'ext' => 'mp3,wav,ogg,wma,mka,m4a,ra,mid,midi', 'label' => __( 'Audio', 'wpuf' ) ),
+        'video' => array( 'ext' => 'avi,divx,flv,mov,ogv,mkv,mp4,m4v,divx,mpg,mpeg,mpe', 'label' => __( 'Videos', 'wpuf' ) ),
+        'pdf' => array( 'ext' => 'pdf', 'label' => __( 'PDF', 'wpuf' ) ),
+        'office' => array( 'ext' => 'doc,ppt,pps,xls,mdb,docx,xlsx,pptx,odt,odp,ods,odg,odc,odb,odf,rtf,txt', 'label' => __( 'Office Documents', 'wpuf' ) ),
+        'zip' => array( 'ext' => 'zip,gz,gzip,rar,7z', 'label' => __( 'Zip Archives' ) ),
+        'exe' => array( 'ext' => 'exe', 'label' => __( 'Executable Files', 'wpuf' ) ),
+        'csv' => array( 'ext' => 'csv', 'label' => __( 'CSV', 'wpuf') )
+    );
+
+    return apply_filters( 'wpuf_allowed_extensions', $extesions );
 }
