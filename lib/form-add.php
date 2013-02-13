@@ -231,7 +231,7 @@ class WPUF_Form_Add {
     }
 
     function enqueue_scripts() {
-        
+
     }
 
     function get_input_fields( $form_id ) {
@@ -312,15 +312,8 @@ class WPUF_Form_Add {
      */
     function render_form( $form_id, $post_id = NULL) {
 
-
-        // $form_vars = $this->get_input_fields( $id );
-
-        // list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
-        // var_dump($post_vars, $taxonomy_vars, $meta_vars);
-
-
-        // var_dump( $form_vars );
         $form_vars = get_post_meta( $form_id, $this->meta_key, true );
+        $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
         if ( isset( $_POST['submit'] ) ) {
             var_dump( $_POST );
@@ -334,9 +327,7 @@ class WPUF_Form_Add {
                     <?php
                     foreach ($form_vars as $key => $form_field) {
 
-                        // check if it's a post field
-                        // if ($form_field['is_meta'] == 'no') {
-                        // }
+
                         printf( '<li class="el-%s">', $form_field['name'] );
 
                         switch ($form_field['input_type']) {
@@ -418,9 +409,9 @@ class WPUF_Form_Add {
 
                         <?php if( $post_id ) { ?>
                             <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
-                            <input type="submit" name="submit" value="Update" />
+                            <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
                         <?php } else { ?>
-                            <input type="submit" name="submit" value="Submit" />
+                            <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
                         <?php } ?>
 
 
