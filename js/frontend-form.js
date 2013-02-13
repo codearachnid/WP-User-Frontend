@@ -5,8 +5,7 @@
             $('.wpuf-form').on('click', 'img.wpuf-clone-field', this.cloneField);
             $('.wpuf-form').on('click', 'img.wpuf-remove-field', this.removeField);
 
-            // $('#wpuf-form-add').on('submit', this.handleForm);
-            $("#wpuf-form-add").validate();
+            $('#wpuf-form-add').on('submit', this.handleForm);
         },
 
         cloneField: function(e) {
