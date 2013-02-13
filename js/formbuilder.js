@@ -189,17 +189,25 @@
 
             switch( value ) {
                 case 'post':
-                    $table.find('tr.wpuf-page-id, tr.wpuf-url').hide();
+                    $table.find('tr.wpuf-page-id, tr.wpuf-url, tr.wpuf-same-page').hide();
                     break;
 
                 case 'page':
                     $table.find('tr.wpuf-page-id').show();
+                    $table.find('tr.wpuf-same-page').hide();
                     $table.find('tr.wpuf-url').hide();
                     break;
 
                 case 'url':
                     $table.find('tr.wpuf-page-id').hide();
+                    $table.find('tr.wpuf-same-page').hide();
                     $table.find('tr.wpuf-url').show();
+                    break;
+
+                case 'same':
+                    $table.find('tr.wpuf-page-id').hide();
+                    $table.find('tr.wpuf-url').hide();
+                    $table.find('tr.wpuf-same-page').show();
                     break;
             }
         }

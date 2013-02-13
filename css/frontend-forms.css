@@ -1,4 +1,5 @@
 .wpuf-loading{width:16px;height:16px;background:url('../images/wpspin_light.gif') no-repeat;display:inline-block;}.wpuf-loading.hide{display:none;}
+.wpuf-success{border:1px solid #99F199;padding:10px;background:#E0FFE0;}
 ul.wpuf-form{list-style:none !important;margin:0 !important;}ul.wpuf-form li{margin-left:0;margin-bottom:10px;padding:10px;}ul.wpuf-form li:after{clear:both;content:"";display:table;}
 ul.wpuf-form li.has-error{background:#FFE4E4;}
 ul.wpuf-form li .wpuf-label{float:left;width:25%;}ul.wpuf-form li .wpuf-label .required{color:red;}

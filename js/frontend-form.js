@@ -175,7 +175,19 @@
             $.post(wpuf_frontend.ajaxurl, $(this).serialize(), function(res) {
 
                 if ( res.success) {
-                    window.location = res.redirect_to;
+                    if( res.show_message == true) {
+                        self.after( '<div class="wpuf-success">' + res.message + '</div>');
+                        self.remove();
+
+                        //focus
+                        $('html, body').animate({
+                            scrollTop: $('.wpuf-success').offset().top - 100
+                        }, 'fast');
+
+                    } else {
+                        window.location = res.redirect_to;
+                    }
+
                 } else {
                     alert( res.error );
                 }

@@ -115,6 +115,7 @@ class WPUF_Forms {
         $post_type_selected = isset( $form_settings['post_type'] ) ? $form_settings['post_type'] : 'post';
         $post_status_selected = isset( $form_settings['post_status'] ) ? $form_settings['post_status'] : 'publish';
         $redirect_to = isset( $form_settings['redirect_to'] ) ? $form_settings['redirect_to'] : 'post';
+        $message = isset( $form_settings['message'] ) ? $form_settings['message'] : '';
         $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
         $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
         $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Submit', 'wpuf' );
@@ -162,6 +163,7 @@ class WPUF_Forms {
                         <?php
                         $redirect_options = array(
                             'post' => __( 'Newly created post', 'wpuf' ),
+                            'same' => __( 'Same Page', 'wpuf' ),
                             'page' => __( 'To a page', 'wpuf' ),
                             'url' => __( 'To a custom URL', 'wpuf' )
                         );
@@ -174,6 +176,13 @@ class WPUF_Forms {
                     <span class="description">
                         <?php _e( 'After successfull submit, where the page will redirect to', $domain = 'default' ) ?>
                     </span>
+                </td>
+            </tr>
+
+            <tr class="wpuf-same-page">
+                <th><?php _e( 'Message to show', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="3" cols="40" name="wpuf_settings[message]"><?php echo esc_textarea( $message ); ?></textarea>
                 </td>
             </tr>
 

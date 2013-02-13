@@ -183,10 +183,13 @@ class WPUF_Form_Add {
 
 
             //redirect URL
+            $show_message = false;
             if ( $form_settings['redirect_to'] == 'page' ) {
                 $redirect_to = get_permalink( $form_settings['page_id'] );
             } elseif ( $form_settings['redirect_to'] == 'url') {
                 $redirect_to = $form_settings['url'];
+            } elseif ($form_settings['redirect_to'] == 'same') {
+                $show_message = true;
             } else {
                 $redirect_to = get_permalink( $post_id );
             }
@@ -195,7 +198,9 @@ class WPUF_Form_Add {
             $response = array(
                 'success' => true,
                 'post_id' => $post_id,
-                'redirect_to' => $redirect_to
+                'redirect_to' => $redirect_to,
+                'show_message' => $show_message,
+                'message' => $form_settings['message']
             );
 
             echo json_encode( $response );
