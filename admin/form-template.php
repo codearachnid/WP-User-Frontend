@@ -43,7 +43,7 @@ class WPUF_Form_Template {
     }
 
     public static function legend( $title = 'Field Name', $values = array() ) {
-        $field_label = $values ? ': ' . $values['label'] : '';
+        $field_label = $values ? ': <strong>' . $values['label'] . '</strong>' : '';
         ?>
         <div class="wpuf-legend">
             <div class="wpuf-label"><?php echo $title . $field_label; ?></div>
@@ -752,7 +752,7 @@ class WPUF_Form_Template {
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Type', 'wpuf' ); ?></label>
                     <select name="<?php echo $type_name ?>">
-                        <option value="select"<?php selected( $type_value, 'select' ); ?>><?php _e( 'Select', 'wpuf' ); ?></option>
+                        <option value="select"<?php selected( $type_value, 'select' ); ?>><?php _e( 'Dropdown', 'wpuf' ); ?></option>
                         <option value="multiselect"<?php selected( $type_value, 'multiselect' ); ?>><?php _e( 'Multi Select', 'wpuf' ); ?></option>
                         <option value="checkbox"<?php selected( $type_value, 'checkbox' ); ?>><?php _e( 'Checkbox', 'wpuf' ); ?></option>
                     </select>
