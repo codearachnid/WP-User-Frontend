@@ -580,7 +580,7 @@ function wpuf_show_meta_front( $content ) {
     return $content;
 }
 
-add_filter( 'the_content', 'wpuf_show_meta_front' );
+//add_filter( 'the_content', 'wpuf_show_meta_front' );
 
 /**
  * Check if the file is a image
