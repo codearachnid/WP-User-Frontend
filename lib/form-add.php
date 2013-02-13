@@ -344,7 +344,7 @@ class WPUF_Form_Add {
                                 break;
 
                             case 'select':
-                                $this->select( $form_field, $post_id );
+                                $this->select( $form_field, false, $post_id );
                                 break;
 
                             case 'multiselect':
