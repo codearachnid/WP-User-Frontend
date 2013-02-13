@@ -285,7 +285,7 @@ class WPUF_Forms {
     }
 
     function edit_form_area() {
-        global $post;
+        global $post, $pagenow;
 
         $form_inputs = get_post_meta( $post->ID, $this->meta_key, true );
         // var_dump($form_inputs);
@@ -319,7 +319,9 @@ class WPUF_Forms {
         ?>
         </ul>
 
-        <button class="button button-primary button-large" id="wpuf-form-submit"><?php _e( 'Update Form', 'wpuf' ); ?></button>
+        <?php if( $pagenow == 'post.php' ) { ?>
+            <a class="button button-primary button-large" target="_blank" href="<?php printf('%s?action=wpuf_form_preview&form_id=%s', admin_url( 'admin-ajax.php' ), $post->ID ); ?>"><?php _e( 'Preview Form', 'wpuf' ); ?></a>
+        <?php } ?>
 
         <?php
         // include dirname( __FILE__ ) . '/forms-edit.php';
