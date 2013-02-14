@@ -110,12 +110,20 @@ class WPUF_Forms {
         global $post;
 
         $form_settings = get_post_meta( $post->ID, 'wpuf_form_settings', true );
-        // var_dump($form_settings);
+
+        $restrict_message = __( "This page is restricted. Please Log in / Register to view this page.", 'wpuf' );
 
         $post_type_selected = isset( $form_settings['post_type'] ) ? $form_settings['post_type'] : 'post';
         $post_status_selected = isset( $form_settings['post_status'] ) ? $form_settings['post_status'] : 'publish';
+
+        $guest_post = isset( $form_settings['guest_post'] ) ? $form_settings['guest_post'] : 'false';
+        $guest_details = isset( $form_settings['guest_details'] ) ? $form_settings['guest_details'] : 'true';
+        $name_label = isset( $form_settings['name_label'] ) ? $form_settings['name_label'] : __( 'Name' );
+        $email_label = isset( $form_settings['email_label'] ) ? $form_settings['email_label'] : __( 'Email' );
+        $message_restrict = isset( $form_settings['message_restrict'] ) ? $form_settings['message_restrict'] : $restrict_message;
+
         $redirect_to = isset( $form_settings['redirect_to'] ) ? $form_settings['redirect_to'] : 'post';
-        $message = isset( $form_settings['message'] ) ? $form_settings['message'] : '';
+        $message = isset( $form_settings['message'] ) ? $form_settings['message'] : __( 'Post saved', 'wpuf' );
         $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
         $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
         $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Submit', 'wpuf' );
@@ -156,6 +164,58 @@ class WPUF_Forms {
                 </td>
             </tr>
 
+            <tr>
+                <th><?php _e( 'Guest Post', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="hidden" name="wpuf_settings[guest_post]" value="false">
+                        <input type="checkbox" name="wpuf_settings[guest_post]" value="true"<?php checked( $guest_post, 'true' ); ?> />
+                        <?php _e( 'Enable Guest Post', 'wpuf' ) ?>
+                    </label>
+                    <div class="description"><?php _e( 'Unregistered users will be able to submit posts', 'wpuf' ); ?></div>
+                </td>
+            </tr>
+
+            <tr class="show-if-guest">
+                <th><?php _e( 'User Details', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="hidden" name="wpuf_settings[guest_details]" value="false">
+                        <input type="checkbox" name="wpuf_settings[guest_details]" value="true"<?php checked( $guest_details, 'true' ); ?> />
+                        <?php _e( 'Require Name and Email address', 'wpuf' ) ?>
+                    </label>
+                    <div class="description"><?php _e( 'If requires, users will be automatically registered to the site using the name and email address', 'wpuf' ); ?></div>
+                </td>
+            </tr>
+
+            <tr class="show-if-guest show-if-details">
+                <th><?php _e( 'Name Label', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="text" name="wpuf_settings[name_label]" value="<?php echo esc_attr( $name_label ); ?>" />
+                    </label>
+                    <div class="description"><?php _e( 'Label text for name field', 'wpuf' ); ?></div>
+                </td>
+            </tr>
+
+            <tr class="show-if-guest show-if-details">
+                <th><?php _e( 'E-Mail Label', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="text" name="wpuf_settings[email_label]" value="<?php echo esc_attr( $email_label ); ?>" />
+                    </label>
+                    <div class="description"><?php _e( 'Label text for email field', 'wpuf' ); ?></div>
+                </td>
+            </tr>
+
+            <tr class="show-if-not-guest">
+                <th><?php _e( 'Unauthorized Message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="3" cols="40" name="wpuf_settings[message_restrict]"><?php echo esc_textarea( $message_restrict ); ?></textarea>
+                    <div class="description"><?php _e( 'Not logged in users will see this message', 'wpuf' ); ?></div>
+                </td>
+            </tr>
+
             <tr class="wpuf-redirect-to">
                 <th><?php _e( 'Redirect To', 'wpuf' ); ?></th>
                 <td>
@@ -173,9 +233,9 @@ class WPUF_Forms {
                         }
                         ?>
                     </select>
-                    <span class="description">
+                    <div class="description">
                         <?php _e( 'After successfull submit, where the page will redirect to', $domain = 'default' ) ?>
-                    </span>
+                    </div>
                 </td>
             </tr>
 

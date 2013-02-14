@@ -13,6 +13,14 @@
             $('#wpuf-metabox-settings').on('change', 'select[name="wpuf_settings[redirect_to]"]', this.settingsRedirect);
             $('select[name="wpuf_settings[redirect_to]"]').change();
 
+            // Form settings: Guest post
+            $('#wpuf-metabox-settings').on('change', 'input[type=checkbox][name="wpuf_settings[guest_post]"]', this.settingsGuest);
+            $('input[type=checkbox][name="wpuf_settings[guest_post]"]').change();
+
+            // From settings: User details
+            $('#wpuf-metabox-settings').on('change', 'input[type=checkbox][name="wpuf_settings[guest_details]"]', this.settingsUserDetails);
+            $('input[type=checkbox][name="wpuf_settings[guest_details]"]').change();
+
             // collapse all
             $('button.wpuf-collapse').on('click', this.collpaseEditFields);
 
@@ -178,6 +186,35 @@
             e.preventDefault();
 
             $('ul#wpuf-form-editor').children('li').find('.wpuf-form-holder').slideToggle();;
+        },
+
+        settingsGuest: function (e) {
+            e.preventDefault();
+
+            var table = $(this).closest('table');
+
+            if ( $(this).is(':checked') ) {
+                table.find('tr.show-if-guest').show();
+                table.find('tr.show-if-not-guest').hide();
+
+                $('input[type=checkbox][name="wpuf_settings[guest_details]"]').change();
+
+            } else {
+                table.find('tr.show-if-guest').hide();
+                table.find('tr.show-if-not-guest').show();
+            }
+        },
+
+        settingsUserDetails: function (e) {
+            e.preventDefault();
+
+            var table = $(this).closest('table');
+
+            if ( $(this).is(':checked') ) {
+                table.find('tr.show-if-details').show();
+            } else {
+                table.find('tr.show-if-details').hide();
+            }
         },
 
         settingsRedirect: function(e) {

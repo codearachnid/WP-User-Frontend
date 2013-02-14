@@ -134,31 +134,36 @@
                             WP_User_Frontend.markError(item);
                         }
                         break;
+
+                    case 'email':
+                        var val = $(item).val();
+
+                        if ( val !== '' ) {
+                            //run the validation
+                            if( !WP_User_Frontend.isValidEmail( val ) ) {
+                                error = true;
+
+                                WP_User_Frontend.markError(item);
+                            }
+                        }
+                        break;
+
+
+                    case 'url':
+                        var val = $(item).val();
+
+                        if ( val !== '' ) {
+                            //run the validation
+                            if( !WP_User_Frontend.isValidURL( val ) ) {
+                                error = true;
+
+                                WP_User_Frontend.markError(item);
+                            }
+                        }
+                        break;
+
                 };
 
-            });
-
-            // check Email and URL
-            self.find('input.url').each(function(i, item) {
-                if ( $(item).val() !== '' ) {
-                    //run the validation
-                    if( !WP_User_Frontend.isValidURL( $(item).val() ) ) {
-                        error = true;
-
-                        WP_User_Frontend.markError(item);
-                    }
-                }
-            });
-
-            self.find('input.email').each(function(i, item) {
-                if ( $(item).val() !== '' ) {
-                    //run the validation
-                    if( !WP_User_Frontend.isValidEmail( $(item).val() ) ) {
-                        error = true;
-
-                        WP_User_Frontend.markError(item);
-                    }
-                }
             });
 
             // if already some error found, bail out
@@ -173,6 +178,8 @@
             self.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
             self.find('input[type=submit]').addClass('button-primary-disabled');
             $.post(wpuf_frontend.ajaxurl, $(this).serialize(), function(res) {
+
+                console.log(res);
 
                 if ( res.success) {
                     if( res.show_message == true) {

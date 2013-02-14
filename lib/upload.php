@@ -13,7 +13,10 @@ class WPUF_Uploader {
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
 
         add_action( 'wp_ajax_wpuf_file_upload', array($this, 'upload_file') );
+        add_action( 'wp_ajax_nopriv_wpuf_file_upload', array($this, 'upload_file') );
+
         add_action( 'wp_ajax_wpuf_file_del', array($this, 'delete_file') );
+        add_action( 'wp_ajax_nopriv_wpuf_file_del', array($this, 'delete_file') );
     }
 
     function enqueue_scripts() {

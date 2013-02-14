@@ -42,17 +42,17 @@ function wpuf_get_option( $option ) {
 function wpuf_settings_sections() {
     $sections = array(
         array(
+            'id' => 'wpuf_general',
+            'title' => __( 'General Options', 'wpuf' )
+        ),
+        array(
             'id' => 'wpuf_dashboard',
             'title' => __( 'Dashboard', 'wpuf' )
         ),
-        array(
-            'id' => 'wpuf_others',
-            'title' => __( 'Others', 'wpuf' )
-        ),
-        array(
-            'id' => 'wpuf_payment',
-            'title' => __( 'Payments', 'wpuf' )
-        ),
+        // array(
+        //     'id' => 'wpuf_payment',
+        //     'title' => __( 'Payments', 'wpuf' )
+        // ),
         array(
             'id' => 'wpuf_support',
             'title' => __( 'Support', 'wpuf' )
@@ -64,49 +64,7 @@ function wpuf_settings_sections() {
 
 function wpuf_settings_fields() {
     $settings_fields = array(
-        'wpuf_dashboard' => apply_filters( 'wpuf_options_dashboard', array(
-            array(
-                'name' => 'post_type',
-                'label' => __( 'Show post type', 'wpuf' ),
-                'desc' => __( 'Select the post type that the user will see', 'wpuf' ),
-                'type' => 'select',
-                'options' => wpuf_get_post_types()
-            ),
-            array(
-                'name' => 'per_page',
-                'label' => __( 'Posts per page', 'wpuf' ),
-                'desc' => __( 'How many posts will be listed in a page', 'wpuf' ),
-                'type' => 'text',
-                'default' => '10'
-            ),
-            array(
-                'name' => 'show_user_bio',
-                'label' => __( 'Show user bio', 'wpuf' ),
-                'desc' => __( 'Users biographical info will be shown', 'wpuf' ),
-                'type' => 'checkbox',
-                'default' => 'on'
-            ),
-            array(
-                'name' => 'show_post_count',
-                'label' => __( 'Show post count', 'wpuf' ),
-                'desc' => __( 'Show how many posts are created by the user', 'wpuf' ),
-                'type' => 'checkbox',
-                'default' => 'on'
-            ),
-            array(
-                'name' => 'show_ft_image',
-                'label' => __( 'Show Featured Image', 'wpuf' ),
-                'desc' => __( 'Show featured image of the post', 'wpuf' ),
-                'type' => 'checkbox'
-            ),
-            array(
-                'name' => 'ft_img_size',
-                'label' => __( 'Featured Image size', 'wpuf' ),
-                'type' => 'select',
-                'options' => wpuf_get_image_sizes()
-            ),
-        ) ),
-        'wpuf_others' => apply_filters( 'wpuf_options_others', array(
+        'wpuf_general' => apply_filters( 'wpuf_options_others', array(
             array(
                 'name' => 'post_notification',
                 'label' => __( 'New post notification', 'wpuf' ),
@@ -148,6 +106,14 @@ function wpuf_settings_fields() {
                 'options' => wpuf_get_pages()
             ),
             array(
+                'name' => 'default_post_owner',
+                'label' => __( 'Default Post Owner', 'wpuf' ),
+                'desc' => __( 'If guest post is enabled and user details are OFF, the posts are assigned to this user', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_list_users(),
+                'default' => '1'
+            ),
+            array(
                 'name' => 'admin_access',
                 'label' => __( 'Admin area access', 'wpuf' ),
                 'desc' => __( 'Allow you to block specific user role to WordPress admin area.', 'wpuf' ),
@@ -162,25 +128,11 @@ function wpuf_settings_fields() {
                 )
             ),
             array(
-                'name' => 'cf_show_front',
-                'label' => __( 'Show custom fields in the post', 'wpuf' ),
-                'desc' => __( 'If you want to show the custom field data in the post added by the plugin.', 'wpuf' ),
-                'type' => 'checkbox',
-                'default' => 'on'
-            ),
-            array(
-                'name' => 'att_show_front',
-                'label' => __( 'Show attachments in the post', 'wpuf' ),
-                'desc' => __( 'If you want to show the uploaded attachments in the post', 'wpuf' ),
-                'type' => 'checkbox',
-                'default' => 'on'
-            ),
-            array(
                 'name' => 'override_editlink',
                 'label' => __( 'Override the post edit link', 'wpuf' ),
-                'desc' => __( 'Users see the edit link in post if s/he is capable to edit the post/page. Selecting <strong>Yes</strong> will override the default WordPress link', 'wpuf' ),
+                'desc' => __( 'Users see the edit link in post if s/he is capable to edit the post/page. Selecting <strong>Yes</strong> will override the default WordPress edit post link in frontend', 'wpuf' ),
                 'type' => 'select',
-                'default' => 'no',
+                'default' => 'yes',
                 'options' => array(
                     'yes' => __( 'Yes', 'wpuf' ),
                     'no' => __( 'No', 'wpuf' )
@@ -191,6 +143,34 @@ function wpuf_settings_fields() {
                 'label' => __( 'Custom CSS codes', 'wpuf' ),
                 'desc' => __( 'If you want to add your custom CSS code, it will be added on page header wrapped with style tag', 'wpuf' ),
                 'type' => 'textarea'
+            ),
+        ) ),
+        'wpuf_dashboard' => apply_filters( 'wpuf_options_dashboard', array(
+            array(
+                'name' => 'show_user_bio',
+                'label' => __( 'Show user bio', 'wpuf' ),
+                'desc' => __( 'Users biographical info will be shown', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'on'
+            ),
+            array(
+                'name' => 'show_post_count',
+                'label' => __( 'Show post count', 'wpuf' ),
+                'desc' => __( 'Show how many posts are created by the user', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'on'
+            ),
+            array(
+                'name' => 'show_ft_image',
+                'label' => __( 'Show Featured Image', 'wpuf' ),
+                'desc' => __( 'Show featured image of the post', 'wpuf' ),
+                'type' => 'checkbox'
+            ),
+            array(
+                'name' => 'ft_img_size',
+                'label' => __( 'Featured Image size', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_get_image_sizes()
             ),
         ) ),
         'wpuf_payment' => apply_filters( 'wpuf_options_payment', array(

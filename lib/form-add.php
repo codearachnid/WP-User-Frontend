@@ -12,6 +12,7 @@ class WPUF_Form_Add {
 
         // ajax requests
         add_action( 'wp_ajax_wpuf_submit_post', array($this, 'submit_post') );
+        add_action( 'wp_ajax_nopriv_wpuf_submit_post', array($this, 'submit_post') );
 
         // form preview
         add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
@@ -29,6 +30,47 @@ class WPUF_Form_Add {
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
         // var_dump($post_vars, $taxonomy_vars, $meta_vars);
 
+        $post_author = null;
+        $default_post_author = wpuf_get_option( 'default_post_owner' );
+
+        // Guest Stuffs: check for guest post
+        if ($form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
+            $guest_name = trim( $_POST['guest_name'] );
+            $guest_email = trim( $_POST['guest_email'] );
+
+            // check if the user email already exists
+            $user = get_user_by( 'email', $guest_email );
+            if ($user) {
+                $post_author = $user->ID;
+            } else {
+
+                // user not found, lets register him
+                $username = sanitize_user( $guest_name );
+                $user_pass = wp_generate_password( 12, false);
+                $user_id = wp_create_user( $username, $user_pass, $guest_email );
+
+                if (!$user_id) {
+                    //something went wrong creating the user, set post author to the default author
+                    $post_author = $default_post_author;
+                } else {
+                    update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
+                    wp_new_user_notification( $user_id, $user_pass );
+
+                    // update display name to full name
+                    wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
+
+                    $post_author = $user_id;
+                }
+            }
+
+            // guest post is enabled and details are off
+        } elseif ($form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false') {
+            $post_author = $default_post_author;
+
+            // the user must be logged in already
+        } else {
+            $post_author = get_current_user_id();
+        }
 
         //validate the form
         $errors = array();
@@ -37,6 +79,7 @@ class WPUF_Form_Add {
         $postarr = array(
             'post_type' => $form_settings['post_type'],
             'post_status' => $form_settings['post_status'],
+            'post_author' => $post_author,
             'post_title' => isset( $_POST['post_title'] ) ? trim( $_POST['post_title'] ) : '',
             'post_content' => isset( $_POST['post_content'] ) ? trim( $_POST['post_content'] ) : '',
             'post_excerpt' => isset( $_POST['post_excerpt'] ) ? trim( $_POST['post_excerpt'] ) : '',
@@ -296,6 +339,12 @@ class WPUF_Form_Add {
         $form_vars = get_post_meta( $form_id, $this->meta_key, true );
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
+        // var_dump($form_settings);
+
+        if ( !is_user_logged_in() && $form_settings['guest_post'] != 'true' ) {
+            echo $form_settings['message_restrict'];
+            return;
+        }
 
         if ( $form_vars ) {
             ?>
@@ -305,6 +354,31 @@ class WPUF_Form_Add {
             <?php } ?>
 
                 <ul class="wpuf-form">
+
+                    <?php if ( !is_user_logged_in() && $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) { ?>
+
+                        <li class="el-name">
+                            <div class="wpuf-label">
+                                <label><?php echo $form_settings['name_label']; ?> <span class="required">*</span></label>
+                            </div>
+
+                            <div class="wpuf-fields">
+                                <input type="text" required="required" data-required="yes" data-type="text" name="guest_name" value="" size="40">
+                            </div>
+                        </li>
+
+                        <li class="el-email">
+                            <div class="wpuf-label">
+                                <label><?php echo $form_settings['email_label']; ?> <span class="required">*</span></label>
+                            </div>
+
+                            <div class="wpuf-fields">
+                                <input type="email" required="required" data-required="yes" data-type="email" name="guest_email" value="" size="40">
+                            </div>
+                        </li>
+
+                    <?php } ?>
+
                     <?php
                     foreach ($form_vars as $key => $form_field) {
 
@@ -461,7 +535,6 @@ class WPUF_Form_Add {
     }
 
     function required_html5( $attr ) {
-        return;
         if ( $attr['required'] == 'yes' ) {
             echo ' required="required"';
         }
