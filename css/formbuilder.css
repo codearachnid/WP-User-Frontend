@@ -10,7 +10,7 @@
 .wpuf-form-editor li .wpuf-legend .wpuf-actions{float:right;}.wpuf-form-editor li .wpuf-legend .wpuf-actions a{font-size:11px;padding:2px 5px;}
 .wpuf-form-editor li .wpuf-legend .wpuf-actions a.wpuf-remove{color:#f00;}
 .wpuf-form-editor li .wpuf-form-holder{padding:10px;}
-.wpuf-form-editor li .wpuf-form-rows:after{clear:both;content:"";display:table;}
+.wpuf-form-editor li .wpuf-form-rows{padding-bottom:3px;}.wpuf-form-editor li .wpuf-form-rows:after{clear:both;content:"";display:table;}
 .wpuf-form-editor li .wpuf-form-rows label{float:left;width:30%;font-size:12px;}
 .wpuf-form-editor li .wpuf-form-rows textarea{width:60%;}
 .wpuf-form-editor li .wpuf-form-rows .wpuf-form-sub-fields{width:65%;float:left;}.wpuf-form-editor li .wpuf-form-rows .wpuf-form-sub-fields label{float:none;display:inline-block;width:auto;}

@@ -57,6 +57,30 @@
     }
 }
 
+.wpuf-button {
+    background: #f3f3f3;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#f4f4f4));
+    background-image: -webkit-linear-gradient(top, #fefefe, #f4f4f4);
+    background-image:    -moz-linear-gradient(top, #fefefe, #f4f4f4);
+    background-image:      -o-linear-gradient(top, #fefefe, #f4f4f4);
+    background-image:   linear-gradient(to bottom, #fefefe, #f4f4f4);
+    border-color: #bbb;
+    color: #333;
+    text-shadow: 0 1px 0 #fff;
+
+    &:hover, &:focus {
+        background: #f3f3f3;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f3f3f3));
+        background-image: -webkit-linear-gradient(top, #fff, #f3f3f3);
+        background-image:    -moz-linear-gradient(top, #fff, #f3f3f3);
+        background-image:     -ms-linear-gradient(top, #fff, #f3f3f3);
+        background-image:      -o-linear-gradient(top, #fff, #f3f3f3);
+        background-image:   linear-gradient(to bottom, #fff, #f3f3f3);
+        border-color: #999;
+        color: #222;
+    }
+}
+
 .wpuf-success {
     border: 1px solid #99F199;
     padding: 10px;
@@ -215,40 +239,38 @@ ul.wpuf-form {
                 }
             }
 
-            .wpuf-attachment-upload-filelist {
-                .progress {
-                    background: -moz-linear-gradient(center bottom , #FFFFFF 0%, #F7F7F7 100%) repeat scroll 0 0 #FFFFFF;
-                    border: 1px solid #D1D1D1;
-                    border-radius: 3px 3px 3px 3px;
-                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;
-                    float: right;
-                    height: 22px;
-                    line-height: 2em;
-                    margin: 0;
-                    overflow: hidden;
-                    padding: 0;
-                    width: 200px;
-                }
+            .progress {
+                background: -moz-linear-gradient(center bottom , #FFFFFF 0%, #F7F7F7 100%) repeat scroll 0 0 #FFFFFF;
+                border: 1px solid #D1D1D1;
+                border-radius: 3px 3px 3px 3px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.1) inset;
+                float: right;
+                height: 22px;
+                line-height: 2em;
+                margin: 0;
+                overflow: hidden;
+                padding: 0;
+                width: 200px;
+            }
 
-                .bar {
-                    background-color: #83B4D8;
-                    background-image: -moz-linear-gradient(center bottom , #72A7CF 0%, #90C5EE 100%);
-                    border-radius: 3px 3px 3px 3px;
-                    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-                    height: 100%;
-                    // margin-top: -26px;
-                    width: 0;
-                    z-index: 9;
-                }
+            .bar {
+                background-color: #83B4D8;
+                background-image: -moz-linear-gradient(center bottom , #72A7CF 0%, #90C5EE 100%);
+                border-radius: 3px 3px 3px 3px;
+                box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+                height: 100%;
+                // margin-top: -26px;
+                width: 0;
+                z-index: 9;
+            }
 
-                .progress .percent {
-                    color: rgba(0, 0, 0, 0.6);
-                    padding: 0 8px;
-                    position: relative;
-                    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
-                    width: 200px;
-                    z-index: 10;
-                }
+            .progress .percent {
+                color: rgba(0, 0, 0, 0.6);
+                padding: 0 8px;
+                position: relative;
+                text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+                width: 200px;
+                z-index: 10;
             }
 
             ul.wpuf-category-checklist {
@@ -264,6 +286,21 @@ ul.wpuf-form {
                 ul.children {
                     list-style: none;
                     margin-left: 25px;
+                }
+            }
+
+            #wpuf-insert-image-container {
+                .clearfix();
+                margin-bottom: 3px;
+
+                a#wpuf-insert-image {
+                    text-decoration: none;
+                    float: left;
+                    border: 1px solid #DFDFDF;
+                    font-size: 11px;
+                    .border-radius(3px);
+                    padding: 2px 6px;
+                    margin-right: 10px;
                 }
             }
         }

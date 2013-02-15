@@ -119,9 +119,8 @@ class WP_User_Frontend {
         // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
         wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
 
-        wp_enqueue_script( 'plupload-handlers' );
         wp_enqueue_script( 'jquery-validate', $path . '/js/jquery.validate.min.js', array('jquery') );
-        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery') );
+        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
 
         wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
             'ajaxurl' => admin_url( 'admin-ajax.php' ),

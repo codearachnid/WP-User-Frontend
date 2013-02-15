@@ -6,6 +6,9 @@
             $('.wpuf-form').on('click', 'img.wpuf-remove-field', this.removeField);
 
             $('#wpuf-form-add').on('submit', this.handleForm);
+
+            // image insert
+            // this.insertImage();
         },
 
         cloneField: function(e) {
@@ -178,7 +181,7 @@
             self.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
             self.find('input[type=submit]').addClass('button-primary-disabled');
             $.post(wpuf_frontend.ajaxurl, $(this).serialize(), function(res) {
-
+                var res = $.parseJSON(res);
                 console.log(res);
 
                 if ( res.success) {
@@ -229,11 +232,102 @@
         isValidURL: function(url) {
             var urlregex = new RegExp("^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.|http:\/\/|https:\/\/){1}([0-9A-Za-z]+\.)");
             return urlregex.test(url);
+        },
+
+        insertImage: function() {
+
+            var button = 'wpuf-insert-image',
+                container = 'wpuf-insert-image-container';
+            if ( !$('#' + button).length) {
+                return;
+            };
+
+            // console.log('uploading image');
+
+            var imageUploader = new plupload.Uploader({
+                runtimes: 'html5,flash,html4',
+                browse_button: button,
+                container: container,
+                multipart: true,
+                multipart_params: {
+                    action: 'wpuf_insert_image'
+                },
+                multiple_queues: false,
+                multi_selection: false,
+                urlstream_upload: true,
+                file_data_name: 'wpuf_file',
+                max_file_size: '2mb',
+                url: wpuf_frontend_upload.plupload.url,
+                flash_swf_url: wpuf_frontend_upload.flash_swf_url,
+                filters: [{
+                    title: 'Allowed Files',
+                    extensions: 'jpg,jpeg,gif,png,bmp'
+                }],
+            });
+
+            // console.log(wpuf_frontend_upload.plupload.url);
+
+            imageUploader.bind('Init', function(up, params) {
+                // console.log("Current runtime environment: " + params.runtime);
+            });
+
+            imageUploader.bind('FilesAdded', function(up, files) {
+                var $container = $('#' + container);
+
+                $.each(files, function(i, file) {
+                    $container.append(
+                        '<div class="upload-item" id="' + file.id + '"><div class="progress progress-striped active"><div class="bar"></div></div></div>');
+                });
+
+                up.refresh();
+                up.start();
+            });
+
+            imageUploader.bind('QueueChanged', function (uploader) {
+                imageUploader.start();
+            });
+
+            imageUploader.bind('UploadProgress', function(up, file) {
+                var item = $('#' + file.id);
+
+                $('.bar', item).css({ width: file.percent + '%' });
+                $('.percent', item).html( file.percent + '%' );
+            });
+
+            imageUploader.bind('Error', function(up, err) {
+                alert('Error #' + error.code + ': ' + error.message);
+            });
+
+            imageUploader.bind('FileUploaded', function(up, file, response) {
+                var res = $.parseJSON(response.response);
+
+                $('#' + file.id).remove();
+
+                if(res.success) {
+                    var success = false;
+
+                    if ( typeof tinyMCE !== 'undefined') {
+                        success = tinyMCE.execInstanceCommand('post_content',"mceInsertContent",false, res.html);
+                    }
+
+                    // insert failed to the edit, perhaps insert into textarea
+                    if (!success) {
+                        var post_content = $('#post_content');
+                        post_content.val( post_content.val() + res.html );
+                    }
+                } else {
+                    alert(res.error);
+                }
+                // console.log("File uploaded, File: " + file.name + ", Response: " + response.response);
+            });
+
+            imageUploader.init();
         }
     };
 
     $(function() {
         WP_User_Frontend.init();
+        WP_User_Frontend.insertImage();
     });
 
 })(jQuery);

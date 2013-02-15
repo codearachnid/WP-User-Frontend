@@ -17,6 +17,9 @@ class WPUF_Uploader {
 
         add_action( 'wp_ajax_wpuf_file_del', array($this, 'delete_file') );
         add_action( 'wp_ajax_nopriv_wpuf_file_del', array($this, 'delete_file') );
+
+        add_action( 'wp_ajax_wpuf_insert_image', array( $this, 'insert_image' ) );
+        add_action( 'wp_ajax_nopriv_wpuf_insert_image', array( $this, 'insert_image' ) );
     }
 
     function enqueue_scripts() {
@@ -38,7 +41,7 @@ class WPUF_Uploader {
         ) );
     }
 
-    function upload_file() {
+    function upload_file( $image_only = false ) {
         $upload = array(
             'name' => $_FILES['wpuf_file']['name'],
             'type' => $_FILES['wpuf_file']['type'],
@@ -51,10 +54,13 @@ class WPUF_Uploader {
 
         if ( $attach['success'] ) {
 
-            $response = array(
-                'success' => true,
-                'html' => $attach['html'],
-            );
+            $response = array( 'success' => true );
+
+            if ($image_only) {
+                $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'full' );
+            } else {
+                $response['html'] = $this->attach_html( $attach['attach_id'] );
+            }
 
             echo json_encode( $response );
             exit;
@@ -93,9 +99,7 @@ class WPUF_Uploader {
             $attach_data = wp_generate_attachment_metadata( $attach_id, $file_loc );
             wp_update_attachment_metadata( $attach_id, $attach_data );
 
-            $html = $this->attach_html( $attach_id );
-
-            return array('success' => true, 'html' => $html);
+            return array('success' => true, 'attach_id' => $attach_id);
         }
 
         return array('success' => false, 'error' => $uploaded_file['error']);
@@ -140,6 +144,10 @@ class WPUF_Uploader {
             'ID' => $attach_id,
             'post_parent' => $post_id
         ) );
+    }
+
+    function insert_image() {
+        $this->upload_file( true );
     }
 
 }

@@ -48,8 +48,8 @@ class WPUF_Form_Template {
         <div class="wpuf-legend">
             <div class="wpuf-label"><?php echo $title . $field_label; ?></div>
             <div class="wpuf-actions">
-                <a href="#" class="wpuf-remove">Remove</a>
-                <a href="#" class="wpuf-toggle">Hide</a>
+                <a href="#" class="wpuf-remove"><?php _e( 'Remove', 'wpuf' ); ?></a>
+                <a href="#" class="wpuf-toggle"><?php _e( 'Toggle', 'wpuf' ); ?></a>
             </div>
         </div> <!-- .wpuf-legend -->
         <?php
@@ -294,6 +294,9 @@ class WPUF_Form_Template {
 
     public static function post_content( $field_id, $label, $values = array() ) {
         // var_dump($values);
+
+        $image_insert_name = sprintf('%s[%d][insert_image]', self::$input_name, $field_id);
+        $image_insert_value = isset( $values['insert_image'] ) ? $values['insert_image'] : 'yes';
         ?>
         <li class="post_content">
             <?php self::legend( $label, $values ); ?>
@@ -304,6 +307,18 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, 'post_content', false, $values ); ?>
                 <?php self::common_text( $field_id, $values ); ?>
                 <?php self::common_textarea( $field_id, $values ); ?>
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Enable Image Insertion', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <label>
+                            <?php self::hidden_field( "[$field_id][insert_image]", 'no' ); ?>
+                            <input type="checkbox" name="<?php echo $image_insert_name ?>" value="yes"<?php checked( $image_insert_value, 'yes' ); ?> />
+                            <?php _e( 'Enable image upload in post area', 'wpuf' ); ?>
+                        </label>
+                    </div>
+                </div> <!-- .wpuf-form-rows -->
             </div> <!-- .wpuf-form-holder -->
         </li>
         <?php

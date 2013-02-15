@@ -21,7 +21,7 @@ class WPUF_Form_Add {
     function submit_post() {
         check_ajax_referer( 'wpuf_form_add' );
 
-        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+        // @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 
         $form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
         $form_vars = $this->get_input_fields( $form_id );
@@ -30,46 +30,54 @@ class WPUF_Form_Add {
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
         // var_dump($post_vars, $taxonomy_vars, $meta_vars);
 
+        // print_r( $_POST );
+
         $post_author = null;
         $default_post_author = wpuf_get_option( 'default_post_owner' );
 
         // Guest Stuffs: check for guest post
-        if ($form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
-            $guest_name = trim( $_POST['guest_name'] );
-            $guest_email = trim( $_POST['guest_email'] );
+        if ( !is_user_logged_in() ) {
+            if ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
+                $guest_name = trim( $_POST['guest_name'] );
+                $guest_email = trim( $_POST['guest_email'] );
 
-            // check if the user email already exists
-            $user = get_user_by( 'email', $guest_email );
-            if ($user) {
-                $post_author = $user->ID;
-            } else {
-
-                // user not found, lets register him
-                $username = sanitize_user( $guest_name );
-                $user_pass = wp_generate_password( 12, false);
-                $user_id = wp_create_user( $username, $user_pass, $guest_email );
-
-                if (!$user_id) {
-                    //something went wrong creating the user, set post author to the default author
-                    $post_author = $default_post_author;
+                // check if the user email already exists
+                $user = get_user_by( 'email', $guest_email );
+                if ($user) {
+                    $post_author = $user->ID;
                 } else {
-                    update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
-                    wp_new_user_notification( $user_id, $user_pass );
 
-                    // update display name to full name
-                    wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
+                    // user not found, lets register him
+                    $username = sanitize_user( $guest_name );
+                    $user_pass = wp_generate_password( 12, false);
+                    $user_id = wp_create_user( $username, $user_pass, $guest_email );
 
-                    $post_author = $user_id;
+                    if (!$user_id) {
+                        //something went wrong creating the user, set post author to the default author
+                        $post_author = $default_post_author;
+                    } else {
+                        update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
+                        wp_new_user_notification( $user_id, $user_pass );
+
+                        // update display name to full name
+                        wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
+
+                        $post_author = $user_id;
+
+                        WP_User_Frontend::log('new reg user id', $post_author);
+                    }
                 }
-            }
 
-            // guest post is enabled and details are off
-        } elseif ($form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false') {
-            $post_author = $default_post_author;
+                // guest post is enabled and details are off
+            } elseif ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false') {
+                $post_author = $default_post_author;
+                WP_User_Frontend::log('default in user id', $post_author);
+            }
 
             // the user must be logged in already
         } else {
             $post_author = get_current_user_id();
+            WP_User_Frontend::log('loggged in user id', $post_author);
         }
 
         //validate the form
@@ -91,6 +99,8 @@ class WPUF_Form_Add {
         if ( isset( $_POST['post_id']) ) {
             $postarr['ID'] = $_POST['post_id'];
         }
+
+        WP_User_Frontend::log('postdata', print_r($postarr, true));
 
         // loop through custom fields
         // skip files, put in a key => value paired array for later executation
@@ -605,6 +615,16 @@ class WPUF_Form_Add {
         ?>
 
         <div class="wpuf-fields">
+
+            <?php if( isset( $attr['insert_image']) && $attr['insert_image'] == 'yes') { ?>
+                <div id="wpuf-insert-image-container">
+                    <a class="wpuf-button" id="wpuf-insert-image" href="#">
+                        <span class="wpuf-media-icon"></span>
+                        <?php _e( 'Insert Photo', 'wpuf' ); ?>
+                    </a>
+                </div>
+            <?php } ?>
+
             <?php
             if ( $attr['rich'] == 'yes' ) {
 
@@ -613,7 +633,7 @@ class WPUF_Form_Add {
 
             } else {
                 ?>
-                <textarea class="textareafield<?php echo $this->required_class( $attr ); ?>" id="wpuf-<?php echo $attr['name']; ?>" name="<?php echo $attr['name']; ?>" data-required="<?php echo $attr['required'] ?>" data-type="textarea"<?php $this->required_html5( $attr ); ?> placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" rows="<?php echo $attr['rows']; ?>" cols="<?php echo $attr['cols']; ?>"><?php echo esc_textarea( $value ) ?></textarea>
+                <textarea class="textareafield<?php echo $this->required_class( $attr ); ?>" id="<?php echo $attr['name']; ?>" name="<?php echo $attr['name']; ?>" data-required="<?php echo $attr['required'] ?>" data-type="textarea"<?php $this->required_html5( $attr ); ?> placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" rows="<?php echo $attr['rows']; ?>" cols="<?php echo $attr['cols']; ?>"><?php echo esc_textarea( $value ) ?></textarea>
             <?php } ?>
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
