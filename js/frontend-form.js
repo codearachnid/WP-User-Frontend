@@ -180,7 +180,22 @@
             // send the request
             self.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
             self.find('input[type=submit]').addClass('button-primary-disabled');
-            $.post(wpuf_frontend.ajaxurl, $(this).serialize(), function(res) {
+
+            var form_data = self.serialize(),
+                rich_texts = [];
+
+            // grab rich texts from tinyMCE
+            $('.wpuf-rich-validation').each(function (index, item) {
+                temp = $(item).data('id');
+                val = $.trim( tinyMCE.get(temp).getContent() );
+
+                rich_texts.push(temp + '=' + val);
+            });
+
+            // append them to the form var
+            form_data = form_data + '&' + rich_texts.join('&');
+
+            $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
                 var res = $.parseJSON(res);
                 console.log(res);
 
