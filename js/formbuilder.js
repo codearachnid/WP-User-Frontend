@@ -7,6 +7,7 @@
 
             // make it sortable
             this.makeSortable();
+
             this.tooltip();
 
             // Form Settings
@@ -15,11 +16,11 @@
 
             // Form settings: Guest post
             $('#wpuf-metabox-settings').on('change', 'input[type=checkbox][name="wpuf_settings[guest_post]"]', this.settingsGuest);
-            $('input[type=checkbox][name="wpuf_settings[guest_post]"]').change();
+            $('input[type=checkbox][name="wpuf_settings[guest_post]"]').trigger('change');
 
             // From settings: User details
-            $('#wpuf-metabox-settings').on('change', 'input[type=checkbox][name="wpuf_settings[guest_details]"]', this.settingsUserDetails);
-            $('input[type=checkbox][name="wpuf_settings[guest_details]"]').change();
+            $('#wpuf-metabox-settings').on('change', 'input[type=checkbox][name="wpuf_settings[guest_details]"]', this.settingsGuestDetails);
+            // $('input[type=checkbox][name="wpuf_settings[guest_details]"]').trigger('change');
 
             // collapse all
             $('button.wpuf-collapse').on('click', this.collpaseEditFields);
@@ -107,7 +108,7 @@
                     alert('You already have this in the form');
                     return false;
                 }
-            };
+            }
 
             $('.wpuf-loading').removeClass('hide');
             $.post(ajaxurl, data, function(res) {
@@ -185,7 +186,7 @@
         collpaseEditFields: function(e) {
             e.preventDefault();
 
-            $('ul#wpuf-form-editor').children('li').find('.wpuf-form-holder').slideToggle();;
+            $('ul#wpuf-form-editor').children('li').find('.wpuf-form-holder').slideToggle();
         },
 
         settingsGuest: function (e) {
@@ -197,7 +198,7 @@
                 table.find('tr.show-if-guest').show();
                 table.find('tr.show-if-not-guest').hide();
 
-                $('input[type=checkbox][name="wpuf_settings[guest_details]"]').change();
+                $('input[type=checkbox][name="wpuf_settings[guest_details]"]').trigger('change');
 
             } else {
                 table.find('tr.show-if-guest').hide();
@@ -205,7 +206,7 @@
             }
         },
 
-        settingsUserDetails: function (e) {
+        settingsGuestDetails: function (e) {
             e.preventDefault();
 
             var table = $(this).closest('table');
