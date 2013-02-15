@@ -77,24 +77,24 @@ class WPUF_Form_Template {
         // var_dump($required, $label_value, $help_value);
         ?>
         <div class="wpuf-form-rows">
-            <label>Required</label>
+            <label><?php _e( 'Required', 'wpuf' ); ?></label>
 
             <?php //self::hidden_field($order_name, ''); ?>
 
             <div class="wpuf-form-sub-fields">
-                <label><input type="radio" name="<?php echo $required_name; ?>" value="yes"<?php checked( $required, 'yes' ); ?>> Yes </label>
-                <label><input type="radio" name="<?php echo $required_name; ?>" value="no"<?php checked( $required, 'no' ); ?>> No </label>
+                <label><input type="radio" name="<?php echo $required_name; ?>" value="yes"<?php checked( $required, 'yes' ); ?>> <?php _e( 'Yes', 'wpuf' ); ?> </label>
+                <label><input type="radio" name="<?php echo $required_name; ?>" value="no"<?php checked( $required, 'no' ); ?>> <?php _e( 'No', 'wpuf' ); ?> </label>
             </div>
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Field Label</label>
+            <label><?php _e( 'Field Label', 'wpuf' ); ?></label>
             <input type="text" data-type="label" name="<?php echo $label_name; ?>" value="<?php echo $label_value; ?>">
         </div> <!-- .wpuf-form-rows -->
 
         <?php if ( $custom_field ) { ?>
             <div class="wpuf-form-rows">
-                <label>Meta Key</label>
+                <label><?php _e( 'Meta Key', 'wpuf' ); ?></label>
                 <input type="text" name="<?php echo $field_name; ?>" value="<?php echo $field_name_value; ?>">
                 <input type="hidden" name="<?php echo $is_meta_name; ?>" value="yes">
             </div> <!-- .wpuf-form-rows -->
@@ -106,16 +106,10 @@ class WPUF_Form_Template {
         <?php } ?>
 
         <div class="wpuf-form-rows">
-            <label>Help text</label>
+            <label><?php _e( 'Help text', 'wpuf' ); ?></label>
             <textarea name="<?php echo $help_name; ?>"><?php echo $help_value; ?></textarea>
         </div> <!-- .wpuf-form-rows -->
 
-        <!-- <div class="wpuf-form-rows">
-            <label>CSS class name</label>
-            <input type="text" name="<?php echo $css_name; ?>" value="">
-        </div>
-        -->
-        <!-- .wpuf-form-rows -->
         <?php
     }
 
@@ -132,18 +126,18 @@ class WPUF_Form_Template {
         // var_dump($values);
         ?>
         <div class="wpuf-form-rows">
-            <label>Placeholder text</label>
-            <input type="text" class="smallipopInput" name="<?php echo $placeholder_name; ?>" title="text for HTML5 placeholder attribute" value="<?php echo $placeholder_value; ?>" />
+            <label><?php _e( 'Placeholder text', 'wpuf' ); ?></label>
+            <input type="text" class="smallipopInput" name="<?php echo $placeholder_name; ?>" title="<?php esc_attr_e( 'Text for HTML5 placeholder attribute', 'wpuf' ); ?>" value="<?php echo $placeholder_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Default value</label>
-            <input type="text" class="smallipopInput" name="<?php echo $default_name; ?>" title="the default value this field will have" value="<?php echo $default_value; ?>" />
+            <label><?php _e( 'Default value', 'wpuf' ); ?></label>
+            <input type="text" class="smallipopInput" name="<?php echo $default_name; ?>" title="<?php esc_attr_e( 'The default value this field will have', 'wpuf' ); ?>" value="<?php echo $default_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Size</label>
-            <input type="text" class="smallipopInput" name="<?php echo $size_name; ?>" title="Size of this input field" value="<?php echo $size_value; ?>" />
+            <label><?php _e( 'Size', 'wpuf' ); ?></label>
+            <input type="text" class="smallipopInput" name="<?php echo $size_name; ?>" title="<?php esc_attr_e( 'Size of this input field', 'wpuf' ); ?>" value="<?php echo $size_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
         <?php
     }
@@ -165,27 +159,27 @@ class WPUF_Form_Template {
         // var_dump($values);
         ?>
         <div class="wpuf-form-rows">
-            <label>Rows</label>
+            <label><?php _e( 'Rows', 'wpuf' ); ?></label>
             <input type="text" class="smallipopInput" name="<?php echo $rows_name; ?>" title="Number of rows in textarea" value="<?php echo $rows_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Columns</label>
+            <label><?php _e( 'Columns', 'wpuf' ); ?></label>
             <input type="text" class="smallipopInput" name="<?php echo $cols_name; ?>" title="Number of columns in textarea" value="<?php echo $cols_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Placeholder text</label>
+            <label><?php _e( 'Placeholder text', 'wpuf' ); ?></label>
             <input type="text" class="smallipopInput" name="<?php echo $placeholder_name; ?>" title="text for HTML5 placeholder attribute" value="<?php echo $placeholder_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Default value</label>
+            <label><?php _e( 'Default value', 'wpuf' ); ?></label>
             <input type="text" class="smallipopInput" name="<?php echo $default_name; ?>" title="the default value this field will have" value="<?php echo $default_value; ?>" />
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label>Enable Rich textarea</label>
+            <label><?php _e( 'Enable Rich textarea', 'wpuf' ); ?></label>
 
             <div class="wpuf-form-sub-fields">
                 <label><input type="radio" name="<?php echo $rich_name; ?>" value="yes"<?php checked( $rich_value, 'yes' ); ?>> Yes </label>
@@ -370,7 +364,7 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, 'featured_image', false, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Max. file size</label>
+                    <label><?php _e( 'Max. file size', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $max_file_name; ?>" value="<?php echo $max_file_value; ?>" title="<?php echo $help; ?>">
                 </div> <!-- .wpuf-form-rows -->
             </div> <!-- .wpuf-form-holder -->
@@ -432,7 +426,7 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Options</label>
+                    <label><?php _e( 'Options', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                         <?php self::radio_fields( $field_id, 'options', $values ); ?>
@@ -454,7 +448,7 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Options</label>
+                    <label><?php _e( 'Options', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                         <?php self::checkbox_field( $field_id, 'options', $values ); ?>
@@ -476,7 +470,7 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Options</label>
+                    <label><?php _e( 'Options', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                         <?php self::radio_fields( $field_id, 'options', $values ); ?>
@@ -498,7 +492,7 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Options</label>
+                    <label><?php _e( 'Options', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                         <?php self::radio_fields( $field_id, 'options', $values ); ?>
@@ -528,12 +522,12 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, 'custom_image', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Max. file size</label>
+                    <label><?php _e( 'Max. file size', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $max_size_name; ?>" value="<?php echo $max_size_value; ?>" title="<?php echo $help; ?>">
                 </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows">
-                    <label>Max. files</label>
+                    <label><?php _e( 'Max. files', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $max_files_name; ?>" value="<?php echo $max_files_value; ?>" title="<?php echo $count; ?>">
                 </div> <!-- .wpuf-form-rows -->
             </div> <!-- .wpuf-form-holder -->
@@ -566,17 +560,17 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Max. file size</label>
+                    <label><?php _e( 'Max. file size', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $max_size_name; ?>" value="<?php echo $max_size_value; ?>" title="<?php echo $help; ?>">
                 </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows">
-                    <label>Max. files</label>
+                    <label><?php _e( 'Max. files', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $max_files_name; ?>" value="<?php echo $max_files_value; ?>" title="<?php echo $count; ?>">
                 </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows">
-                    <label>Allowed Files</label>
+                    <label><?php _e( 'Allowed Files', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                         <?php foreach ($extesions as $key => $value) {
@@ -648,7 +642,7 @@ class WPUF_Form_Template {
                 <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
-                    <label>Multiple Column</label>
+                    <label><?php _e( 'Multiple Column', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                         <label><input type="checkbox" class="multicolumn" name="<?php echo $enable_column_name ?>"<?php echo $has_column ? ' checked="checked"' : ''; ?> value="true"> Enable Multi Column</label>
@@ -656,22 +650,22 @@ class WPUF_Form_Template {
                 </div>
 
                 <div class="wpuf-form-rows<?php echo $has_column ? ' wpuf-hide' : ''; ?>">
-                    <label>Placeholder text</label>
+                    <label><?php _e( 'Placeholder text', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $placeholder_name; ?>" title="text for HTML5 placeholder attribute" value="<?php echo $placeholder_value; ?>" />
                 </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows<?php echo $has_column ? ' wpuf-hide' : ''; ?>">
-                    <label>Default value</label>
+                    <label><?php _e( 'Default value', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $default_name; ?>" title="the default value this field will have" value="<?php echo $default_value; ?>" />
                 </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows">
-                    <label>Size</label>
+                    <label><?php _e( 'Size', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $size_name; ?>" title="Size of this input field" value="<?php echo $size_value; ?>" />
                 </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows column-names<?php echo $has_column ? '' : ' wpuf-hide'; ?>">
-                    <label>Columns</label>
+                    <label><?php _e( 'Columns', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
                     <?php

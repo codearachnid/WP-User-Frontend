@@ -2,450 +2,1043 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP User Frontend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-14 17:46+0600\n"
-"PO-Revision-Date: 2012-04-14 17:46+0600\n"
+"POT-Creation-Date: 2013-02-15 20:41+0600\n"
+"PO-Revision-Date: 2013-02-15 20:41+0600\n"
 "Last-Translator: Tareq Hasan <tareq@wedevs.com>\n"
 "Language-Team: Tareq Hasan <tareq@wedevs.com>\n"
-"Language: \n"
+"Language: en_BD\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _e;__\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-Language: English\n"
-"X-Poedit-Country: Bangladesh\n"
+"X-Generator: Poedit 1.5.5\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../wpuf.php:167
-msgid "Access Denied. Your site administrator has blocked your access to the WordPress back-office."
+#: ../wpuf-edit-user.php:23
+msgid "User doesn't exists"
 msgstr ""
 
-#: ../wpuf.php:179
-#, php-format
-msgid "You need to set your <a href=\"%1$s\">permalink custom structure</a> to at least contain <b>/&#37;postname&#37;/</b> before WP User Frontend will work properly."
+#: ../wpuf-edit-user.php:34
+msgid "You don't have permission for this purpose"
 msgstr ""
 
-#: ../wpuf.php:236
-#: ../wpuf-add-post.php:76
-#: ../wpuf-edit-post.php:119
-msgid "-- Select --"
-msgstr ""
-
-#: ../wpuf.php:268
-msgid "You must purchase a pack before posting"
-msgstr ""
-
-#: ../wpuf-dashboard.php:22
-#: ../wpuf-add-post.php:19
-#: ../wpuf-editprofile.php:15
-#: ../wpuf-edit-user.php:36
-#: ../wpuf-edit-post.php:15
+#: ../wpuf-edit-user.php:37 ../class/dashboard.php:32
+#: ../class/edit-profile.php:27
 #, php-format
 msgid "This page is restricted. Please %s to view this page."
 msgstr ""
 
-#: ../wpuf-dashboard.php:57
+#: ../wpuf-edit-user.php:77
+msgid "User Deleted"
+msgstr ""
+
+#: ../wpuf-edit-user.php:92 ../wpuf-edit-user.php:144
+#: ../class/edit-profile.php:96
+msgid "Username"
+msgstr ""
+
+#: ../wpuf-edit-user.php:93
+msgid "Action"
+msgstr ""
+
+#: ../wpuf-edit-user.php:99 ../class/dashboard.php:159 ../class/forms.php:62
+msgid "Edit"
+msgstr ""
+
+#: ../wpuf-edit-user.php:100 ../class/dashboard.php:165
+#: ../class/upload.php:120
+msgid "Delete"
+msgstr ""
+
+#: ../wpuf-edit-user.php:119 ../wpuf-edit-user.php:177
+msgid "Add New User"
+msgstr ""
+
+#: ../wpuf-edit-user.php:132
+msgid "User Added"
+msgstr ""
+
+#: ../wpuf-edit-user.php:152 ../class/forms.php:122 ../class/forms.php:314
+msgid "Email"
+msgstr ""
+
+#: ../wpuf-edit-user.php:160
+msgid "Role"
+msgstr ""
+
+#: ../wpuf-edit-user.php:204
+msgid "<strong>ERROR</strong>: Please enter a username."
+msgstr ""
+
+#: ../wpuf-edit-user.php:206
+msgid ""
+"<strong>ERROR</strong>: This username is invalid because it uses illegal "
+"characters. Please enter a valid username."
+msgstr ""
+
+#: ../wpuf-edit-user.php:209
+msgid ""
+"<strong>ERROR</strong>: This username is already registered, please choose "
+"another one."
+msgstr ""
+
+#: ../wpuf-edit-user.php:214
+msgid "<strong>ERROR</strong>: Please type your e-mail address."
+msgstr ""
+
+#: ../wpuf-edit-user.php:216
+msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+msgstr ""
+
+#: ../wpuf-edit-user.php:219
+msgid ""
+"<strong>ERROR</strong>: This email is already registered, please choose "
+"another one."
+msgstr ""
+
+#: ../wpuf-edit-user.php:242
+#, php-format
+msgid ""
+"<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a "
+"href=\"mailto:%s\">webmaster</a> !"
+msgstr ""
+
+#: ../wpuf-functions.php:14
+msgid "Live"
+msgstr ""
+
+#: ../wpuf-functions.php:18
+msgid "Offline"
+msgstr ""
+
+#: ../wpuf-functions.php:22
+msgid "Awaiting Approval"
+msgstr ""
+
+#: ../wpuf-functions.php:25
+msgid "Scheduled"
+msgstr ""
+
+#: ../wpuf-functions.php:60
+#, php-format
+msgid "[%s] New Post Submission"
+msgstr ""
+
+#: ../wpuf-functions.php:62
+#, php-format
+msgid "A new post has been submitted on %s"
+msgstr ""
+
+#: ../wpuf-functions.php:63
+#, php-format
+msgid "Author : %s"
+msgstr ""
+
+#: ../wpuf-functions.php:64
+#, php-format
+msgid "Author Email : %s"
+msgstr ""
+
+#: ../wpuf-functions.php:65
+#, php-format
+msgid "Title : %s"
+msgstr ""
+
+#: ../wpuf-functions.php:66
+#, php-format
+msgid "Permalink : %s"
+msgstr ""
+
+#: ../wpuf-functions.php:67
+#, php-format
+msgid "Edit Link : %s"
+msgstr ""
+
+#: ../wpuf-functions.php:358
+#, php-format
+msgid ""
+"You need to set your <a href=\"%1$s\">permalink custom structure</a> to at "
+"least contain <b>/&#37;postname&#37;/</b> before WP User Frontend will work "
+"properly."
+msgstr ""
+
+#: ../wpuf-functions.php:404
+msgid "You must purchase a pack before posting"
+msgstr ""
+
+#: ../wpuf-functions.php:462
+msgid "Images"
+msgstr ""
+
+#: ../wpuf-functions.php:463
+msgid "Audio"
+msgstr ""
+
+#: ../wpuf-functions.php:464
+msgid "Videos"
+msgstr ""
+
+#: ../wpuf-functions.php:465
+msgid "PDF"
+msgstr ""
+
+#: ../wpuf-functions.php:466
+msgid "Office Documents"
+msgstr ""
+
+#: ../wpuf-functions.php:467
+msgid "Zip Archives"
+msgstr ""
+
+#: ../wpuf-functions.php:468
+msgid "Executable Files"
+msgstr ""
+
+#: ../wpuf-functions.php:469
+msgid "CSV"
+msgstr ""
+
+#: ../wpuf.php:143
+msgid "Please fix the errors to proceed"
+msgstr ""
+
+#: ../wpuf.php:159
+msgid ""
+"Access Denied. Your site administrator has blocked your access to the "
+"WordPress back-office."
+msgstr ""
+
+#: ../admin/settings-options.php:46
+msgid "General Options"
+msgstr ""
+
+#: ../admin/settings-options.php:50
+msgid "Dashboard"
+msgstr ""
+
+#: ../admin/settings-options.php:58
+msgid "Support"
+msgstr ""
+
+#: ../admin/settings-options.php:70
+msgid "New post notification"
+msgstr ""
+
+#: ../admin/settings-options.php:71
+msgid "A mail will be sent to admin when a new post is created"
+msgstr ""
+
+#: ../admin/settings-options.php:75 ../admin/settings-options.php:86
+#: ../admin/settings-options.php:97 ../admin/settings-options.php:137
+#: ../admin/settings-options.php:192 ../class/form-template.php:85
+msgid "Yes"
+msgstr ""
+
+#: ../admin/settings-options.php:76 ../admin/settings-options.php:87
+#: ../admin/settings-options.php:98 ../admin/settings-options.php:138
+#: ../admin/settings-options.php:193 ../class/form-template.php:86
+msgid "No"
+msgstr ""
+
+#: ../admin/settings-options.php:81
+msgid "Users can edit post?"
+msgstr ""
+
+#: ../admin/settings-options.php:82
+msgid "Users will be able to edit their own posts"
+msgstr ""
+
+#: ../admin/settings-options.php:92
+msgid "User can delete post?"
+msgstr ""
+
+#: ../admin/settings-options.php:93
+msgid "Users will be able to delete their own posts"
+msgstr ""
+
+#: ../admin/settings-options.php:103
+msgid "Edit Page"
+msgstr ""
+
+#: ../admin/settings-options.php:104
+msgid "Select the page where [wpuf_edit] is located"
+msgstr ""
+
+#: ../admin/settings-options.php:110
+msgid "Default Post Owner"
+msgstr ""
+
+#: ../admin/settings-options.php:111
+msgid ""
+"If guest post is enabled and user details are OFF, the posts are assigned to "
+"this user"
+msgstr ""
+
+#: ../admin/settings-options.php:118
+msgid "Admin area access"
+msgstr ""
+
+#: ../admin/settings-options.php:119
+msgid "Allow you to block specific user role to WordPress admin area."
+msgstr ""
+
+#: ../admin/settings-options.php:123
+msgid "Admin Only"
+msgstr ""
+
+#: ../admin/settings-options.php:124
+msgid "Admins, Editors"
+msgstr ""
+
+#: ../admin/settings-options.php:125
+msgid "Admins, Editors, Authors"
+msgstr ""
+
+#: ../admin/settings-options.php:126
+msgid "Admins, Editors, Authors, Contributors"
+msgstr ""
+
+#: ../admin/settings-options.php:127
+msgid "Default"
+msgstr ""
+
+#: ../admin/settings-options.php:132
+msgid "Override the post edit link"
+msgstr ""
+
+#: ../admin/settings-options.php:133
+msgid ""
+"Users see the edit link in post if s/he is capable to edit the post/page. "
+"Selecting <strong>Yes</strong> will override the default WordPress edit post "
+"link in frontend"
+msgstr ""
+
+#: ../admin/settings-options.php:143
+msgid "reCAPTCHA Public Key"
+msgstr ""
+
+#: ../admin/settings-options.php:147
+msgid "reCAPTCHA Private Key"
+msgstr ""
+
+#: ../admin/settings-options.php:151
+msgid "Custom CSS codes"
+msgstr ""
+
+#: ../admin/settings-options.php:152
+msgid ""
+"If you want to add your custom CSS code, it will be added on page header "
+"wrapped with style tag"
+msgstr ""
+
+#: ../admin/settings-options.php:159
+msgid "Show user bio"
+msgstr ""
+
+#: ../admin/settings-options.php:160
+msgid "Users biographical info will be shown"
+msgstr ""
+
+#: ../admin/settings-options.php:166
+msgid "Show post count"
+msgstr ""
+
+#: ../admin/settings-options.php:167
+msgid "Show how many posts are created by the user"
+msgstr ""
+
+#: ../admin/settings-options.php:173
+msgid "Show Featured Image"
+msgstr ""
+
+#: ../admin/settings-options.php:174
+msgid "Show featured image of the post"
+msgstr ""
+
+#: ../admin/settings-options.php:179
+msgid "Featured Image size"
+msgstr ""
+
+#: ../admin/settings-options.php:187
+msgid "Charge for posting"
+msgstr ""
+
+#: ../admin/settings-options.php:188
+msgid "Charge user for submitting a post"
+msgstr ""
+
+#: ../admin/settings-options.php:198
+msgid "Force pack purchase"
+msgstr ""
+
+#: ../admin/settings-options.php:199
+msgid "When active, users must have to buy a pack for posting"
+msgstr ""
+
+#: ../admin/settings-options.php:203
+msgid "Disable"
+msgstr ""
+
+#: ../admin/settings-options.php:204
+msgid "Enable"
+msgstr ""
+
+#: ../admin/settings-options.php:209
+msgid "Currency"
+msgstr ""
+
+#: ../admin/settings-options.php:241
+msgid "Currency Symbol"
+msgstr ""
+
+#: ../admin/settings-options.php:247
+msgid "Cost"
+msgstr ""
+
+#: ../admin/settings-options.php:248
+msgid "Cost per post"
+msgstr ""
+
+#: ../admin/settings-options.php:254
+msgid "Enable demo/sandbox mode"
+msgstr ""
+
+#: ../admin/settings-options.php:255
+msgid ""
+"When sandbox mode is active, all payment gateway will be used in demo mode"
+msgstr ""
+
+#: ../admin/settings-options.php:261
+msgid "Payment Page"
+msgstr ""
+
+#: ../admin/settings-options.php:262
+msgid "This page will be used to process payment options"
+msgstr ""
+
+#: ../admin/settings-options.php:268
+msgid "Payment Success Page"
+msgstr ""
+
+#: ../admin/settings-options.php:269
+msgid "After payment users will be redirected here"
+msgstr ""
+
+#: ../admin/settings-options.php:275
+msgid "Payment Gateways"
+msgstr ""
+
+#: ../admin/settings-options.php:276
+msgid "Active payment gateways"
+msgstr ""
+
+#: ../admin/settings-options.php:284
+msgid "Need Help?"
+msgstr ""
+
+#: ../class/dashboard.php:60
 msgid "Post Deleted"
 msgstr ""
 
-#: ../wpuf-dashboard.php:59
-msgid "You are not the post author. Cheeting huh!"
-msgstr ""
-
-#: ../wpuf-dashboard.php:79
-msgid "&laquo;"
-msgstr ""
-
-#: ../wpuf-dashboard.php:80
-msgid "&raquo;"
-msgstr ""
-
-#: ../wpuf-dashboard.php:94
+#: ../class/dashboard.php:76
 #, php-format
 msgid "%s's Dashboard"
 msgstr ""
 
-#: ../wpuf-dashboard.php:99
-msgid "You have created"
+#: ../class/dashboard.php:80
+#, php-format
+msgid "You have created <span>%d</span> %s"
 msgstr ""
 
-#: ../wpuf-dashboard.php:107
+#: ../class/dashboard.php:97 ../class/forms.php:300
+msgid "Featured Image"
+msgstr ""
+
+#: ../class/dashboard.php:100 ../class/form-template.php:714
+#: ../class/form-template.php:741 ../class/form-template.php:802
 msgid "Title"
 msgstr ""
 
-#: ../wpuf-dashboard.php:108
+#: ../class/dashboard.php:101
 msgid "Status"
 msgstr ""
 
-#: ../wpuf-dashboard.php:110
+#: ../class/dashboard.php:104
 msgid "Payment"
 msgstr ""
 
-#: ../wpuf-dashboard.php:111
+#: ../class/dashboard.php:107 ../class/form-template.php:429
+#: ../class/form-template.php:451 ../class/form-template.php:473
+#: ../class/form-template.php:495
 msgid "Options"
 msgstr ""
 
-#: ../wpuf-dashboard.php:150
-#: ../wpuf-edit-user.php:96
-msgid "Edit"
+#: ../class/dashboard.php:122
+msgid "No Image"
 msgstr ""
 
-#: ../wpuf-dashboard.php:156
-#: ../wpuf-edit-user.php:97
-msgid "Delete"
+#: ../class/dashboard.php:178
+msgid "&laquo;"
 msgstr ""
 
-#: ../wpuf-dashboard.php:171
-msgid "Currently you have no post"
+#: ../class/dashboard.php:179
+msgid "&raquo;"
 msgstr ""
 
-#: ../wpuf-dashboard.php:178
+#: ../class/dashboard.php:192
+#, php-format
+msgid "No %s found"
+msgstr ""
+
+#: ../class/dashboard.php:212
 msgid "Author Info"
 msgstr ""
 
-#: ../wpuf-subscription.php:246
-#: ../wpuf-subscription.php:256
-#, php-format
-msgid "Click here to complete the pack on %s"
+#: ../class/dashboard.php:248
+msgid "You are not the post author. Cheeting huh!"
 msgstr ""
 
-#: ../wpuf-subscription.php:450
-msgid "Unlimited duration"
-msgstr ""
-
-#: ../wpuf-subscription.php:452
-msgid "Expired"
-msgstr ""
-
-#: ../wpuf-subscription.php:466
-msgid "Subscription Details"
-msgstr ""
-
-#: ../wpuf-subscription.php:468
-#: ../wpuf-editprofile.php:280
-msgid "Validity:"
-msgstr ""
-
-#: ../wpuf-subscription.php:469
-msgid "Post Left:"
-msgstr ""
-
-#: ../wpuf-subscription.php:495
-msgid "Buy Now"
-msgstr ""
-
-#: ../wpuf-subscription.php:512
-#, php-format
-msgid "This will cost you <strong>%s</strong>. to add a new post. You may buy some bulk package too. "
-msgstr ""
-
-#: ../wpuf-add-post.php:42
-msgid "Post It!"
-msgstr ""
-
-#: ../wpuf-add-post.php:146
-msgid "Cheating?"
-msgstr ""
-
-#: ../wpuf-add-post.php:182
-#: ../wpuf-edit-post.php:201
-msgid "Empty post title"
-msgstr ""
-
-#: ../wpuf-add-post.php:189
-msgid "Please choose a category"
-msgstr ""
-
-#: ../wpuf-add-post.php:194
-#: ../wpuf-edit-post.php:207
-msgid "Empty post content"
-msgstr ""
-
-#: ../wpuf-add-post.php:220
-#: ../wpuf-edit-post.php:229
-#, php-format
-msgid "%s is missing"
-msgstr ""
-
-#: ../wpuf-editprofile.php:56
+#: ../class/edit-profile.php:66
 msgid "<strong>Success</strong>: Profile updated"
 msgstr ""
 
-#: ../wpuf-editprofile.php:82
+#: ../class/edit-profile.php:92 ../class/forms.php:121
 msgid "Name"
 msgstr ""
 
-#: ../wpuf-editprofile.php:86
-#: ../wpuf-edit-user.php:89
-#: ../wpuf-edit-user.php:141
-msgid "Username"
-msgstr ""
-
-#: ../wpuf-editprofile.php:87
+#: ../class/edit-profile.php:97
 msgid "Usernames cannot be changed."
 msgstr ""
 
-#: ../wpuf-editprofile.php:90
+#: ../class/edit-profile.php:100
 msgid "First Name"
 msgstr ""
 
-#: ../wpuf-editprofile.php:95
+#: ../class/edit-profile.php:105
 msgid "Last Name"
 msgstr ""
 
-#: ../wpuf-editprofile.php:100
+#: ../class/edit-profile.php:110
 msgid "Nickname"
 msgstr ""
 
-#: ../wpuf-editprofile.php:100
-#: ../wpuf-editprofile.php:141
+#: ../class/edit-profile.php:110 ../class/edit-profile.php:151
 msgid "(required)"
 msgstr ""
 
-#: ../wpuf-editprofile.php:105
+#: ../class/edit-profile.php:115
 msgid "Display to Public as"
 msgstr ""
 
-#: ../wpuf-editprofile.php:137
+#: ../class/edit-profile.php:147
 msgid "Contact Info"
 msgstr ""
 
-#: ../wpuf-editprofile.php:141
+#: ../class/edit-profile.php:151
 msgid "E-mail"
 msgstr ""
 
-#: ../wpuf-editprofile.php:146
+#: ../class/edit-profile.php:156
 msgid "Website"
 msgstr ""
 
-#: ../wpuf-editprofile.php:164
+#: ../class/edit-profile.php:174
 msgid "About Yourself"
 msgstr ""
 
-#: ../wpuf-editprofile.php:168
+#: ../class/edit-profile.php:178
 msgid "Biographical Info"
 msgstr ""
 
-#: ../wpuf-editprofile.php:170
-msgid "Share a little biographical information to fill out your profile. This may be shown publicly."
+#: ../class/edit-profile.php:180
+msgid ""
+"Share a little biographical information to fill out your profile. This may "
+"be shown publicly."
 msgstr ""
 
-#: ../wpuf-editprofile.php:173
+#: ../class/edit-profile.php:183
 msgid "New Password"
 msgstr ""
 
-#: ../wpuf-editprofile.php:179
+#: ../class/edit-profile.php:189
 msgid "Confirm Password"
 msgstr ""
 
-#: ../wpuf-editprofile.php:181
+#: ../class/edit-profile.php:191
 msgid "Type your new password again."
 msgstr ""
 
-#: ../wpuf-editprofile.php:186
+#: ../class/edit-profile.php:196
 msgid "Password Strength"
 msgstr ""
 
-#: ../wpuf-editprofile.php:188
+#: ../class/edit-profile.php:198
 msgid "Strength indicator"
 msgstr ""
 
-#: ../wpuf-editprofile.php:211
+#: ../class/edit-profile.php:221
 msgid "Update Profile"
 msgstr ""
 
-#: ../wpuf-editprofile.php:230
+#: ../class/edit-profile.php:240
 msgid "WPUF Post Lock"
 msgstr ""
 
-#: ../wpuf-editprofile.php:233
+#: ../class/edit-profile.php:243
 msgid "Lock Post:"
 msgstr ""
 
-#: ../wpuf-editprofile.php:239
+#: ../class/edit-profile.php:249
 msgid "Lock user from creating new post."
 msgstr ""
 
-#: ../wpuf-editprofile.php:244
+#: ../class/edit-profile.php:254
 msgid "Lock Reason:"
 msgstr ""
 
-#: ../wpuf-editprofile.php:264
+#: ../class/edit-profile.php:274
 msgid "WPUF Subscription"
 msgstr ""
 
-#: ../wpuf-editprofile.php:268
+#: ../class/edit-profile.php:278
 msgid "Pack:"
 msgstr ""
 
-#: ../wpuf-editprofile.php:274
+#: ../class/edit-profile.php:284
 msgid "Post Count:"
 msgstr ""
 
-#: ../wpuf-edit-user.php:22
-msgid "User doesn't exists"
+#: ../class/edit-profile.php:290
+msgid "Validity:"
 msgstr ""
 
-#: ../wpuf-edit-user.php:33
-msgid "You don't have permission for this purpose"
+#: ../class/form-posting.php:39
+msgid "reCAPTCHA validation failed"
 msgstr ""
 
-#: ../wpuf-edit-user.php:74
-msgid "User Deleted"
+#: ../class/form-posting.php:270
+msgid "Something went wrong"
 msgstr ""
 
-#: ../wpuf-edit-user.php:90
-msgid "Action"
+#: ../class/form-posting.php:335
+msgid "I don't know how to edit this post, I don't have the form ID"
 msgstr ""
 
-#: ../wpuf-edit-user.php:116
-#: ../wpuf-edit-user.php:174
-msgid "Add New User"
+#: ../class/form-posting.php:632
+msgid "Insert Photo"
 msgstr ""
 
-#: ../wpuf-edit-user.php:129
-msgid "User Added"
+#: ../class/form-posting.php:677
+msgid "Select Image"
 msgstr ""
 
-#: ../wpuf-edit-user.php:149
-msgid "Email"
+#: ../class/form-posting.php:816
+msgid "Select File(s)"
 msgstr ""
 
-#: ../wpuf-edit-user.php:157
-msgid "Role"
+#: ../class/form-posting.php:1010 ../class/form-posting.php:1016
+msgid "-- Select --"
 msgstr ""
 
-#: ../wpuf-edit-user.php:201
-msgid "<strong>ERROR</strong>: Please enter a username."
+#: ../class/form-template.php:51
+msgid "Remove"
 msgstr ""
 
-#: ../wpuf-edit-user.php:203
-msgid "<strong>ERROR</strong>: This username is invalid because it uses illegal characters. Please enter a valid username."
+#: ../class/form-template.php:52
+msgid "Toggle"
 msgstr ""
 
-#: ../wpuf-edit-user.php:206
-msgid "<strong>ERROR</strong>: This username is already registered, please choose another one."
+#: ../class/form-template.php:80
+msgid "Required"
 msgstr ""
 
-#: ../wpuf-edit-user.php:211
-msgid "<strong>ERROR</strong>: Please type your e-mail address."
+#: ../class/form-template.php:91
+msgid "Field Label"
 msgstr ""
 
-#: ../wpuf-edit-user.php:213
-msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+#: ../class/form-template.php:97
+msgid "Meta Key"
 msgstr ""
 
-#: ../wpuf-edit-user.php:216
-msgid "<strong>ERROR</strong>: This email is already registered, please choose another one."
+#: ../class/form-template.php:109
+msgid "Help text"
 msgstr ""
 
-#: ../wpuf-edit-user.php:239
+#: ../class/form-template.php:129 ../class/form-template.php:172
+#: ../class/form-template.php:653
+msgid "Placeholder text"
+msgstr ""
+
+#: ../class/form-template.php:134 ../class/form-template.php:177
+#: ../class/form-template.php:658
+msgid "Default value"
+msgstr ""
+
+#: ../class/form-template.php:139 ../class/form-template.php:663
+msgid "Size"
+msgstr ""
+
+#: ../class/form-template.php:162
+msgid "Rows"
+msgstr ""
+
+#: ../class/form-template.php:167 ../class/form-template.php:668
+msgid "Columns"
+msgstr ""
+
+#: ../class/form-template.php:182
+msgid "Enable Rich textarea"
+msgstr ""
+
+#: ../class/form-template.php:306
+msgid "Enable Image Insertion"
+msgstr ""
+
+#: ../class/form-template.php:312
+msgid "Enable image upload in post area"
+msgstr ""
+
+#: ../class/form-template.php:355 ../class/form-template.php:513
+#: ../class/form-template.php:551
+msgid "Enter maximum upload size limit in MB"
+msgstr ""
+
+#: ../class/form-template.php:367 ../class/form-template.php:525
+#: ../class/form-template.php:563
+msgid "Max. file size"
+msgstr ""
+
+#: ../class/form-template.php:514 ../class/form-template.php:552
+msgid "Number of images can be uploaded"
+msgstr ""
+
+#: ../class/form-template.php:530 ../class/form-template.php:568
+msgid "Max. files"
+msgstr ""
+
+#: ../class/form-template.php:573 ../class/upload.php:37
+msgid "Allowed Files"
+msgstr ""
+
+#: ../class/form-template.php:645
+msgid "Multiple Column"
+msgstr ""
+
+#: ../class/form-template.php:719
+msgid "HTML Codes"
+msgstr ""
+
+#: ../class/form-template.php:746
+msgid "Description"
+msgstr ""
+
+#: ../class/form-template.php:770
+msgid "Type"
+msgstr ""
+
+#: ../class/form-template.php:772 ../class/forms.php:307
+msgid "Dropdown"
+msgstr ""
+
+#: ../class/form-template.php:773 ../class/forms.php:308
+msgid "Multi Select"
+msgstr ""
+
+#: ../class/form-template.php:774 ../class/forms.php:310
+msgid "Checkbox"
+msgstr ""
+
+#: ../class/form-template.php:779
+msgid "Exclude terms"
+msgstr ""
+
+#: ../class/form-template.php:808
 #, php-format
-msgid "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href=\"mailto:%s\">webmaster</a> !"
+msgid ""
+"Insert your public key and private key in <a href='%s'>plugin settings</a>. "
+"<a href='https://www.google.com/recaptcha/' target='_blank'>Register</a> "
+"first if you don't have any keys."
 msgstr ""
 
-#: ../wpuf-functions.php:63
-msgid "Live"
+#: ../class/forms.php:48 ../class/forms.php:57 ../class/forms.php:59
+msgid "Forms"
 msgstr ""
 
-#: ../wpuf-functions.php:67
-msgid "Offline"
+#: ../class/forms.php:58
+msgid "Form"
 msgstr ""
 
-#: ../wpuf-functions.php:71
-msgid "Awaiting Approval"
+#: ../class/forms.php:60
+msgid "Add Form"
 msgstr ""
 
-#: ../wpuf-functions.php:74
-msgid "Scheduled"
+#: ../class/forms.php:61
+msgid "Add New Form"
 msgstr ""
 
-#: ../wpuf-functions.php:99
-msgid "Please wait..."
+#: ../class/forms.php:63
+msgid "Edit Form"
 msgstr ""
 
-#: ../wpuf-functions.php:247
-msgid "Attachment file is too big"
+#: ../class/forms.php:64
+msgid "New Form"
 msgstr ""
 
-#: ../wpuf-functions.php:252
-msgid "Invalid attachment file type"
+#: ../class/forms.php:65 ../class/forms.php:66
+msgid "View Form"
 msgstr ""
 
-#: ../wpuf-edit-post.php:68
-msgid "Invalid post"
+#: ../class/forms.php:67
+msgid "Search Form"
 msgstr ""
 
-#: ../wpuf-edit-post.php:71
-msgid "Post Editing is disabled"
+#: ../class/forms.php:68
+msgid "No Form Found"
 msgstr ""
 
-#: ../wpuf-edit-post.php:74
-msgid "Invalid post id"
+#: ../class/forms.php:69
+msgid "No Form Found in Trash"
 msgstr ""
 
-#: ../wpuf-edit-post.php:162
+#: ../class/forms.php:70
+msgid "Parent Form"
+msgstr ""
+
+#: ../class/forms.php:78
+msgid "Form Name"
+msgstr ""
+
+#: ../class/forms.php:79
+msgid "Shortcode"
+msgstr ""
+
+#: ../class/forms.php:96
+msgid "Form Settings"
+msgstr ""
+
+#: ../class/forms.php:97
+msgid "Form Editor"
+msgstr ""
+
+#: ../class/forms.php:98
+msgid "Form Elements"
+msgstr ""
+
+#: ../class/forms.php:114
+msgid "This page is restricted. Please Log in / Register to view this page."
+msgstr ""
+
+#: ../class/forms.php:126
+msgid "Post saved"
+msgstr ""
+
+#: ../class/forms.php:129
+msgid "Submit"
+msgstr ""
+
+#: ../class/forms.php:130
 msgid "Update"
 msgstr ""
 
-#: ../wpuf-edit-post.php:254
-msgid "Post updated succesfully."
+#: ../class/forms.php:134
+msgid "Post Type"
 msgstr ""
 
-#: ../extra/custom_hooks.php:25
-msgid "Publish Time:"
+#: ../class/forms.php:153
+msgid "Post Status"
 msgstr ""
 
-#: ../extra/custom_hooks.php:54
-msgid "Expiration Time:"
+#: ../class/forms.php:168
+msgid "Guest Post"
 msgstr ""
 
-#: ../extra/custom_hooks.php:64
-msgid "Post expiration time in hour after publishing."
+#: ../class/forms.php:173
+msgid "Enable Guest Post"
 msgstr ""
 
-#: ../extra/custom_hooks.php:131
-#, php-format
-msgid "[%s] Payment Received"
+#: ../class/forms.php:175
+msgid "Unregistered users will be able to submit posts"
 msgstr ""
 
-#: ../extra/custom_hooks.php:132
-#, php-format
-msgid "New payment received at %s"
+#: ../class/forms.php:180
+msgid "User Details"
 msgstr ""
 
-#: ../admin/wpuf-admin.php:12
-msgid "Options saved"
+#: ../class/forms.php:185
+msgid "Require Name and Email address"
 msgstr ""
 
-#: ../admin/wpuf-admin.php:32
-#: ../admin/wpuf-admin.php:43
-msgid "Save Changes"
+#: ../class/forms.php:187
+msgid ""
+"If requires, users will be automatically registered to the site using the "
+"name and email address"
 msgstr ""
 
-#: ../admin/wpuf-admin.php:75
-msgid "Settings Saved"
+#: ../class/forms.php:192
+msgid "Name Label"
 msgstr ""
 
-#: ../admin/wpuf-admin-subscription.php:118
-msgid "Add Package"
+#: ../class/forms.php:197
+msgid "Label text for name field"
 msgstr ""
 
-#: ../admin/wpuf-admin-subscription.php:244
-msgid "Update Package"
+#: ../class/forms.php:202
+msgid "E-Mail Label"
 msgstr ""
 
-#: ../admin/wpuf-options-value.php:233
-msgid "Your settings have been saved."
+#: ../class/forms.php:207
+msgid "Label text for email field"
 msgstr ""
 
-#: ../admin/wpuf-admin-meta.php:86
-#: ../admin/wpuf-admin-taxonomy.php:86
-msgid "Add Field"
+#: ../class/forms.php:212
+msgid "Unauthorized Message"
 msgstr ""
 
-#: ../admin/wpuf-admin-meta.php:241
-#: ../admin/wpuf-admin-taxonomy.php:241
-msgid "Update Field"
+#: ../class/forms.php:215
+msgid "Not logged in users will see this message"
 msgstr ""
 
+#: ../class/forms.php:220
+msgid "Redirect To"
+msgstr ""
+
+#: ../class/forms.php:225
+msgid "Newly created post"
+msgstr ""
+
+#: ../class/forms.php:226
+msgid "Same Page"
+msgstr ""
+
+#: ../class/forms.php:227
+msgid "To a page"
+msgstr ""
+
+#: ../class/forms.php:228
+msgid "To a custom URL"
+msgstr ""
+
+#: ../class/forms.php:237
+msgid "After successfull submit, where the page will redirect to"
+msgstr ""
+
+#: ../class/forms.php:243
+msgid "Message to show"
+msgstr ""
+
+#: ../class/forms.php:250
+msgid "Page"
+msgstr ""
+
+#: ../class/forms.php:265
+msgid "Custom URL"
+msgstr ""
+
+#: ../class/forms.php:272
+msgid "Submit Button text"
+msgstr ""
+
+#: ../class/forms.php:279
+msgid "Update Button text"
+msgstr ""
+
+#: ../class/forms.php:293
+msgid "Post Fields"
+msgstr ""
+
+#: ../class/forms.php:295
+msgid "Post Title"
+msgstr ""
+
+#: ../class/forms.php:296
+msgid "Post Body"
+msgstr ""
+
+#: ../class/forms.php:297
+msgid "Excerpt"
+msgstr ""
+
+#: ../class/forms.php:298
+msgid "Tags"
+msgstr ""
+
+#: ../class/forms.php:299
+msgid "Category"
+msgstr ""
+
+#: ../class/forms.php:303
+msgid "Custom Fields"
+msgstr ""
+
+#: ../class/forms.php:305
+msgid "Text"
+msgstr ""
+
+#: ../class/forms.php:306
+msgid "Textarea"
+msgstr ""
+
+#: ../class/forms.php:309
+msgid "Radio"
+msgstr ""
+
+#: ../class/forms.php:311
+msgid "Image Upload"
+msgstr ""
+
+#: ../class/forms.php:312
+msgid "File Upload"
+msgstr ""
+
+#: ../class/forms.php:313
+msgid "URL"
+msgstr ""
+
+#: ../class/forms.php:315
+msgid "Repeat Field"
+msgstr ""
+
+#: ../class/forms.php:319
+msgid "Custom Taxonomies"
+msgstr ""
+
+#: ../class/forms.php:330
+msgid "No custom taxonomies found"
+msgstr ""
+
+#: ../class/forms.php:334
+msgid "Others"
+msgstr ""
+
+#: ../class/forms.php:336
+msgid "reCaptcha"
+msgstr ""
+
+#: ../class/forms.php:337
+msgid "Section Break"
+msgstr ""
+
+#: ../class/forms.php:338
+msgid "HTML"
+msgstr ""
+
+#: ../class/forms.php:398
+msgid "Preview Form"
+msgstr ""
+
+#: ../class/settings.php:35
+msgid "WP User Frontend"
+msgstr ""
+
+#: ../class/settings.php:40
+msgid "Settings"
+msgstr ""
+
+#: ../class/settings.php:67
+msgid "WP User Frontend: Settings"
+msgstr ""
+
+#: ../class/upload.php:32
+msgid "Are you sure?"
+msgstr ""
