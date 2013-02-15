@@ -30,7 +30,18 @@ class WPUF_Form_Add {
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
         // var_dump($post_vars, $taxonomy_vars, $meta_vars);
 
-        // print_r( $_POST );
+        if (isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
+            $resp = recaptcha_check_answer( wpuf_get_option('recaptcha_private'), $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+
+            if (!$resp->is_valid) {
+                echo json_encode( array(
+                    'success' => false,
+                    'error' => __( 'reCAPTCHA validation failed', 'wpuf' )
+                ));
+
+                exit;
+            }
+        }
 
         $post_author = null;
         $default_post_author = wpuf_get_option( 'default_post_owner' );
@@ -1036,7 +1047,7 @@ class WPUF_Form_Add {
 
         ?>
         <div class="wpuf-fields">
-            reCaptcha
+            <?php echo recaptcha_get_html( wpuf_get_option('recaptcha_public') ); ?>
         </div>
         <?php
     }

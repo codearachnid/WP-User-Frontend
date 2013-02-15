@@ -23,6 +23,7 @@ if ( is_admin() ) {
 
 require_once 'lib/form-add.php';
 require_once 'lib/upload.php';
+require_once 'lib/recaptchalib.php';
 
  require_once 'wpuf-dashboard.php';
  require_once 'wpuf-editprofile.php';

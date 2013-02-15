@@ -197,7 +197,6 @@
 
             $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
                 var res = $.parseJSON(res);
-                console.log(res);
 
                 if ( res.success) {
                     if( res.show_message == true) {
@@ -257,8 +256,6 @@
                 return;
             };
 
-            // console.log('uploading image');
-
             var imageUploader = new plupload.Uploader({
                 runtimes: 'html5,flash,html4',
                 browse_button: button,
@@ -277,10 +274,8 @@
                 filters: [{
                     title: 'Allowed Files',
                     extensions: 'jpg,jpeg,gif,png,bmp'
-                }],
+                }]
             });
-
-            // console.log(wpuf_frontend_upload.plupload.url);
 
             imageUploader.bind('Init', function(up, params) {
                 // console.log("Current runtime environment: " + params.runtime);
@@ -333,7 +328,6 @@
                 } else {
                     alert(res.error);
                 }
-                // console.log("File uploaded, File: " + file.name + ", Response: " + response.response);
             });
 
             imageUploader.init();

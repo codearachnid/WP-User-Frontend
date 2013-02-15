@@ -38,7 +38,7 @@
             filters: [{
                 title: 'Allowed Files',
                 extensions: allowed_type
-            }],
+            }]
         });
 
         //attach event handlers
@@ -57,14 +57,10 @@
     WPUF_Uploader.prototype = {
 
         init: function (up, params) {
-            // console.log('uploader init');
-            // dokan_hideUploadBtn();
-            // console.log(this.count, this.max);
             this.showHide();
         },
 
         showHide: function () {
-            // console.log('max: ' + this.max + ', count: ' + this.count);
 
             if ( this.count >= this.max) {
                 $('#' + this.container).find('.file-selector').hide();

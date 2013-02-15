@@ -308,13 +308,12 @@ class WPUF_Forms {
             <button class="button" data-name="custom_multiselect" data-type="multiselect"><?php _e( 'Multi Select', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_radio" data-type="radio"><?php _e( 'Radio', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_checkbox" data-type="checkbox"><?php _e( 'Checkbox', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_html" data-type="html"><?php _e( 'HTML', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_image" data-type="image"><?php _e( 'Image Upload', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_file" data-type="file"><?php _e( 'File Upload', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_url" data-type="url"><?php _e( 'URL', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_email" data-type="email"><?php _e( 'Email', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_repeater" data-type="repeat"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
-            <button class="button" data-name="section_break" data-type="break"><?php _e( 'Section Break', 'wpuf' ); ?></button>
+
         </div>
 
         <h2><?php _e( 'Custom Taxonomies', 'wpuf' ); ?></h2>
@@ -335,6 +334,8 @@ class WPUF_Forms {
         <h2><?php _e( 'Others', 'wpuf' ); ?></h2>
         <div class="wpuf-form-buttons">
             <button class="button" data-name="recaptcha" data-type="captcha"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
+            <button class="button" data-name="section_break" data-type="break"><?php _e( 'Section Break', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_html" data-type="html"><?php _e( 'HTML', 'wpuf' ); ?></button>
         </div>
         <?php
     }
