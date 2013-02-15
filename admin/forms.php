@@ -331,6 +331,11 @@ class WPUF_Forms {
                 _e('No custom taxonomies found', 'wpuf');
             }?>
         </div>
+
+        <h2><?php _e( 'Others', 'wpuf' ); ?></h2>
+        <div class="wpuf-form-buttons">
+            <button class="button" data-name="recaptcha" data-type="captcha"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
+        </div>
         <?php
     }
 
@@ -484,6 +489,10 @@ class WPUF_Forms {
 
             case 'section_break':
                 WPUF_Form_Template::section_break( $field_id, 'Section Break' );
+                break;
+
+            case 'recaptcha':
+                WPUF_Form_Template::recaptcha( $field_id, 'reCaptcha' );
                 break;
 
 

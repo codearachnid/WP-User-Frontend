@@ -387,7 +387,7 @@ class WPUF_Form_Add {
                     foreach ($form_vars as $key => $form_field) {
 
 
-                        printf( '<li class="el-%s">', $form_field['name'] );
+                        printf( '<li class="el-%s">', isset( $form_field['name'] ) ? $form_field['name'] : 'class' );
 
                         switch ($form_field['input_type']) {
                             case 'text':
@@ -444,6 +444,10 @@ class WPUF_Form_Add {
 
                             case 'html':
                                 $this->html( $form_field );
+                                break;
+
+                            case 'recaptcha':
+                                $this->recaptcha( $form_field );
                                 break;
 
                             default:
@@ -533,7 +537,7 @@ class WPUF_Form_Add {
     }
 
     function required_mark( $attr ) {
-        if ( $attr['required'] == 'yes' ) {
+        if ( isset( $attr['required'] ) && $attr['required'] == 'yes' ) {
             return ' <span class="required">*</span>';
         }
     }
@@ -554,7 +558,7 @@ class WPUF_Form_Add {
     function label( $attr ) {
         ?>
         <div class="wpuf-label">
-            <label for="wpuf-<?php echo $attr['name']; ?>"><?php echo $attr['label'] . $this->required_mark( $attr ); ?></label>
+            <label for="wpuf-<?php echo isset( $attr['name'] ) ? $attr['name'] : 'cls'; ?>"><?php echo $attr['label'] . $this->required_mark( $attr ); ?></label>
         </div>
         <?php
     }
@@ -1019,7 +1023,22 @@ class WPUF_Form_Add {
     }
 
     function html( $attr ) {
-        echo do_shortcode( $attr['html'] );
+        $this->label( $attr );
+        ?>
+        <div class="wpuf-fields">
+            <?php echo do_shortcode( $attr['html'] ); ?>
+        </div>
+        <?php
+    }
+
+    function recaptcha( $attr ) {
+        $this->label( $attr );
+
+        ?>
+        <div class="wpuf-fields">
+            reCaptcha
+        </div>
+        <?php
     }
 
     function section_break( $attr ) {

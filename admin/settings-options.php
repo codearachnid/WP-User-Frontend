@@ -139,6 +139,14 @@ function wpuf_settings_fields() {
                 )
             ),
             array(
+                'name' => 'recaptcha_public',
+                'label' => __( 'reCAPTCHA Public Key', 'wpuf' ),
+            ),
+            array(
+                'name' => 'recaptcha_private',
+                'label' => __( 'reCAPTCHA Private Key', 'wpuf' ),
+            ),
+            array(
                 'name' => 'custom_css',
                 'label' => __( 'Custom CSS codes', 'wpuf' ),
                 'desc' => __( 'If you want to add your custom CSS code, it will be added on page header wrapped with style tag', 'wpuf' ),

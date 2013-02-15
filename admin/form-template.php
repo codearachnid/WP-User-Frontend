@@ -704,7 +704,10 @@ class WPUF_Form_Template {
     }
 
     public static function custom_html( $field_id, $label, $values = array() ) {
+        $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
         $html_name = sprintf( '%s[%d][html]', self::$input_name, $field_id );
+
+        $title_value = $values ? esc_attr( $values['label'] ) : '';
         $html_value = $values ? esc_attr( $values['html'] ) : '';
         ?>
         <li class="custom-field custom_html">
@@ -713,6 +716,11 @@ class WPUF_Form_Template {
             <?php self::hidden_field( "[$field_id][template]", 'custom_html' ); ?>
 
             <div class="wpuf-form-holder">
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Title', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" title="Title of the section" name="<?php echo $title_name; ?>" value="<?php echo esc_attr( $title_value ); ?>" />
+                </div> <!-- .wpuf-form-rows -->
+
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'HTML Codes', 'wpuf' ); ?></label>
                     <textarea class="smallipopInput" title="Paste your HTML codes, WordPress shortcodes will also work here" name="<?php echo $html_name; ?>" rows="10"><?php echo esc_textarea( $html_value ); ?></textarea>
@@ -778,6 +786,35 @@ class WPUF_Form_Template {
                     <input type="text" class="smallipopInput" name="<?php echo $exclude_name; ?>" title="Enter the term ID's as comma separated to exclude in the form" value="<?php echo $exclude_value; ?>" />
                 </div> <!-- .wpuf-form-rows -->
 
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
+
+    public static function recaptcha( $field_id, $label, $values = array() ) {
+        $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
+        $html_name = sprintf( '%s[%d][html]', self::$input_name, $field_id );
+
+        $title_value = $values ? esc_attr( $values['label'] ) : '';
+        $html_value = $values ? esc_attr( $values['html'] ) : '';
+        ?>
+        <li class="custom-field custom_html">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'recaptcha' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'recaptcha' ); ?>
+
+            <div class="wpuf-form-holder">
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Title', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <input type="text" class="smallipopInput" title="Title of the section" name="<?php echo $title_name; ?>" value="<?php echo esc_attr( $title_value ); ?>" />
+
+                        <div class="description" style="margin-top: 8px;">
+                            <?php printf( __( "Insert your public key and private key in <a href='%s'>plugin settings</a>. <a href='https://www.google.com/recaptcha/' target='_blank'>Register</a> first if you don't have any keys." ), admin_url( 'admin.php?page=wpuf-settings' ) ); ?>
+                        </div>
+                    </div> <!-- .wpuf-form-rows -->
+                </div>
             </div> <!-- .wpuf-form-holder -->
         </li>
         <?php
