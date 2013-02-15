@@ -32,12 +32,12 @@ class WPUF_Settings {
      * @since 1.0
      */
     function admin_menu() {
-        add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'WP User Frontend', 'wpuf' ), 'activate_plugins', 'wpuf-admin-opt', array($this, 'plugin_page'), null );
+        add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'WP User Frontend', 'wpuf' ), 'delete_others_pages', 'wpuf-admin-opt', array($this, 'plugin_page'), null );
         // add_submenu_page( 'wpuf-admin-opt', __( 'Custom Fields', 'wpuf' ), __( 'Custom Fields', 'wpuf' ), 'activate_plugins', 'wpuf_custom_fields', 'wpuf_custom_fields' );
         //add_submenu_page( 'wpuf-admin-opt', 'Custom Taxonomies', 'Custom Taxonomies', 'activate_plugins', 'wpuf_custom_tax', 'wpuf_taxonomy_fields' );
         // add_submenu_page( 'wpuf-admin-opt', __( 'Subscription', 'wpuf' ), __( 'Subscription', 'wpuf' ), 'activate_plugins', 'wpuf_subscription', 'wpuf_subscription_admin' );
         // add_submenu_page( 'wpuf-admin-opt', __( 'Transaction', 'wpuf' ), __( 'Transaction', 'wpuf' ), 'activate_plugins', 'wpuf_transaction', 'wpuf_transaction' );
-        add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'activate_plugins', 'wpuf-settings', array($this, 'plugin_page') );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'delete_others_pages', 'wpuf-settings', array($this, 'plugin_page') );
     }
 
     /**
