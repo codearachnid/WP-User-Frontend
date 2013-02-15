@@ -63,21 +63,17 @@ class WPUF_Form_Add {
                         wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
 
                         $post_author = $user_id;
-
-                        WP_User_Frontend::log('new reg user id', $post_author);
                     }
                 }
 
                 // guest post is enabled and details are off
             } elseif ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false') {
                 $post_author = $default_post_author;
-                WP_User_Frontend::log('default in user id', $post_author);
             }
 
             // the user must be logged in already
         } else {
             $post_author = get_current_user_id();
-            WP_User_Frontend::log('loggged in user id', $post_author);
         }
 
         //validate the form
@@ -99,8 +95,6 @@ class WPUF_Form_Add {
         if ( isset( $_POST['post_id']) ) {
             $postarr['ID'] = $_POST['post_id'];
         }
-
-        WP_User_Frontend::log('postdata', print_r($postarr, true));
 
         // loop through custom fields
         // skip files, put in a key => value paired array for later executation
