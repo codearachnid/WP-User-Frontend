@@ -77,5 +77,3 @@ class WPUF_Settings {
         <?php
     }
 }
-
-$wpuf_settings = new WPUF_Settings();

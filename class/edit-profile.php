@@ -315,5 +315,3 @@ class WPUF_Edit_Profile {
     }
 
 }
-
-$edit_profile = new WPUF_Edit_Profile();

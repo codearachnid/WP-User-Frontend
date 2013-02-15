@@ -506,5 +506,3 @@ class WPUF_Forms {
     }
 
 }
-
-$wpuf_forms = new WPUF_Forms();

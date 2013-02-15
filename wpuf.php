@@ -1,38 +1,54 @@
 <?php
-
 /*
 Plugin Name: WP User Frontend
 Plugin URI: http://tareq.wedevs.com/2011/01/new-plugin-wordpress-user-frontend/
 Description: Post, Edit, Delete posts and edit profile without coming to backend
 Author: Tareq Hasan
-Version: 1.1
+Version: 2.0
 Author URI: http://tareq.weDevs.com
 */
 
 if ( !class_exists( 'WeDevs_Settings_API' ) ) {
-    require_once dirname( __FILE__ ) . '/lib/class.settings-api.php';
+    require_once dirname( __FILE__ ) . '/class/class.settings-api.php';
 }
 
-require_once 'wpuf-functions.php';
-require_once 'admin/settings-options.php';
+require_once dirname( __FILE__ ) . '/wpuf-functions.php';
+require_once dirname( __FILE__ ) . '/admin/settings-options.php';
 
-if ( is_admin() ) {
-    require_once 'admin/settings.php';
-    require_once 'admin/forms.php';
+if ( !is_admin() ) {
+    require_once dirname( __FILE__ ) . '/lib/recaptchalib.php';
+    require_once dirname( __FILE__ ) . '/wpuf-edit-user.php';
 }
 
-require_once 'lib/form-add.php';
-require_once 'lib/upload.php';
-require_once 'lib/recaptchalib.php';
+/**
+ * Autoload class files on demand
+ *
+ * `WPUF_Form_Posting` becomes => form-posting.php
+ * `WPUF_Dashboard` becomes => dashboard.php
+ *
+ * @param string $class requested class name
+ */
+function wpuf_autoload( $class ) {
+    $class = str_replace( 'WPUF_', '', $class );
+    $class = explode( '_', $class );
 
- require_once 'wpuf-dashboard.php';
- require_once 'wpuf-editprofile.php';
- require_once 'wpuf-edit-user.php';
+    $class_name = isset( $class[1] ) ? $class[0] . '-' . $class[1] : $class[0];
+    $filename = dirname( __FILE__ ) . '/class/' . strtolower( $class_name ) . '.php';
+
+    if ( file_exists( $filename ) ) {
+        require_once $filename;
+    }
+}
+
+spl_autoload_register( 'wpuf_autoload' );
 
 class WP_User_Frontend {
 
     function __construct() {
-//        register_activation_hook( __FILE__, array($this, 'install') );
+
+        $this->instantiate();
+
+        // register_activation_hook( __FILE__, array($this, 'install') );
         register_deactivation_hook( __FILE__, array($this, 'uninstall') );
 
         add_action( 'admin_init', array($this, 'block_admin_access') );
@@ -50,19 +66,6 @@ class WP_User_Frontend {
         global $wpdb;
 
         flush_rewrite_rules( false );
-
-        $sql_custom = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpuf_customfields (
-         `id` int(11) NOT NULL AUTO_INCREMENT,
-         `field` varchar(30) NOT NULL,
-         `type` varchar(20) NOT NULL,
-         `values` text NOT NULL,
-         `label` varchar(200) NOT NULL,
-         `desc` varchar(200) NOT NULL,
-         `required` varchar(5) NOT NULL,
-         `region` varchar(20) NOT NULL DEFAULT 'top',
-         `order` int(1) NOT NULL,
-         PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8";
 
         $sql_subscription = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpuf_subscription (
         `id` mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -92,13 +95,25 @@ class WP_User_Frontend {
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 
-        $wpdb->query( $sql_custom );
         $wpdb->query( $sql_subscription );
         $wpdb->query( $sql_transaction );
     }
 
     function uninstall() {
 
+    }
+
+    function instantiate() {
+        new WPUF_Forms();
+
+        if (is_admin()) {
+            new WPUF_Settings();
+        } else {
+            new WPUF_Form_Posting();
+            new WPUF_Dashboard();
+            new WPUF_Edit_Profile();
+            new WPUF_Upload();
+        }
     }
 
     /**

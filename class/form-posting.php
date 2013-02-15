@@ -1,6 +1,6 @@
 <?php
 
-class WPUF_Form_Add {
+class WPUF_Form_Posting {
 
     protected $meta_key = 'wpuf_form';
     protected $separator = ', ';
@@ -1062,6 +1062,3 @@ class WPUF_Form_Add {
     }
 
 }
-
-
-new WPUF_Form_Add();

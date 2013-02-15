@@ -6,7 +6,7 @@
  * @since 1.0
  * @package wpuf
  */
-class WPUF_Uploader {
+class WPUF_Upload {
 
     function __construct() {
 
@@ -151,5 +151,3 @@ class WPUF_Uploader {
     }
 
 }
-
-$wpuf_feat_image = new WPUF_Uploader();
