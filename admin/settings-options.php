@@ -155,6 +155,13 @@ function wpuf_settings_fields() {
         ) ),
         'wpuf_dashboard' => apply_filters( 'wpuf_options_dashboard', array(
             array(
+                'name' => 'per_page',
+                'label' => __( 'Posts per page', 'wpuf' ),
+                'desc' => __( 'How many posts will be listed in a page', 'wpuf' ),
+                'type' => 'text',
+                'default' => '10'
+            ),
+            array(
                 'name' => 'show_user_bio',
                 'label' => __( 'Show user bio', 'wpuf' ),
                 'desc' => __( 'Users biographical info will be shown', 'wpuf' ),

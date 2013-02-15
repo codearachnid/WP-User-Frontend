@@ -87,9 +87,6 @@ class WPUF_Form_Posting {
             $post_author = get_current_user_id();
         }
 
-        //validate the form
-        $errors = array();
-
         $category = isset( $_POST['category'] ) ? $_POST['category'] : array();
         $postarr = array(
             'post_type' => $form_settings['post_type'],

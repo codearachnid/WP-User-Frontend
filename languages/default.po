@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP User Frontend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-15 20:41+0600\n"
-"PO-Revision-Date: 2013-02-15 20:41+0600\n"
+"POT-Creation-Date: 2013-02-15 20:54+0600\n"
+"PO-Revision-Date: 2013-02-15 20:54+0600\n"
 "Last-Translator: Tareq Hasan <tareq@wedevs.com>\n"
 "Language-Team: Tareq Hasan <tareq@wedevs.com>\n"
 "Language: en_BD\n"
@@ -231,13 +231,13 @@ msgstr ""
 
 #: ../admin/settings-options.php:75 ../admin/settings-options.php:86
 #: ../admin/settings-options.php:97 ../admin/settings-options.php:137
-#: ../admin/settings-options.php:192 ../class/form-template.php:85
+#: ../admin/settings-options.php:199 ../class/form-template.php:85
 msgid "Yes"
 msgstr ""
 
 #: ../admin/settings-options.php:76 ../admin/settings-options.php:87
 #: ../admin/settings-options.php:98 ../admin/settings-options.php:138
-#: ../admin/settings-options.php:193 ../class/form-template.php:86
+#: ../admin/settings-options.php:200 ../class/form-template.php:86
 msgid "No"
 msgstr ""
 
@@ -333,107 +333,115 @@ msgid ""
 msgstr ""
 
 #: ../admin/settings-options.php:159
-msgid "Show user bio"
+msgid "Posts per page"
 msgstr ""
 
 #: ../admin/settings-options.php:160
-msgid "Users biographical info will be shown"
+msgid "How many posts will be listed in a page"
 msgstr ""
 
 #: ../admin/settings-options.php:166
-msgid "Show post count"
+msgid "Show user bio"
 msgstr ""
 
 #: ../admin/settings-options.php:167
-msgid "Show how many posts are created by the user"
+msgid "Users biographical info will be shown"
 msgstr ""
 
 #: ../admin/settings-options.php:173
-msgid "Show Featured Image"
+msgid "Show post count"
 msgstr ""
 
 #: ../admin/settings-options.php:174
+msgid "Show how many posts are created by the user"
+msgstr ""
+
+#: ../admin/settings-options.php:180
+msgid "Show Featured Image"
+msgstr ""
+
+#: ../admin/settings-options.php:181
 msgid "Show featured image of the post"
 msgstr ""
 
-#: ../admin/settings-options.php:179
+#: ../admin/settings-options.php:186
 msgid "Featured Image size"
 msgstr ""
 
-#: ../admin/settings-options.php:187
+#: ../admin/settings-options.php:194
 msgid "Charge for posting"
 msgstr ""
 
-#: ../admin/settings-options.php:188
+#: ../admin/settings-options.php:195
 msgid "Charge user for submitting a post"
 msgstr ""
 
-#: ../admin/settings-options.php:198
+#: ../admin/settings-options.php:205
 msgid "Force pack purchase"
 msgstr ""
 
-#: ../admin/settings-options.php:199
+#: ../admin/settings-options.php:206
 msgid "When active, users must have to buy a pack for posting"
 msgstr ""
 
-#: ../admin/settings-options.php:203
+#: ../admin/settings-options.php:210
 msgid "Disable"
 msgstr ""
 
-#: ../admin/settings-options.php:204
+#: ../admin/settings-options.php:211
 msgid "Enable"
 msgstr ""
 
-#: ../admin/settings-options.php:209
+#: ../admin/settings-options.php:216
 msgid "Currency"
 msgstr ""
 
-#: ../admin/settings-options.php:241
+#: ../admin/settings-options.php:248
 msgid "Currency Symbol"
 msgstr ""
 
-#: ../admin/settings-options.php:247
+#: ../admin/settings-options.php:254
 msgid "Cost"
 msgstr ""
 
-#: ../admin/settings-options.php:248
+#: ../admin/settings-options.php:255
 msgid "Cost per post"
 msgstr ""
 
-#: ../admin/settings-options.php:254
+#: ../admin/settings-options.php:261
 msgid "Enable demo/sandbox mode"
 msgstr ""
 
-#: ../admin/settings-options.php:255
+#: ../admin/settings-options.php:262
 msgid ""
 "When sandbox mode is active, all payment gateway will be used in demo mode"
 msgstr ""
 
-#: ../admin/settings-options.php:261
+#: ../admin/settings-options.php:268
 msgid "Payment Page"
 msgstr ""
 
-#: ../admin/settings-options.php:262
+#: ../admin/settings-options.php:269
 msgid "This page will be used to process payment options"
 msgstr ""
 
-#: ../admin/settings-options.php:268
+#: ../admin/settings-options.php:275
 msgid "Payment Success Page"
 msgstr ""
 
-#: ../admin/settings-options.php:269
+#: ../admin/settings-options.php:276
 msgid "After payment users will be redirected here"
 msgstr ""
 
-#: ../admin/settings-options.php:275
+#: ../admin/settings-options.php:282
 msgid "Payment Gateways"
 msgstr ""
 
-#: ../admin/settings-options.php:276
+#: ../admin/settings-options.php:283
 msgid "Active payment gateways"
 msgstr ""
 
-#: ../admin/settings-options.php:284
+#: ../admin/settings-options.php:291
 msgid "Need Help?"
 msgstr ""
 
@@ -617,27 +625,27 @@ msgstr ""
 msgid "reCAPTCHA validation failed"
 msgstr ""
 
-#: ../class/form-posting.php:270
+#: ../class/form-posting.php:267
 msgid "Something went wrong"
 msgstr ""
 
-#: ../class/form-posting.php:335
+#: ../class/form-posting.php:332
 msgid "I don't know how to edit this post, I don't have the form ID"
 msgstr ""
 
-#: ../class/form-posting.php:632
+#: ../class/form-posting.php:629
 msgid "Insert Photo"
 msgstr ""
 
-#: ../class/form-posting.php:677
+#: ../class/form-posting.php:674
 msgid "Select Image"
 msgstr ""
 
-#: ../class/form-posting.php:816
+#: ../class/form-posting.php:813
 msgid "Select File(s)"
 msgstr ""
 
-#: ../class/form-posting.php:1010 ../class/form-posting.php:1016
+#: ../class/form-posting.php:1007 ../class/form-posting.php:1013
 msgid "-- Select --"
 msgstr ""
 

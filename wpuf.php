@@ -105,14 +105,14 @@ class WP_User_Frontend {
 
     function instantiate() {
         new WPUF_Forms();
+        new WPUF_Form_Posting();
+        new WPUF_Upload();
 
         if (is_admin()) {
             new WPUF_Settings();
         } else {
-            new WPUF_Form_Posting();
             new WPUF_Dashboard();
             new WPUF_Edit_Profile();
-            new WPUF_Upload();
         }
     }
 
