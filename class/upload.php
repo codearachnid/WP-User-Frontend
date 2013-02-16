@@ -117,10 +117,14 @@ class WPUF_Upload {
             $image = wp_mime_type_icon( $attach_id );
         }
 
-        $html = '<li class="image-wrap thumbnail" style="width: 150px">';
-        $html .= sprintf( '<div class="attachment-name"><img src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
-        $html .= sprintf( '<div class="caption"><a href="#" class="btn btn-danger btn-small attachment-delete" data-attach_id="%d">%s</a></div>', $attach_id, __( 'Delete', 'wpuf' ) );
-        $html .= sprintf( '<input type="hidden" name="wpuf_files[%s][]" value="%d" />', $type, $attach_id );
+        // $html = '<li class="image-wrap thumbnail" style="width: 150px">';
+        // $html .= sprintf( '<div class="attachment-name"><img src="%s" alt="%s" /></div>', $image, esc_attr( $attachment->post_title ) );
+        // $html .= sprintf( '<div class="caption"><a href="#" class="btn btn-danger btn-small attachment-delete" data-attach_id="%d">%s</a></div>', $attach_id, __( 'Delete', 'wpuf' ) );
+        // $html .= sprintf( '<input type="hidden" name="wpuf_files[%s][]" value="%d" />', $type, $attach_id );
+        // $html .= '</li>';
+
+        $html = '<li';
+        $html .= sprintf( '<img src="%s" alt="%s" />', $image, esc_attr( $attachment->post_title ) );
         $html .= '</li>';
 
         return $html;
