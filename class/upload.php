@@ -50,7 +50,7 @@ class WPUF_Upload {
             'size' => $_FILES['wpuf_file']['size']
         );
 
-        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+        // @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 
         $attach = $this->handle_upload( $upload );
 
