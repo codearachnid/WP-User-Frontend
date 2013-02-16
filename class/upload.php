@@ -61,8 +61,8 @@ class WPUF_Upload {
             if ($image_only) {
                 $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'full' );
             } else {
-                // $response['html'] = $this->attach_html( $attach['attach_id'] );
-                $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'thumbnail' );
+                $response['html'] = $this->attach_html( $attach['attach_id'] );
+                // $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'thumbnail' );
             }
 
             echo wp_send_json( $response );
@@ -125,7 +125,7 @@ class WPUF_Upload {
         // $html .= '</li>';
 
         $html = '<li>';
-        $html .= sprintf( "<img src='%s' alt='%s' />", $image, esc_attr( $attachment->post_title ) );
+        $html .= sprintf( "%s %s", $image, esc_attr( $attachment->post_title ) );
         $html .= '</li>';
 
         return $html;
