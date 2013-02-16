@@ -50,7 +50,7 @@ class WPUF_Upload {
             'size' => $_FILES['wpuf_file']['size']
         );
 
-        // @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 
         $attach = $this->handle_upload( $upload );
 
@@ -64,7 +64,7 @@ class WPUF_Upload {
                 $response['html'] = $this->attach_html( $attach['attach_id'] );
             }
 
-            echo json_encode( $response );
+            echo wp_send_json( $response );
             exit;
         }
 
