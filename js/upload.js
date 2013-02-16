@@ -111,7 +111,7 @@
             var res = JSON.parse(response.response);
 
             // console.log( typeof response, typeof response.response);
-            // console.log(response, response.response, res);
+            console.log(response, response.response, res);
 
             $('#' + file.id + " b").html("100%");
             $('#' + file.id).remove();
