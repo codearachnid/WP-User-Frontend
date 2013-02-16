@@ -61,7 +61,8 @@ class WPUF_Upload {
             if ($image_only) {
                 $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'full' );
             } else {
-                $response['html'] = $this->attach_html( $attach['attach_id'] );
+                // $response['html'] = $this->attach_html( $attach['attach_id'] );
+                $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'thumbnail' );
             }
 
             echo wp_send_json( $response );
