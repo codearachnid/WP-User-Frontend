@@ -108,16 +108,19 @@
         },
 
         uploaded: function (up, file, response) {
-            // var res = $.parseJSON(response.response);
+            var res = $.parseJSON(response.response);
+
+            // console.log( typeof response, typeof response.response);
+            console.log(response, response.response, res);
 
             $('#' + file.id + " b").html("100%");
             $('#' + file.id).remove();
 
-            if(response.response.success) {
+            if(res.success) {
                 var $container = $('#' + this.container).find('.wpuf-attachment-list');
-                $container.append(response.response.html);
+                $container.append(res.html);
             } else {
-                alert(response.response.error);
+                alert(res.error);
 
                 this.count -= 1;
                 this.showHide();
