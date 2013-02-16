@@ -123,8 +123,8 @@ class WPUF_Upload {
         // $html .= sprintf( '<input type="hidden" name="wpuf_files[%s][]" value="%d" />', $type, $attach_id );
         // $html .= '</li>';
 
-        $html = '<li';
-        $html .= sprintf( '<img src="%s" alt="%s" />', $image, esc_attr( $attachment->post_title ) );
+        $html = '<li>';
+        $html .= sprintf( "<img src='%s' alt='%s' />", $image, esc_attr( $attachment->post_title ) );
         $html .= '</li>';
 
         return $html;
