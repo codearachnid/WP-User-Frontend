@@ -21,7 +21,7 @@ class WPUF_Form_Posting {
     function submit_post() {
         check_ajax_referer( 'wpuf_form_add' );
 
-        // @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 
         $form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
         $form_vars = $this->get_input_fields( $form_id );

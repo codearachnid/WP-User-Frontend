@@ -196,7 +196,7 @@
             form_data = form_data + '&' + rich_texts.join('&');
 
             $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
-                var res = $.parseJSON(res);
+                // var res = $.parseJSON(res);
 
                 if ( res.success) {
                     if( res.show_message == true) {
