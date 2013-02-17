@@ -54,16 +54,16 @@ class WPUF_Form_Posting {
 
                 // check if the user email already exists
                 $user = get_user_by( 'email', $guest_email );
-                if ($user) {
+                if ( $user ) {
                     $post_author = $user->ID;
                 } else {
 
                     // user not found, lets register him
                     $username = sanitize_user( $guest_name );
-                    $user_pass = wp_generate_password( 12, false);
+                    $user_pass = wp_generate_password( 12, false );
                     $user_id = wp_create_user( $username, $user_pass, $guest_email );
 
-                    if (!$user_id) {
+                    if ( !$user_id ) {
                         //something went wrong creating the user, set post author to the default author
                         $post_author = $default_post_author;
                     } else {
@@ -78,7 +78,7 @@ class WPUF_Form_Posting {
                 }
 
                 // guest post is enabled and details are off
-            } elseif ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false') {
+            } elseif ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false' ) {
                 $post_author = $default_post_author;
             }
 

@@ -14,9 +14,9 @@ if ( !class_exists( 'WeDevs_Settings_API' ) ) {
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/admin/settings-options.php';
+require_once dirname( __FILE__ ) . '/lib/recaptchalib.php';
 
 if ( !is_admin() ) {
-    require_once dirname( __FILE__ ) . '/lib/recaptchalib.php';
     require_once dirname( __FILE__ ) . '/wpuf-edit-user.php';
 }
 
