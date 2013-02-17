@@ -664,7 +664,7 @@ class WPUF_Form_Posting {
 
                 if ($thumb_id) {
                     $has_featured_image = true;
-                    $featured_image = WPUF_Uploader::attach_html( $thumb_id );
+                    $featured_image = WPUF_Upload::attach_html( $thumb_id );
                 }
             }
         }
