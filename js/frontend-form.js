@@ -309,24 +309,22 @@
             });
 
             imageUploader.bind('FileUploaded', function(up, file, response) {
-                var res = $.parseJSON(response.response);
 
                 $('#' + file.id).remove();
 
-                if(res.success) {
+                if(response.response !== 'error' ) {
                     var success = false;
 
                     if ( typeof tinyMCE !== 'undefined') {
-                        success = tinyMCE.execInstanceCommand('post_content',"mceInsertContent",false, res.html);
+                        success = tinyMCE.execInstanceCommand('post_content',"mceInsertContent",false, response.response);
                     }
 
                     // insert failed to the edit, perhaps insert into textarea
-                    if (!success) {
-                        var post_content = $('#post_content');
-                        post_content.val( post_content.val() + res.html );
-                    }
+                    var post_content = $('#post_content');
+                    post_content.val( post_content.val() + response.response );
+
                 } else {
-                    alert(res.error);
+                    alert('Something went wrong');
                 }
             });
 

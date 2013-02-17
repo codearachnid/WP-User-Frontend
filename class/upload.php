@@ -50,7 +50,7 @@ class WPUF_Upload {
             'size' => $_FILES['wpuf_file']['size']
         );
 
-        // @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+        header('Content-Type: text/html; charset=' . get_option('blog_charset'));
 
         $attach = $this->handle_upload( $upload );
 
@@ -65,13 +65,14 @@ class WPUF_Upload {
                 // $response['html'] = wp_get_attachment_image( $attach['attach_id'], 'thumbnail' );
             }
 
-            echo wp_send_json( $response );
-            exit;
+            echo $response['html'];
+        } else {
+            echo 'error';
         }
 
 
-        $response = array('success' => false, 'message' => $attach['error']);
-        echo json_encode( $response );
+        // $response = array('success' => false, 'message' => $attach['error']);
+        // echo json_encode( $response );
         exit;
     }
 

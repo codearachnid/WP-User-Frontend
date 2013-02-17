@@ -32,7 +32,7 @@
             multi_selection: false,
             urlstream_upload: true,
             file_data_name: 'wpuf_file',
-            max_file_size: (max_file_size * 1024 * 1024) + 'b',
+            max_file_size: max_file_size + 'mb',
             url: wpuf_frontend_upload.plupload.url + '&type=' + type,
             flash_swf_url: wpuf_frontend_upload.flash_swf_url,
             filters: [{
@@ -108,7 +108,7 @@
         },
 
         uploaded: function (up, file, response) {
-            var res = JSON.parse(response.response);
+            // var res = $.parseJSON(response.response);
 
             // console.log( typeof response, typeof response.response);
             // console.log(response, response.response, res);
@@ -116,9 +116,9 @@
             $('#' + file.id + " b").html("100%");
             $('#' + file.id).remove();
 
-            if(res.success == true) {
+            if(response.response !== 'error') {
                 var $container = $('#' + this.container).find('.wpuf-attachment-list');
-                $container.append(res.html);
+                $container.append(response.response);
             } else {
                 alert(res.error);
 
@@ -133,20 +133,20 @@
             var self = this,
                 el = $(e.currentTarget);
 
-			if ( confirm(wpuf_frontend_upload.confirmMsg) ) {
-				var data = {
-					'attach_id' : el.data('attach_id'),
-					'nonce' : wpuf_frontend_upload.nonce,
-					'action' : 'wpuf_file_del'
-				};
+            if ( confirm(wpuf_frontend_upload.confirmMsg) ) {
+                var data = {
+                    'attach_id' : el.data('attach_id'),
+                    'nonce' : wpuf_frontend_upload.nonce,
+                    'action' : 'wpuf_file_del'
+                };
 
-				jQuery.post(wpuf_frontend.ajaxurl, data, function() {
-					el.parent().parent().remove();
+                jQuery.post(wpuf_frontend.ajaxurl, data, function() {
+                    el.parent().parent().remove();
 
                     self.count -= 1;
                     self.showHide();
-				});
-			}
-		}
+                });
+            }
+        }
     };
 })(jQuery);
