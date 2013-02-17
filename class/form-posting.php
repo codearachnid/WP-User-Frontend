@@ -185,7 +185,10 @@ class WPUF_Form_Posting {
         if ( $post_id ) {
             // set featured image if there's any
             if ( isset( $_POST['wpuf_files']['featured_image'])) {
-                set_post_thumbnail( $post_id, $_POST['wpuf_files']['featured_image'][0] );
+                $attachment_id = $_POST['wpuf_files']['featured_image'][0];
+                
+                wpuf_associate_attachment( $attachment_id, $post_id );
+                set_post_thumbnail( $post_id, $attachment_id );
             }
 
             // save all custom fields
