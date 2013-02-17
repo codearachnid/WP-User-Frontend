@@ -212,6 +212,7 @@ class WPUF_Form_Posting {
                 foreach ($file_input['value'] as $attachment_id) {
                     $full_url = wp_get_attachment_url( $attachment_id );
 
+                    wpuf_associate_attachment( $attachment_id, $post_id );
                     add_post_meta( $post_id, $file_input['name'], $full_url );
                 }
             }

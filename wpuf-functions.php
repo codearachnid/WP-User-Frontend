@@ -483,3 +483,19 @@ function wpuf_allowed_extensions() {
 
     return apply_filters( 'wpuf_allowed_extensions', $extesions );
 }
+
+
+/**
+ * Associate attachemnt to a post
+ * 
+ * @since 2.0
+ * 
+ * @param type $attachment_id
+ * @param type $post_id
+ */
+function wpuf_associate_attachment( $attachment_id, $post_id ) {
+    wp_update_post( array(
+        'ID' => $attachment_id,
+        'post_parent' => $post_id
+    ) );
+}
