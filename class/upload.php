@@ -112,6 +112,8 @@ class WPUF_Upload {
     public static function attach_html( $attach_id ) {
         $type = isset( $_GET['type'] ) ? $_GET['type'] : 'image';
 
+        $attachment = get_post( $attach_id );
+        
         if (wp_attachment_is_image( $attach_id)) {
             $image = wp_get_attachment_image_src( $attach_id, 'thumbnail' );
             $image = $image[0];
