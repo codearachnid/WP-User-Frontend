@@ -499,3 +499,20 @@ function wpuf_associate_attachment( $attachment_id, $post_id ) {
         'post_parent' => $post_id
     ) );
 }
+
+function wpuf_thumbnail_url_to_id( $file_url ) {
+    global $wpdb;
+
+    $filename = basename( $file_url );
+
+    $sql = $wpdb->prepare( "
+        SELECT p.ID
+        FROM {$wpdb->posts} p
+        INNER JOIN {$wpdb->postmeta} m ON p.ID = m.post_id
+                        AND m.meta_key = '_wp_attachment_metadata'
+                        AND m.meta_value LIKE %s
+        ", '%' . like_escape( $filename ) . '%'
+    );
+        
+    return $wpdb->get_var( $sql );
+}

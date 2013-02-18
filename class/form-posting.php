@@ -650,14 +650,64 @@ class WPUF_Form_Posting {
 
         <?php
     }
+    
+    function file_upload( $attr, $post_id ) {
+
+        $this->label( $attr );
+
+        $allowed_ext = '';
+        $extensions = wpuf_allowed_extensions();
+        if ( is_array( $attr['extension'] ) ) {
+            foreach ($attr['extension'] as $ext) {
+                $allowed_ext .= $extensions[$ext]['ext'] . ',';
+            }
+        } else {
+            $allowed_ext = '*';
+        }
+
+        $uploaded_items = $post_id ? get_post_meta( $post_id, $attr['name'] ) : array();
+        ?>
+
+        <div class="wpuf-fields">
+            <div id="wpuf-<?php echo $attr['name']; ?>-upload-container">
+                <div class="wpuf-attachment-upload-filelist">
+                    <a id="wpuf-<?php echo $attr['name']; ?>-pickfiles" class="button file-selector" href="#"><?php _e( 'Select File(s)', 'wpuf' ); ?></a>
+
+                    <?php printf( '<span class="wpuf-file-validation" data-required="%s" data-type="file"></span>', $attr['required'] ); ?>
+
+                    <ul class="wpuf-attachment-list thumbnails">
+                        <?php
+                        if ( $uploaded_items ) {
+                            foreach ($uploaded_items as $file_url) {
+                                echo WPUF_Upload::attach_html( wpuf_thumbnail_url_to_id( $file_url ) );
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div><!-- .container -->
+
+            <span class="wpuf-help"><?php echo $attr['help']; ?></span>
+
+        </div> <!-- .wpuf-fields -->
+
+        <script type="text/javascript">
+            jQuery(function($) {
+                new WPUF_Uploader('wpuf-<?php echo $attr['name']; ?>-pickfiles', 'wpuf-<?php echo $attr['name']; ?>-upload-container', <?php echo $attr['count']; ?>, '<?php echo $attr['name']; ?>', '<?php echo $allowed_ext; ?>', <?php echo $attr['max_size'] ?>);
+            });
+        </script>
+        <?php
+    }
 
     function image_upload( $attr, $post_id ) {
 
         $has_featured_image = false;
+        $has_images = false;
 
         if ($post_id) {
             if ($attr['is_meta'] == 'yes') {
-                $url = get_post_meta( $post_id, $attr['name'], true );
+                $images = get_post_meta( $post_id, $attr['name'] );
+                $has_images = true;
             } else {
                 // it's a featured image then
                 $thumb_id = get_post_thumbnail_id( $post_id );
@@ -683,6 +733,12 @@ class WPUF_Form_Posting {
                         <?php
                         if ( $has_featured_image ) {
                             echo $featured_image;
+                        }
+                        
+                        if ( $has_images ) {
+                            foreach ($images as $file_url) {
+                                echo WPUF_Upload::attach_html( wpuf_thumbnail_url_to_id( $file_url ) );
+                            }
                         }
                         ?>
                     </ul>
@@ -791,55 +847,6 @@ class WPUF_Form_Posting {
 
         </div>
 
-        <?php
-    }
-
-    function file_upload( $attr, $post_id ) {
-
-        $this->label( $attr );
-
-        $allowed_ext = '';
-        $extensions = wpuf_allowed_extensions();
-        if ( is_array( $attr['extension'] ) ) {
-            foreach ($attr['extension'] as $ext) {
-                $allowed_ext .= $extensions[$ext]['ext'] . ',';
-            }
-        } else {
-            $allowed_ext = '*';
-        }
-
-        $uploaded_items = $post_id ? get_post_meta( $post_id, $attr['name'] ) : array();
-        ?>
-
-        <div class="wpuf-fields">
-            <div id="wpuf-<?php echo $attr['name']; ?>-upload-container">
-                <div class="wpuf-attachment-upload-filelist">
-                    <a id="wpuf-<?php echo $attr['name']; ?>-pickfiles" class="button file-selector" href="#"><?php _e( 'Select File(s)', 'wpuf' ); ?></a>
-
-                    <?php printf( '<span class="wpuf-file-validation" data-required="%s" data-type="file"></span>', $attr['required'] ); ?>
-
-                    <ul class="wpuf-attachment-list thumbnails">
-                        <?php
-                        if ( $uploaded_items ) {
-                            foreach ($uploaded_items as $attachment) {
-                                list( $url, $attachment_id ) = explode( $this->separator, $attachment);
-                                echo WPUF_Uploader::attach_html( $attachment_id );
-                            }
-                        }
-                        ?>
-                    </ul>
-                </div>
-            </div><!-- .container -->
-
-            <span class="wpuf-help"><?php echo $attr['help']; ?></span>
-
-        </div> <!-- .wpuf-fields -->
-
-        <script type="text/javascript">
-            jQuery(function($) {
-                new WPUF_Uploader('wpuf-<?php echo $attr['name']; ?>-pickfiles', 'wpuf-<?php echo $attr['name']; ?>-upload-container', <?php echo $attr['count']; ?>, '<?php echo $attr['name']; ?>', '<?php echo $allowed_ext; ?>', <?php echo $attr['max_size'] ?>);
-            });
-        </script>
         <?php
     }
 
