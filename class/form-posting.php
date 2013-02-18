@@ -133,8 +133,9 @@ class WPUF_Form_Posting {
 
                         $ref_arr = array();
                         $cols = count( $value['columns'] );
-                        $rows = count( $_POST[$value['name']] );
-
+                        $first = array_shift( array_values( $_POST[$value['name']] ) ); //first element
+                        $rows = count( $first );
+                        
                         // loop through columns
                         for ($i = 0; $i < $cols; $i++) {
 
@@ -151,7 +152,7 @@ class WPUF_Form_Posting {
 
                         // now, if we found anything in $ref_arr, store to $multi_repeated
                         if ( $ref_arr ) {
-                            $multi_repeated[$value['name']] = $ref_arr;
+                            $multi_repeated[$value['name']] = array_slice( $ref_arr, 0, $rows );
                         }
                     }
 
