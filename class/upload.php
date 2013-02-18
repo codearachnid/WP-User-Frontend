@@ -109,8 +109,10 @@ class WPUF_Upload {
         return array('success' => false, 'error' => $uploaded_file['error']);
     }
 
-    public static function attach_html( $attach_id ) {
-        $type = isset( $_GET['type'] ) ? $_GET['type'] : 'image';
+    public static function attach_html( $attach_id, $type = NULL ) {
+        if ( !$type ) {
+            $type = isset( $_GET['type'] ) ? $_GET['type'] : 'image';
+        }
 
         $attachment = get_post( $attach_id );
         

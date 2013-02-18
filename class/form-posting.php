@@ -679,7 +679,8 @@ class WPUF_Form_Posting {
                         <?php
                         if ( $uploaded_items ) {
                             foreach ($uploaded_items as $file_url) {
-                                echo WPUF_Upload::attach_html( wpuf_thumbnail_url_to_id( $file_url ) );
+                                $attach_id = wpuf_thumbnail_url_to_id( $file_url );
+                                echo WPUF_Upload::attach_html( $attach_id, $attr['name'] );
                             }
                         }
                         ?>
@@ -737,7 +738,8 @@ class WPUF_Form_Posting {
                         
                         if ( $has_images ) {
                             foreach ($images as $file_url) {
-                                echo WPUF_Upload::attach_html( wpuf_thumbnail_url_to_id( $file_url ) );
+                                $attach_id = wpuf_thumbnail_url_to_id( $file_url );
+                                echo WPUF_Upload::attach_html( $attach_id, $attr['name'] );
                             }
                         }
                         ?>
