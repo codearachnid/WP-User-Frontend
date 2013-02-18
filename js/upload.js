@@ -69,6 +69,9 @@
             };
 
             $('#' + this.container).find('.file-selector').show();
+            
+            //refresh the uploader
+            this.uploader.refresh();
         },
 
         added: function (up, files) {
@@ -127,11 +130,11 @@
             }
         },
 
-		removeAttachment: function(e) {
-			e.preventDefault();
+        removeAttachment: function(e) {
+            e.preventDefault();
 
             var self = this,
-                el = $(e.currentTarget);
+            el = $(e.currentTarget);
 
             if ( confirm(wpuf_frontend_upload.confirmMsg) ) {
                 var data = {
