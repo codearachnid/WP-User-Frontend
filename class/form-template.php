@@ -717,7 +717,7 @@ class WPUF_Form_Template {
 
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'HTML Codes', 'wpuf' ); ?></label>
-                    <textarea class="smallipopInput" title="Paste your HTML codes, WordPress shortcodes will also work here" name="<?php echo $html_name; ?>" rows="10"><?php echo esc_textarea( $html_value ); ?></textarea>
+                    <textarea class="smallipopInput" title="Paste your HTML codes, WordPress shortcodes will also work here" name="<?php echo $html_name; ?>" rows="10"><?php echo esc_html( $html_value ); ?></textarea>
                 </div>
             </div> <!-- .wpuf-form-holder -->
         </li>
@@ -744,7 +744,7 @@ class WPUF_Form_Template {
 
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Description', 'wpuf' ); ?></label>
-                    <textarea class="smallipopInput" title="Some details text about the section" name="<?php echo $description_name; ?>" rows="3"><?php echo esc_textarea( $description_value ); ?></textarea>
+                    <textarea class="smallipopInput" title="Some details text about the section" name="<?php echo $description_name; ?>" rows="3"><?php echo esc_html( $description_value ); ?></textarea>
                 </div> <!-- .wpuf-form-rows -->
             </div> <!-- .wpuf-form-holder -->
         </li>
