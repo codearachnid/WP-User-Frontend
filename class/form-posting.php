@@ -87,7 +87,6 @@ class WPUF_Form_Posting {
             $post_author = get_current_user_id();
         }
 
-        $category = isset( $_POST['category'] ) ? $_POST['category'] : array();
         $postarr = array(
             'post_type' => $form_settings['post_type'],
             'post_status' => $form_settings['post_status'],
@@ -95,9 +94,16 @@ class WPUF_Form_Posting {
             'post_title' => isset( $_POST['post_title'] ) ? trim( $_POST['post_title'] ) : '',
             'post_content' => isset( $_POST['post_content'] ) ? trim( $_POST['post_content'] ) : '',
             'post_excerpt' => isset( $_POST['post_excerpt'] ) ? trim( $_POST['post_excerpt'] ) : '',
-            'tags_input' => isset( $_POST['tags'] ) ? explode(',', $_POST['tags']) : array(),
-            'post_category' => is_array( $category ) ? $category : array( $category )
         );
+        
+        if ( isset( $_POST['category'] ) ) {
+            $category = $_POST['category'];
+            $postarr['post_category'] = is_array( $category ) ? $category : array( $category );
+        }
+        
+        if ( isset( $_POST['tags'] ) ) {
+            $postarr['tags_input'] = explode( ',', $_POST['tags'] );
+        }
 
         // if post_id is passed, we update the post
         if ( isset( $_POST['post_id']) ) {
@@ -137,11 +143,11 @@ class WPUF_Form_Posting {
                         $rows = count( $first );
                         
                         // loop through columns
-                        for ($i = 0; $i < $cols; $i++) {
+                        for ($i = 0; $i < $rows; $i++) {
 
                             // loop through the rows and store in a temp array
                             $temp = array();
-                            for ($j = 0; $j < $rows; $j++) {
+                            for ($j = 0; $j < $cols; $j++) {
 
                                 $temp[] = $_POST[$value['name']][$j][$i];
                             }
