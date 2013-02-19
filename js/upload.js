@@ -69,9 +69,6 @@
             };
 
             $('#' + this.container).find('.file-selector').show();
-            
-            //refresh the uploader
-            this.uploader.refresh();
         },
 
         added: function (up, files) {
@@ -108,6 +105,7 @@
 
             this.count -= 1;
             this.showHide();
+            this.uploader.refresh();
         },
 
         uploaded: function (up, file, response) {
@@ -129,7 +127,7 @@
                 this.showHide();
             }
         },
-
+        
         removeAttachment: function(e) {
             e.preventDefault();
 
@@ -148,6 +146,7 @@
 
                     self.count -= 1;
                     self.showHide();
+                    self.uploader.refresh();
                 });
             }
         }
