@@ -22,6 +22,7 @@ class WPUF_Forms {
         add_action( 'wp_ajax_wpuf_form_add_el', array( $this, 'ajax_add_element' ) );
 
         add_action( 'save_post', array( $this, 'save_meta' ), 1, 2 ); // save the custom fields
+        add_action( 'save_post', array( $this, 'form_selection_metabox_save' ), 1, 2 ); // save the custom fields
     }
 
     function enqueue_scripts() {
@@ -90,12 +91,51 @@ class WPUF_Forms {
 
     function do_meta_boxes() {
         remove_meta_box('submitbox', 'wpuf_forms', 'side');
+        
+        $post_types = get_post_types( array('public' => true) );
+        foreach ($post_types as $post_type) {
+            add_meta_box( 'wpuf-select-form', __('WPUF Form'), array($this, 'form_selection_metabox'), $post_type, 'side', 'high' );
+        }
     }
 
     function add_meta_box() {
         add_meta_box( 'wpuf-metabox-settings', __( 'Form Settings', 'wpuf' ), array($this, 'form_settings'), 'wpuf_forms', 'normal', 'high' );
         add_meta_box( 'wpuf-metabox', __( 'Form Editor', 'wpuf' ), array($this, 'edit_form_area'), 'wpuf_forms', 'normal', 'high' );
         add_meta_box( 'wpuf-metabox-fields', __( 'Form Elements', 'wpuf' ), array($this, 'form_elements'), 'wpuf_forms', 'side', 'core' );
+    }
+    
+    function form_selection_metabox() {
+        global $post;
+        
+        $forms = get_posts( array('post_type' => 'wpuf_forms', 'numberposts' => '-1') );
+        $selected = get_post_meta( $post->ID, '_wpuf_form_id', true );
+        ?>
+
+        <input type="hidden" name="wpuf_form_select_nonce" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
+        
+        <select name="wpuf_form_select">
+            <?php foreach ($forms as $form) { ?>
+            <option value="<?php echo $form->ID; ?>"<?php selected($selected, $form->ID); ?>><?php echo $form->post_title; ?></option>
+            <?php } ?>
+        </select>
+        <?php
+    }
+    
+    function form_selection_metabox_save( $post_id, $post ) {
+        if ( !isset($_POST['wpuf_form_select'])) {
+            return $post->ID;
+        }
+
+        if ( !wp_verify_nonce( $_POST['wpuf_form_select_nonce'], plugin_basename( __FILE__ ) ) ) {
+            return $post->ID;
+        }
+
+        // Is the user allowed to edit the post or page?
+        if ( !current_user_can( 'edit_post', $post->ID ) ) {
+            return $post->ID;
+        }
+
+        update_post_meta( $post->ID, '_wpuf_form_id', $_POST['wpuf_form_select'] );
     }
 
     function form_dump() {
