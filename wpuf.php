@@ -95,8 +95,8 @@ class WP_User_Frontend {
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 
-        $wpdb->query( $sql_subscription );
-        $wpdb->query( $sql_transaction );
+        // $wpdb->query( $sql_subscription );
+        // $wpdb->query( $sql_transaction );
     }
 
     function uninstall() {
@@ -134,8 +134,11 @@ class WP_User_Frontend {
 
         // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
         wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
+        wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
 
-        wp_enqueue_script( 'jquery-validate', $path . '/js/jquery.validate.min.js', array('jquery') );
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_script( 'jquery-ui-slider' );
+        wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
         wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
 
         wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(

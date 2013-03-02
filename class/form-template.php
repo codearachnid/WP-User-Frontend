@@ -55,6 +55,14 @@ class WPUF_Form_Template {
         <?php
     }
 
+    /**
+     * Common Fields
+     *
+     * @param int $id field order
+     * @param mixed $field_name_value
+     * @param bool $custom_field if it a custom field or not
+     * @param array $values saved value
+     */
     public static function common( $id, $field_name_value = '', $custom_field = true, $values = array() ) {
         $tpl = '%s[%d][%s]';
         $required_name = sprintf( $tpl, self::$input_name, $id, 'required' );
@@ -68,6 +76,7 @@ class WPUF_Form_Template {
         $required = $values ? esc_attr( $values['required'] ) : 'yes';
         $label_value = $values ? esc_attr( $values['label'] ) : '';
         $help_value = $values ? esc_textarea( $values['help'] ) : '';
+        $css_value = $values ? esc_attr( $values['css'] ) : '';
 
         if ($custom_field && $values) {
             $field_name_value = $values['name'];
@@ -108,6 +117,11 @@ class WPUF_Form_Template {
         <div class="wpuf-form-rows">
             <label><?php _e( 'Help text', 'wpuf' ); ?></label>
             <textarea name="<?php echo $help_name; ?>"><?php echo $help_value; ?></textarea>
+        </div> <!-- .wpuf-form-rows -->
+
+        <div class="wpuf-form-rows">
+            <label><?php _e( 'CSS Class Name', 'wpuf' ); ?></label>
+            <input type="text" name="<?php echo $css_name; ?>" value="<?php echo $css_value; ?>">
         </div> <!-- .wpuf-form-rows -->
 
         <?php
@@ -813,7 +827,7 @@ class WPUF_Form_Template {
         </li>
         <?php
     }
-    
+
         public static function really_simple_captcha( $field_id, $label, $values = array() ) {
         $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
         $html_name = sprintf( '%s[%d][html]', self::$input_name, $field_id );
@@ -871,6 +885,44 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
                         </div>
                     </div> <!-- .wpuf-form-rows -->
                 </div>
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
+
+    public static function custom_date( $field_id, $label, $values = array() ) {
+        $format_name = sprintf('%s[%d][format]', self::$input_name, $field_id);
+        $time_name = sprintf('%s[%d][time]', self::$input_name, $field_id);
+
+        $format_value = $values ? $values['format'] : 'dd/mm/yy';
+        $time_value = $values ? $values['time'] : 'no';
+
+        $help = esc_attr( __( 'The date format', 'wpuf' ) );
+        ?>
+        <li class="custom-field custom_image">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'date' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'custom_date' ); ?>
+
+            <div class="wpuf-form-holder">
+                <?php self::common( $field_id, '', true, $values ); ?>
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Date Format', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" name="<?php echo $format_name; ?>" value="<?php echo $format_value; ?>" title="<?php echo $help; ?>">
+                </div> <!-- .wpuf-form-rows -->
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Time', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <label>
+                            <?php self::hidden_field( "[$field_id][time]", 'no' ); ?>
+                            <input type="checkbox" name="<?php echo $time_name ?>" value="yes"<?php checked( $time_value, 'yes' ); ?> />
+                            <?php _e( 'Enable time input', 'wpuf' ); ?>
+                        </label>
+                    </div>
+                </div> <!-- .wpuf-form-rows -->
             </div> <!-- .wpuf-form-holder -->
         </li>
         <?php

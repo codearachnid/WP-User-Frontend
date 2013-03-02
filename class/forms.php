@@ -353,6 +353,7 @@ class WPUF_Forms {
             <button class="button" data-name="custom_url" data-type="url"><?php _e( 'URL', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_email" data-type="email"><?php _e( 'Email', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_repeater" data-type="repeat"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_date" data-type="date"><?php _e( 'Date', 'wpuf' ); ?></button>
 
         </div>
 
@@ -544,6 +545,10 @@ class WPUF_Forms {
 
             case 'really_simple_captcha':
                 WPUF_Form_Template::really_simple_captcha( $field_id, 'Really Simple Captcha' );
+                break;
+
+            case 'custom_date':
+                WPUF_Form_Template::custom_date( $field_id, 'Custom Field: Date' );
                 break;
 
 

@@ -17,10 +17,10 @@ class WPUF_Form_Posting {
         // form preview
         add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
     }
-    
+
     /**
      * Search on multi dimentional array
-     * 
+     *
      * @param array $array
      * @param string $key name of key
      * @param string $value the value to search
@@ -51,7 +51,7 @@ class WPUF_Form_Posting {
 
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
         // var_dump($post_vars, $taxonomy_vars, $meta_vars);
-        
+
         // search if rs captcha is there
         if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
             $rs_captcha_input = isset( $_POST['rs_captcha'] ) ? $_POST['rs_captcha'] : '';
@@ -59,7 +59,7 @@ class WPUF_Form_Posting {
 
             if ( class_exists( 'ReallySimpleCaptcha' ) ) {
                 $captcha_instance = new ReallySimpleCaptcha();
-                
+
                 if ( !$captcha_instance->check( $rs_captcha_file, $rs_captcha_input ) ) {
                     echo json_encode( array(
                         'success' => false,
@@ -73,7 +73,7 @@ class WPUF_Form_Posting {
                 }
             }
         }
-        
+
         // check recaptcha
         if ( $this->search( $post_vars, 'input_type', 'recaptcha' ) ) {
             $recap_challenge = isset( $_POST['recaptcha_challenge_field'] ) ? $_POST['recaptcha_challenge_field'] : '';
@@ -111,11 +111,11 @@ class WPUF_Form_Posting {
                     // username from email address
                     $username = sanitize_user( substr( $email, 0, strpos( $email, '@' ) ) );
                     $user_pass = wp_generate_password( 12, false );
-                    
+
                     if ( username_exists( $username ) ) {
                         $username = str_replace( ' ', '_', $guest_name ) . rand( 1, 99 );
                     }
-                    
+
                     $user_id = wp_create_user( $username, $user_pass, $guest_email );
 
                     if ( !$user_id ) {
@@ -150,12 +150,12 @@ class WPUF_Form_Posting {
             'post_content' => isset( $_POST['post_content'] ) ? trim( $_POST['post_content'] ) : '',
             'post_excerpt' => isset( $_POST['post_excerpt'] ) ? trim( $_POST['post_excerpt'] ) : '',
         );
-        
+
         if ( isset( $_POST['category'] ) ) {
             $category = $_POST['category'];
             $postarr['post_category'] = is_array( $category ) ? $category : array( $category );
         }
-        
+
         if ( isset( $_POST['tags'] ) ) {
             $postarr['tags_input'] = explode( ',', $_POST['tags'] );
         }
@@ -196,7 +196,7 @@ class WPUF_Form_Posting {
                         $cols = count( $value['columns'] );
                         $first = array_shift( array_values( $_POST[$value['name']] ) ); //first element
                         $rows = count( $first );
-                        
+
                         // loop through columns
                         for ($i = 0; $i < $rows; $i++) {
 
@@ -249,7 +249,7 @@ class WPUF_Form_Posting {
             // set featured image if there's any
             if ( isset( $_POST['wpuf_files']['featured_image'])) {
                 $attachment_id = $_POST['wpuf_files']['featured_image'][0];
-                
+
                 wpuf_associate_attachment( $attachment_id, $post_id );
                 set_post_thumbnail( $post_id, $attachment_id );
             }
@@ -302,10 +302,10 @@ class WPUF_Form_Posting {
                     }
                 }
             }
-            
+
             //plugin API to extend the functionality
             do_action( 'wpuf_add_post_after_insert', $post_id, $form_id, $form_settings, $form_vars );
-            
+
             //send mail notification
             if ( wpuf_get_option( 'post_notification' ) == 'yes' ) {
                 wpuf_notify_post_mail( $userdata, $post_id );
@@ -468,8 +468,10 @@ class WPUF_Form_Posting {
                     <?php
                     foreach ($form_vars as $key => $form_field) {
 
+                        $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
+                        $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
 
-                        printf( '<li class="el-%s">', isset( $form_field['name'] ) ? $form_field['name'] : 'class' );
+                        printf( '<li class="wpuf-el %s%s">', $el_name, $class_name );
 
                         switch ($form_field['input_type']) {
                             case 'text':
@@ -538,6 +540,10 @@ class WPUF_Form_Posting {
 
                             case 'really_simple_captcha':
                                 $this->really_simple_captcha( $form_field );
+                                break;
+
+                            case 'date':
+                                $this->date( $form_field, $post_id );
                                 break;
 
                             default:
@@ -728,7 +734,7 @@ class WPUF_Form_Posting {
 
         <?php
     }
-    
+
     function file_upload( $attr, $post_id ) {
 
         $this->label( $attr );
@@ -813,7 +819,7 @@ class WPUF_Form_Posting {
                         if ( $has_featured_image ) {
                             echo $featured_image;
                         }
-                        
+
                         if ( $has_images ) {
                             foreach ($images as $file_url) {
                                 $attach_id = wpuf_thumbnail_url_to_id( $file_url );
@@ -1148,22 +1154,22 @@ class WPUF_Form_Posting {
         </div>
         <?php
     }
-    
+
     function action_hook( $attr, $form_id, $post_id, $form_settings ) {
 
         if ( !empty( $attr['label'] ) ) {
             do_action( $attr['label'], $form_id, $post_id, $form_settings );
         }
     }
-    
+
     function really_simple_captcha( $attr ) {
         if ( !class_exists( 'ReallySimpleCaptcha') ) {
             _e( 'Error: Really Simple Captcha plugin not found!', 'wpuf' );
             return;
         }
-        
+
         $this->label( $attr );
-        
+
         $captcha_instance = new ReallySimpleCaptcha();
         $word = $captcha_instance->generate_random_word();
         $prefix = mt_rand();
@@ -1174,6 +1180,30 @@ class WPUF_Form_Posting {
             <input type="text" name="rs_captcha" value="" />
             <input type="hidden" name="rs_captcha_val" value="<?php echo $prefix; ?>" />
         </div>
+        <?php
+    }
+
+    function date( $attr, $post_id ) {
+
+        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
+
+        $this->label( $attr );
+        ?>
+
+        <div class="wpuf-fields">
+            <input id="wpuf-<?php echo $attr['name']; ?>" type="text" class="datepicker" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+            <span class="wpuf-help"><?php echo $attr['help']; ?></span>
+        </div>
+        <script type="text/javascript">
+            jQuery(function($) {
+                <?php if ( $attr['time'] == 'yes' ) { ?>
+                    $(".datepicker").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+                <?php } else { ?>
+                    $(".datepicker").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+                <?php } ?>
+            });
+        </script>
+
         <?php
     }
 
