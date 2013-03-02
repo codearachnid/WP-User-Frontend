@@ -376,6 +376,7 @@ class WPUF_Forms {
             <button class="button" data-name="recaptcha" data-type="captcha"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
             <button class="button" data-name="section_break" data-type="break"><?php _e( 'Section Break', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_html" data-type="html"><?php _e( 'HTML', 'wpuf' ); ?></button>
+            <button class="button" data-name="action_hook" data-type="action"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
         </div>
         <?php
     }
@@ -534,6 +535,10 @@ class WPUF_Forms {
 
             case 'recaptcha':
                 WPUF_Form_Template::recaptcha( $field_id, 'reCaptcha' );
+                break;
+
+            case 'action_hook':
+                WPUF_Form_Template::action_hook( $field_id, 'Action Hook' );
                 break;
 
 

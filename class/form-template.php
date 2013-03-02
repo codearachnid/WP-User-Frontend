@@ -814,4 +814,37 @@ class WPUF_Form_Template {
         <?php
     }
 
+    public static function action_hook( $field_id, $label, $values = array() ) {
+        $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
+        $title_value = $values ? esc_attr( $values['label'] ) : '';
+        ?>
+        <li class="custom-field custom_html">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'action_hook' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'action_hook' ); ?>
+
+            <div class="wpuf-form-holder">
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Hook Name', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <input type="text" class="smallipopInput" title="<?php _e( 'Name of the hook', 'wpuf' ); ?>" name="<?php echo $title_name; ?>" value="<?php echo esc_attr( $title_value ); ?>" />
+
+                        <div class="description" style="margin-top: 8px;">
+                            <?php _e( "An option for developers to add dynamic elements they want. It provides the chance to add whatever input type you want to add in this form.", 'wpuf' ); ?>
+                            <?php _e( 'This way, you can bind your own functions to render the form to this action hook. You\'ll be given 3 parameters to play with: $form_id, $post_id, $form_settings.', 'wpuf' ); ?>
+<pre>
+add_action('HOOK_NAME', 'your_function_name', 10, 3 );
+function your_function_name( $form_id, $post_id, $form_settings ) {
+    // do what ever you want
+}
+</pre>
+                        </div>
+                    </div> <!-- .wpuf-form-rows -->
+                </div>
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
+
 }
