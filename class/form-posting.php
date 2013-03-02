@@ -59,8 +59,14 @@ class WPUF_Form_Posting {
                 } else {
 
                     // user not found, lets register him
-                    $username = sanitize_user( $guest_name );
+                    // username from email address
+                    $username = sanitize_user( substr( $email, 0, strpos( $email, '@' ) ) );
                     $user_pass = wp_generate_password( 12, false );
+                    
+                    if ( username_exists( $username ) ) {
+                        $username = str_replace( ' ', '_', $guest_name ) . rand( 1, 99 );
+                    }
+                    
                     $user_id = wp_create_user( $username, $user_pass, $guest_email );
 
                     if ( !$user_id ) {
@@ -187,6 +193,7 @@ class WPUF_Form_Posting {
         // die();
 
         // ############ It's Time to Save the World ###############
+        $postarr = apply_filters( 'wpuf_add_post_args', $postarr, $form_id, $form_settings, $form_vars );
         $post_id = wp_insert_post( $postarr );
 
         if ( $post_id ) {
@@ -246,7 +253,14 @@ class WPUF_Form_Posting {
                     }
                 }
             }
-
+            
+            //plugin API to extend the functionality
+            do_action( 'wpuf_add_post_after_insert', $post_id, $form_id, $form_settings, $form_vars );
+            
+            //send mail notification
+            if ( wpuf_get_option( 'post_notification' ) == 'yes' ) {
+                wpuf_notify_post_mail( $userdata, $post_id );
+            }
 
             //redirect URL
             $show_message = false;
