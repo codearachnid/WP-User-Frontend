@@ -177,12 +177,9 @@
                 return false;
             }
 
-            // send the request
-            self.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
-            self.find('input[type=submit]').addClass('button-primary-disabled');
-
             var form_data = self.serialize(),
-                rich_texts = [];
+                rich_texts = [],
+                submitButton = self.find('input[type=submit]');
 
             // grab rich texts from tinyMCE
             $('.wpuf-rich-validation').each(function (index, item) {
@@ -195,6 +192,10 @@
             // append them to the form var
             form_data = form_data + '&' + rich_texts.join('&');
 
+            // send the request
+            self.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
+            submitButton.attr('disabled', 'disabled').addClass('button-primary-disabled');
+            
             $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
                 // var res = $.parseJSON(res);
 
@@ -214,9 +215,10 @@
 
                 } else {
                     alert( res.error );
+                    submitButton.removeAttr('disabled');
                 }
 
-                self.find('input[type=submit]').removeClass('button-primary-disabled');
+                submitButton.removeClass('button-primary-disabled');
                 self.find('span.wpuf-loading').remove();
             });
         },

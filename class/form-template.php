@@ -813,6 +813,35 @@ class WPUF_Form_Template {
         </li>
         <?php
     }
+    
+        public static function really_simple_captcha( $field_id, $label, $values = array() ) {
+        $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
+        $html_name = sprintf( '%s[%d][html]', self::$input_name, $field_id );
+
+        $title_value = $values ? esc_attr( $values['label'] ) : '';
+        $html_value = $values ? esc_attr( $values['html'] ) : '';
+        ?>
+        <li class="custom-field custom_html">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'really_simple_captcha' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'really_simple_captcha' ); ?>
+
+            <div class="wpuf-form-holder">
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Title', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <input type="text" class="smallipopInput" title="Title of the section" name="<?php echo $title_name; ?>" value="<?php echo esc_attr( $title_value ); ?>" />
+
+                        <div class="description" style="margin-top: 8px;">
+                            <?php printf( __( "Depends on <a href='http://wordpress.org/extend/plugins/really-simple-captcha/' target='_blank'>Really Simple Captcha</a> Plugin. Install it first." )  ); ?>
+                        </div>
+                    </div> <!-- .wpuf-form-rows -->
+                </div>
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
 
     public static function action_hook( $field_id, $label, $values = array() ) {
         $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );

@@ -17,6 +17,28 @@ class WPUF_Form_Posting {
         // form preview
         add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
     }
+    
+    /**
+     * Search on multi dimentional array
+     * 
+     * @param array $array
+     * @param string $key name of key
+     * @param string $value the value to search
+     * @return array
+     */
+    function search( $array, $key, $value ) {
+        $results = array();
+
+        if ( is_array( $array ) ) {
+            if ( isset( $array[$key] ) && $array[$key] == $value )
+                $results[] = $array;
+
+            foreach ($array as $subarray)
+                $results = array_merge( $results, $this->search( $subarray, $key, $value ) );
+        }
+
+        return $results;
+    }
 
     function submit_post() {
         check_ajax_referer( 'wpuf_form_add' );
@@ -29,15 +51,42 @@ class WPUF_Form_Posting {
 
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
         // var_dump($post_vars, $taxonomy_vars, $meta_vars);
+        
+        // search if rs captcha is there
+        if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
+            $rs_captcha_input = isset( $_POST['rs_captcha'] ) ? $_POST['rs_captcha'] : '';
+            $rs_captcha_file = isset( $_POST['rs_captcha_val'] ) ? $_POST['rs_captcha_val'] : '';
 
-        if (isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
-            $resp = recaptcha_check_answer( wpuf_get_option('recaptcha_private'), $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+            if ( class_exists( 'ReallySimpleCaptcha' ) ) {
+                $captcha_instance = new ReallySimpleCaptcha();
+                
+                if ( !$captcha_instance->check( $rs_captcha_file, $rs_captcha_input ) ) {
+                    echo json_encode( array(
+                        'success' => false,
+                        'error' => __( 'Really Simple Captcha validation failed', 'wpuf' )
+                    ) );
 
-            if (!$resp->is_valid) {
+                    exit;
+                } else {
+                    // validation success, remove the files
+                    $captcha_instance->remove( $rs_captcha_file );
+                }
+            }
+        }
+        
+        // check recaptcha
+        if ( $this->search( $post_vars, 'input_type', 'recaptcha' ) ) {
+            $recap_challenge = isset( $_POST['recaptcha_challenge_field'] ) ? $_POST['recaptcha_challenge_field'] : '';
+            $recap_response = isset( $_POST['recaptcha_response_field'] ) ? $_POST['recaptcha_response_field'] : '';
+            $private_key = wpuf_get_option( 'recaptcha_private' );
+
+            $resp = recaptcha_check_answer( $private_key, $_SERVER["REMOTE_ADDR"], $recap_challenge, $recap_response );
+
+            if ( !$resp->is_valid ) {
                 echo json_encode( array(
                     'success' => false,
                     'error' => __( 'reCAPTCHA validation failed', 'wpuf' )
-                ));
+                ) );
 
                 exit;
             }
@@ -485,6 +534,10 @@ class WPUF_Form_Posting {
 
                             case 'action_hook':
                                 $this->action_hook( $form_field, $form_id, $post_id, $form_settings );
+                                break;
+
+                            case 'really_simple_captcha':
+                                $this->really_simple_captcha( $form_field );
                                 break;
 
                             default:
@@ -1101,6 +1154,27 @@ class WPUF_Form_Posting {
         if ( !empty( $attr['label'] ) ) {
             do_action( $attr['label'], $form_id, $post_id, $form_settings );
         }
+    }
+    
+    function really_simple_captcha( $attr ) {
+        if ( !class_exists( 'ReallySimpleCaptcha') ) {
+            _e( 'Error: Really Simple Captcha plugin not found!', 'wpuf' );
+            return;
+        }
+        
+        $this->label( $attr );
+        
+        $captcha_instance = new ReallySimpleCaptcha();
+        $word = $captcha_instance->generate_random_word();
+        $prefix = mt_rand();
+        $image_num = $captcha_instance->generate_image( $prefix, $word );
+        ?>
+        <div class="wpuf-fields">
+            <img src="<?php echo plugins_url( 'really-simple-captcha/tmp/' . $image_num ); ?>" alt="Captcha" />
+            <input type="text" name="rs_captcha" value="" />
+            <input type="hidden" name="rs_captcha_val" value="<?php echo $prefix; ?>" />
+        </div>
+        <?php
     }
 
 }
