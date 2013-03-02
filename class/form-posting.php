@@ -483,6 +483,10 @@ class WPUF_Form_Posting {
                                 $this->recaptcha( $form_field );
                                 break;
 
+                            case 'action_hook':
+                                $this->action_hook( $form_field, $form_id, $post_id, $form_settings );
+                                break;
+
                             default:
                                 # code...
                                 break;
@@ -1090,6 +1094,13 @@ class WPUF_Form_Posting {
             <div class="wpuf-section-details"><?php echo $attr['description']; ?></div>
         </div>
         <?php
+    }
+    
+    function action_hook( $attr, $form_id, $post_id, $form_settings ) {
+
+        if ( !empty( $attr['label'] ) ) {
+            do_action( $attr['label'], $form_id, $post_id, $form_settings );
+        }
     }
 
 }
