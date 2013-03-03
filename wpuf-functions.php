@@ -306,8 +306,7 @@ class WPUF_Walker_Category_Checklist extends Walker {
         else
             $name = $taxonomy;
 
-        $class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
-        $output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="' . $name . '[]" id="in-' . $taxonomy . '-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters( 'the_category', $category->name ) ) . '</label>';
+        $output .= "\n<li id='{$taxonomy}-{$category->term_id}'>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="' . $name . '[]" id="in-' . $taxonomy . '-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters( 'the_category', $category->name ) ) . '</label>';
     }
 
     function end_el( &$output, $category, $depth, $args ) {
@@ -327,40 +326,24 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
     require_once ABSPATH . '/wp-admin/includes/template.php';
 
     $walker = new WPUF_Walker_Category_Checklist();
-
-    //exclude categories from checklist
-    if ( $exclude ) {
-        add_filter( 'list_terms_exclusions', 'wpuf_category_checklist_exclusions' );
+    
+    $args = array(
+        'taxonomy' => $tax,
+    );
+    
+    if ( $post_id ) {
+        $args['selected_cats'] = wp_get_object_terms( $post_id, $tax, array('fields' => 'ids') );
+    } elseif ($selected_cats ) {
+        $args['selected_cats'] = $selected_cats;
+    } else {
+        $args['selected_cats'] = array();
     }
+    
+    $categories = (array) get_terms($tax, array('get' => 'all', 'exclude' => $exclude));
 
     echo '<ul class="wpuf-category-checklist">';
-    wp_terms_checklist( $post_id, array(
-        'taxonomy' => $tax,
-        'descendants_and_self' => 0,
-        'selected_cats' => $selected_cats,
-        'popular_cats' => false,
-        'walker' => $walker,
-        'checked_ontop' => false
-    ) );
+    echo call_user_func_array(array(&$walker, 'walk'), array($categories, 0, $args));
     echo '</ul>';
-}
-
-/**
- * Exclude categories from checklist
- *
- * @param string $exclusions
- * @return string
- */
-function wpuf_category_checklist_exclusions( $exclusions ) {
-
-    //calling wpuf_get_option generates a recursion fatal error
-    //thats why exclue category values picked up manually
-    $opt = get_option( 'wpuf_frontend_posting' );
-    if ( isset( $opt['exclude_cats'] ) && !empty( $opt['exclude_cats'] ) ) {
-        $exclusions = " AND t.term_id NOT IN({$opt['exclude_cats']})";
-    }
-
-    return $exclusions;
 }
 
 // display msg if permalinks aren't setup correctly
@@ -376,80 +359,6 @@ function wpuf_permalink_nag() {
 if ( !stristr( get_option( 'permalink_structure' ), '%postname%' ) ) {
     add_action( 'admin_notices', 'wpuf_permalink_nag', 3 );
 }
-
-function wpuf_option_values() {
-    global $custom_fields;
-
-    wpuf_value_travarse( $custom_fields );
-}
-
-function wpuf_value_travarse( $param ) {
-    foreach ($param as $key => $value) {
-        if ( $value['name'] ) {
-            echo '"' . $value['name'] . '" => "' . get_option( $value['name'] ) . '"<br>';
-        }
-    }
-}
-
-//wpuf_option_values();
-
-/**
- * Adds notices on add post form if any
- *
- * @param string $text
- * @return string
- */
-function wpuf_addpost_notice( $text ) {
-    $user = wp_get_current_user();
-
-    if ( is_user_logged_in() ) {
-        $lock = ( $user->wpuf_postlock == 'yes' ) ? 'yes' : 'no';
-
-        if ( $lock == 'yes' ) {
-            return $user->wpuf_lock_cause;
-        }
-
-        $force_pack = wpuf_get_option( 'force_pack' );
-        $post_count = (isset( $user->wpuf_sub_pcount )) ? intval( $user->wpuf_sub_pcount ) : 0;
-
-        if ( $force_pack == 'yes' && $post_count == 0 ) {
-            return __( 'You must purchase a pack before posting', 'wpuf' );
-        }
-    }
-
-    return $text;
-}
-
-add_filter( 'wpuf_addpost_notice', 'wpuf_addpost_notice' );
-
-/**
- * Adds the filter to the add post form if the user can post or not
- *
- * @param string $perm permission type. "yes" or "no"
- * @return string permission type. "yes" or "no"
- */
-function wpuf_can_post( $perm ) {
-    $user = wp_get_current_user();
-
-    if ( is_user_logged_in() ) {
-        $lock = ( $user->wpuf_postlock == 'yes' ) ? 'yes' : 'no';
-
-        if ( $lock == 'yes' ) {
-            return 'no';
-        }
-
-        $force_pack = wpuf_get_option( 'force_pack' );
-        $post_count = (isset( $user->wpuf_sub_pcount )) ? intval( $user->wpuf_sub_pcount ) : 0;
-
-        if ( $force_pack == 'yes' && $post_count == 0 ) {
-            return 'no';
-        }
-    }
-
-    return $perm;
-}
-
-add_filter( 'wpuf_can_post', 'wpuf_can_post' );
 
 /**
  * Get all the image sizes
@@ -498,21 +407,4 @@ function wpuf_associate_attachment( $attachment_id, $post_id ) {
         'ID' => $attachment_id,
         'post_parent' => $post_id
     ) );
-}
-
-function wpuf_thumbnail_url_to_id( $file_url ) {
-    global $wpdb;
-
-    $filename = basename( $file_url );
-
-    $sql = $wpdb->prepare( "
-        SELECT p.ID
-        FROM {$wpdb->posts} p
-        INNER JOIN {$wpdb->postmeta} m ON p.ID = m.post_id
-                        AND m.meta_key = '_wp_attachment_metadata'
-                        AND m.meta_value LIKE %s
-        ", '%' . like_escape( $filename ) . '%'
-    );
-        
-    return $wpdb->get_var( $sql );
 }
