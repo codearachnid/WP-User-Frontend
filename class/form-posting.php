@@ -276,10 +276,7 @@ class WPUF_Form_Posting {
                 delete_post_meta( $post_id, $file_input['name'] );
 
                 foreach ($file_input['value'] as $attachment_id) {
-                    $full_url = wp_get_attachment_url( $attachment_id );
-
-                    wpuf_associate_attachment( $attachment_id, $post_id );
-                    add_post_meta( $post_id, $file_input['name'], $full_url );
+                    add_post_meta( $post_id, $file_input['name'], $attachment_id );
                 }
             }
 
@@ -762,8 +759,7 @@ class WPUF_Form_Posting {
                     <ul class="wpuf-attachment-list thumbnails">
                         <?php
                         if ( $uploaded_items ) {
-                            foreach ($uploaded_items as $file_url) {
-                                $attach_id = wpuf_thumbnail_url_to_id( $file_url );
+                            foreach ($uploaded_items as $attach_id) {
                                 echo WPUF_Upload::attach_html( $attach_id, $attr['name'] );
                             }
                         }
@@ -821,8 +817,7 @@ class WPUF_Form_Posting {
                         }
 
                         if ( $has_images ) {
-                            foreach ($images as $file_url) {
-                                $attach_id = wpuf_thumbnail_url_to_id( $file_url );
+                            foreach ($images as $attach_id) {
                                 echo WPUF_Upload::attach_html( $attach_id, $attr['name'] );
                             }
                         }
