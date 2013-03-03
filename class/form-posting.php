@@ -40,6 +40,11 @@ class WPUF_Form_Posting {
         return $results;
     }
 
+    /**
+     * New/Edit post submit handler
+     * 
+     * @return void
+     */
     function submit_post() {
         check_ajax_referer( 'wpuf_form_add' );
 
@@ -341,6 +346,12 @@ class WPUF_Form_Posting {
         exit;
     }
 
+    /**
+     * Get input meta fields formatted
+     * 
+     * @param int $form_id
+     * @return array
+     */
     function get_input_fields( $form_id ) {
         $form_vars = get_post_meta( $form_id, $this->meta_key, true );
 
@@ -376,6 +387,12 @@ class WPUF_Form_Posting {
         return array($post_vars, $taxonomy_vars, $meta_vars);
     }
 
+    /**
+     * Add post shortcode handler
+     * 
+     * @param array $atts
+     * @return string
+     */
     function add_post_shortcode( $atts ) {
         extract( shortcode_atts( array('id' => 0), $atts ) );
         ob_start();
@@ -388,6 +405,12 @@ class WPUF_Form_Posting {
         return $content;
     }
 
+    /**
+     * Edit post shortcode handler
+     * 
+     * @param array $atts
+     * @return string
+     */
     function edit_post_shortcode( $atts ) {
         extract( shortcode_atts( array('post_id' => 0), $atts ) );
 
@@ -582,6 +605,11 @@ class WPUF_Form_Posting {
         } //endif
     }
 
+    /**
+     * Form preview handler
+     * 
+     * @return void
+     */
     function preview_form() {
         $form_id = isset( $_GET['form_id'] ) ? intval( $_GET['form_id'] ) : 0;
 
@@ -629,18 +657,36 @@ class WPUF_Form_Posting {
         exit;
     }
 
+    /**
+     * Prints required field asterisk
+     * 
+     * @param array $attr
+     * @return string
+     */
     function required_mark( $attr ) {
         if ( isset( $attr['required'] ) && $attr['required'] == 'yes' ) {
             return ' <span class="required">*</span>';
         }
     }
 
+    /**
+     * Prints HTML5 required attribute
+     * 
+     * @param array $attr
+     * @return string
+     */
     function required_html5( $attr ) {
         if ( $attr['required'] == 'yes' ) {
             echo ' required="required"';
         }
     }
 
+    /**
+     * Print required class name
+     * 
+     * @param array $attr
+     * @return string
+     */
     function required_class( $attr ) {
         return;
         if ( $attr['required'] == 'yes' ) {
@@ -648,6 +694,11 @@ class WPUF_Form_Posting {
         }
     }
 
+    /**
+     * Prints form input label
+     * 
+     * @param string $attr
+     */
     function label( $attr ) {
         ?>
         <div class="wpuf-label">
@@ -656,6 +707,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a text field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function text( $attr, $post_id ) {
         if ($post_id) {
             if ($attr['is_meta'] == 'yes') {
@@ -689,6 +746,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a textarea field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function textarea( $attr, $post_id ) {
         $req_class = ( $attr['required'] == 'yes' ) ? 'required' : 'rich-editor';
 
@@ -732,6 +795,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a file upload field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function file_upload( $attr, $post_id ) {
 
         $this->label( $attr );
@@ -780,6 +849,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a image upload field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function image_upload( $attr, $post_id ) {
 
         $has_featured_image = false;
@@ -838,6 +913,13 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a select or multiselect field
+     * 
+     * @param array $attr
+     * @param bool $multiselect
+     * @param int|null $post_id
+     */
     function select( $attr, $multiselect = false, $post_id ) {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : '';
 
@@ -866,6 +948,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a radio field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function radio( $attr, $post_id ) {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : '';
 
@@ -899,6 +987,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a checkbox field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function checkbox( $attr, $post_id ) {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : array();
 
@@ -931,6 +1025,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a url field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function url( $attr, $post_id ) {
 
         $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
@@ -946,6 +1046,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a email field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function email( $attr, $post_id ) {
         $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
 
@@ -960,6 +1066,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a repeatable field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function repeat( $attr, $post_id ) {
         $add = plugins_url( 'images/add.png', dirname( __FILE__ ) );
         $remove = plugins_url( 'images/remove.png', dirname( __FILE__ ) );
@@ -1074,6 +1186,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a taxonomy field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function taxonomy( $attr, $post_id ) {
         $exclude = $attr['exclude'];
         $taxonomy = $attr['name'];
@@ -1122,6 +1240,11 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a HTML field
+     * 
+     * @param array $attr
+     */
     function html( $attr ) {
         $this->label( $attr );
         ?>
@@ -1131,6 +1254,11 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints recaptcha field
+     * 
+     * @param array $attr
+     */
     function recaptcha( $attr ) {
         $this->label( $attr );
 
@@ -1141,6 +1269,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a section break
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function section_break( $attr ) {
         ?>
         <div class="wpuf-section-wrap">
@@ -1150,6 +1284,14 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a action hook
+     * 
+     * @param array $attr
+     * @param int $form_id
+     * @param int|null $post_id
+     * @param array $form_settings
+     */
     function action_hook( $attr, $form_id, $post_id, $form_settings ) {
 
         if ( !empty( $attr['label'] ) ) {
@@ -1157,6 +1299,12 @@ class WPUF_Form_Posting {
         }
     }
 
+    /**
+     * Prints really simple captcha
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function really_simple_captcha( $attr ) {
         if ( !class_exists( 'ReallySimpleCaptcha') ) {
             _e( 'Error: Really Simple Captcha plugin not found!', 'wpuf' );
@@ -1178,6 +1326,12 @@ class WPUF_Form_Posting {
         <?php
     }
 
+    /**
+     * Prints a date field
+     * 
+     * @param array $attr
+     * @param int|null $post_id
+     */
     function date( $attr, $post_id ) {
 
         $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
