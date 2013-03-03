@@ -14,7 +14,11 @@ if ( !class_exists( 'WeDevs_Settings_API' ) ) {
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/admin/settings-options.php';
-require_once dirname( __FILE__ ) . '/lib/recaptchalib.php';
+
+// add reCaptcha library if not found
+if ( !function_exists( 'recaptcha_get_html' ) ) {
+    require_once dirname( __FILE__ ) . '/lib/recaptchalib.php';
+}
 
 if ( !is_admin() ) {
     require_once dirname( __FILE__ ) . '/wpuf-edit-user.php';
