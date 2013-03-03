@@ -158,7 +158,7 @@ class WPUF_Form_Posting {
 
         if ( isset( $_POST['category'] ) ) {
             $category = $_POST['category'];
-            $postarr['post_category'] = is_array( $category ) ? $category : array( $category );
+            $postarr['post_category'] = is_array( $category ) ? $category : array($category);
         }
 
         if ( isset( $_POST['tags'] ) ) {
@@ -166,7 +166,7 @@ class WPUF_Form_Posting {
         }
 
         // if post_id is passed, we update the post
-        if ( isset( $_POST['post_id']) ) {
+        if ( isset( $_POST['post_id'] ) ) {
             $postarr['ID'] = $_POST['post_id'];
         }
 
@@ -178,7 +178,7 @@ class WPUF_Form_Posting {
         $files = array();
         $meta_key_value = array();
         $multi_repeated = array(); //multi repeated fields will in sotre duplicated meta key
-
+            
         foreach ($meta_vars as $key => $value) {
 
             // put files in a separate array, we'll process it later
@@ -189,13 +189,13 @@ class WPUF_Form_Posting {
                 );
 
                 // process repeatable fiels
-            } elseif ($value['input_type'] == 'repeat') {
+            } elseif ( $value['input_type'] == 'repeat' ) {
 
                 // if it is a multi column repeat field
-                if (isset($value['multiple'])) {
+                if ( isset( $value['multiple'] ) ) {
 
                     // if there's any items in the array, process it
-                    if ($_POST[$value['name']]) {
+                    if ( $_POST[$value['name']] ) {
 
                         $ref_arr = array();
                         $cols = count( $value['columns'] );
@@ -221,17 +221,16 @@ class WPUF_Form_Posting {
                             $multi_repeated[$value['name']] = array_slice( $ref_arr, 0, $rows );
                         }
                     }
-
                 } else {
-                    $meta_key_value[$value['name']] = implode( $this->separator, $_POST[$value['name']]);
+                    $meta_key_value[$value['name']] = implode( $this->separator, $_POST[$value['name']] );
                 }
 
                 // process other fields
             } else {
 
                 // if it's an array, implode with this->separator
-                if (is_array($_POST[$value['name']])) {
-                    $meta_key_value[$value['name']] = implode( $this->separator, $_POST[$value['name']]);
+                if ( is_array( $_POST[$value['name']] ) ) {
+                    $meta_key_value[$value['name']] = implode( $this->separator, $_POST[$value['name']] );
                 } else {
                     $meta_key_value[$value['name']] = trim( $_POST[$value['name']] );
                 }
@@ -252,7 +251,7 @@ class WPUF_Form_Posting {
 
         if ( $post_id ) {
             // set featured image if there's any
-            if ( isset( $_POST['wpuf_files']['featured_image'])) {
+            if ( isset( $_POST['wpuf_files']['featured_image'] ) ) {
                 $attachment_id = $_POST['wpuf_files']['featured_image'][0];
 
                 wpuf_associate_attachment( $attachment_id, $post_id );
@@ -290,14 +289,14 @@ class WPUF_Form_Posting {
 
             // save any custom taxonomies
             foreach ($taxonomy_vars as $taxonomy) {
-                if (isset($_POST[$taxonomy['name']])) {
+                if ( isset( $_POST[$taxonomy['name']] ) ) {
 
-                    if ( is_object_in_taxonomy($form_settings['post_type'], $taxonomy['name']) ) {
+                    if ( is_object_in_taxonomy( $form_settings['post_type'], $taxonomy['name'] ) ) {
                         $tax = $_POST[$taxonomy['name']];
 
                         // if it's not an array, make it one
-                        if (!is_array($tax)) {
-                            $tax = array( $tax );
+                        if ( !is_array( $tax ) ) {
+                            $tax = array($tax);
                         }
 
                         wp_set_post_terms( $post_id, $_POST[$taxonomy['name']], $taxonomy['name'] );
@@ -317,9 +316,9 @@ class WPUF_Form_Posting {
             $show_message = false;
             if ( $form_settings['redirect_to'] == 'page' ) {
                 $redirect_to = get_permalink( $form_settings['page_id'] );
-            } elseif ( $form_settings['redirect_to'] == 'url') {
+            } elseif ( $form_settings['redirect_to'] == 'url' ) {
                 $redirect_to = $form_settings['url'];
-            } elseif ($form_settings['redirect_to'] == 'same') {
+            } elseif ( $form_settings['redirect_to'] == 'same' ) {
                 $show_message = true;
             } else {
                 $redirect_to = get_permalink( $post_id );
@@ -361,12 +360,12 @@ class WPUF_Form_Posting {
         foreach ($form_vars as $key => $value) {
 
             // ignore section break and HTML input type
-            if (in_array($value['input_type'], $ignore_lists)) {
+            if ( in_array( $value['input_type'], $ignore_lists ) ) {
                 continue;
             }
 
             //separate the post and custom fields
-            if ($value['is_meta'] == 'yes') {
+            if ( $value['is_meta'] == 'yes' ) {
                 $meta_vars[] = $value;
                 continue;
             }
@@ -374,7 +373,7 @@ class WPUF_Form_Posting {
             if ( $value['input_type'] == 'taxonomy' ) {
 
                 // don't add "category"
-                if ( $value['name'] == 'category') {
+                if ( $value['name'] == 'category' ) {
                     continue;
                 }
 
@@ -416,11 +415,11 @@ class WPUF_Form_Posting {
 
         ob_start();
 
-        if (!$post_id) {
+        if ( !$post_id ) {
             $post_id = isset( $_GET['pid'] ) ? intval( $_GET['pid'] ) : 0;
         }
 
-        $form_id = get_post_meta($post_id, $this->config_id, true);
+        $form_id = get_post_meta( $post_id, $this->config_id, true );
 
         if ( !$form_id ) {
             return __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' );
@@ -1196,11 +1195,9 @@ class WPUF_Form_Posting {
         $exclude = $attr['exclude'];
         $taxonomy = $attr['name'];
 
-        $selected = '';
         $terms = array();
         if ($post_id) {
-            $terms = wp_get_post_terms( $post_id, $taxonomy );
-            $selected = isset( $terms[0] ) ? $terms[0]->term_id : '';
+            $terms = wp_get_post_terms( $post_id, $taxonomy, array('fields' => 'ids') );
         }
 
         $this->label( $attr );
@@ -1213,14 +1210,35 @@ class WPUF_Form_Posting {
             switch ($attr['type']) {
                 case 'select':
 
+                    $selected = $terms ? $terms[0] : '';
                     $required = sprintf( 'data-required="%s" data-type="select"', $attr['required'] );
+                    
                     $select = wp_dropdown_categories( 'show_option_none=' . __( '-- Select --', 'wpuf' ) . "&hierarchical=1&hide_empty=0&orderby=name&name=$taxonomy&id=$taxonomy&taxonomy=$taxonomy&show_count=0&echo=0&title_li=&use_desc_for_title=1&class=$taxonomy&exclude=" . $exclude . '&selected=' . $selected );
                     echo str_replace('<select', '<select ' . $required, $select);
                     break;
 
                 case 'multiselect':
+                    $selected = $terms ? $terms : array();
                     $required = sprintf( 'data-required="%s" data-type="multiselect"', $attr['required'] );
-                    $select = wp_dropdown_categories( 'show_option_none=' . __( '-- Select --', 'wpuf' ) . "&hierarchical=1&hide_empty=0&orderby=name&name={$taxonomy}[]&id=$taxonomy&taxonomy=$taxonomy&show_count=0&echo=0&title_li=&use_desc_for_title=1&class=$taxonomy multiselect&exclude=" . $exclude . '&selected=' . $selected );
+                    $walker = new WPUF_Walker_Category_Multi();
+                    
+                    $select = wp_dropdown_categories( array(
+                        'show_option_none' => __( '-- Select --', 'wpuf' ),
+                        'hierarchical' => 1,
+                        'hide_empty' => 0,
+                        'orderby' => 'name',
+                        'name' => $taxonomy . '[]',
+                        'id' => $taxonomy,
+                        'taxonomy' => $taxonomy,
+                        'show_count' => 0,
+                        'echo' => 0,
+                        'title_li' => '',
+                        'class' => $taxonomy . ' multiselect',
+                        'exclude' => $exclude,
+                        'selected' => $selected,
+                        'walker' => $walker
+                    ) );
+                    
                     echo str_replace('<select', '<select multiple="multiple" ' . $required, $select);
                     break;
 
@@ -1334,13 +1352,13 @@ class WPUF_Form_Posting {
      */
     function date( $attr, $post_id ) {
 
-        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
+        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : '';
 
         $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
-            <input id="wpuf-date-<?php echo $attr['name']; ?>" type="text" class="datepicker" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+            <input id="wpuf-date-<?php echo $attr['name']; ?>" type="text" class="datepicker" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="30" />
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
         <script type="text/javascript">
