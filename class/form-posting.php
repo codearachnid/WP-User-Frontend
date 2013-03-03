@@ -1196,7 +1196,7 @@ class WPUF_Form_Posting {
         $taxonomy = $attr['name'];
 
         $terms = array();
-        if ($post_id) {
+        if ( $post_id ) {
             $terms = wp_get_post_terms( $post_id, $taxonomy, array('fields' => 'ids') );
         }
 
@@ -1221,7 +1221,7 @@ class WPUF_Form_Posting {
                     $selected = $terms ? $terms : array();
                     $required = sprintf( 'data-required="%s" data-type="multiselect"', $attr['required'] );
                     $walker = new WPUF_Walker_Category_Multi();
-                    
+
                     $select = wp_dropdown_categories( array(
                         'show_option_none' => __( '-- Select --', 'wpuf' ),
                         'hierarchical' => 1,
@@ -1244,7 +1244,7 @@ class WPUF_Form_Posting {
 
                 case 'checkbox':
                     printf( '<span data-required="%s" data-type="tax-checkbox" />', $attr['required'] );
-                    wpuf_category_checklist( $post_id, false, $taxonomy, $exclude);
+                    wpuf_category_checklist( $post_id, false, $taxonomy, $exclude );
                     break;
 
                 default:
