@@ -75,7 +75,9 @@ class WPUF_Admin_Posting {
             }
         }
 
-        // var_dump( $custom_fields );
+        if ( empty( $custom_fields ) ) {
+            _e( 'No custom field found.', 'wpuf' );
+        }
         ?>
 
         <input type="hidden" name="wpuf_cf_update" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
@@ -391,6 +393,46 @@ class WPUF_Admin_Posting {
             });
 
         </script>
+        <style type="text/css">
+        ul.wpuf-attachment-list li {
+          display: inline-block;
+          border: 1px solid #dfdfdf;
+          padding: 5px;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+          margin-right: 5px;
+        }
+        ul.wpuf-attachment-list li a.attachment-delete {
+          text-decoration: none;
+          padding: 3px 12px;
+          border: 1px solid #C47272;
+          color: #ffffff;
+          text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+          -webkit-border-radius: 3px;
+          -moz-border-radius: 3px;
+          border-radius: 3px;
+          background-color: #da4f49;
+          background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+          background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+          background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+          background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+          background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+          background-repeat: repeat-x;
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+          border-color: #bd362f #bd362f #802420;
+          border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+          *background-color: #bd362f;
+          filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        }
+        ul.wpuf-attachment-list li a.attachment-delete:hover,
+        ul.wpuf-attachment-list li a.attachment-delete:active {
+          color: #ffffff;
+          background-color: #bd362f;
+          *background-color: #a9302a;
+        }
+
+        </style>
         <?php
     }
 
