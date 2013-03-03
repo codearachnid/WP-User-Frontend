@@ -346,6 +346,8 @@ class WPUF_Admin_Posting {
                                     break;
                             }
                             ?>
+
+                            <div class="description"><?php echo $attr['help']; ?></div>
                         </td>
                     </tr>
                 <?php } ?>
