@@ -42,7 +42,7 @@ class WPUF_Form_Posting {
 
     /**
      * New/Edit post submit handler
-     * 
+     *
      * @return void
      */
     function submit_post() {
@@ -178,7 +178,7 @@ class WPUF_Form_Posting {
         $files = array();
         $meta_key_value = array();
         $multi_repeated = array(); //multi repeated fields will in sotre duplicated meta key
-            
+
         foreach ($meta_vars as $key => $value) {
 
             // put files in a separate array, we'll process it later
@@ -347,7 +347,7 @@ class WPUF_Form_Posting {
 
     /**
      * Get input meta fields formatted
-     * 
+     *
      * @param int $form_id
      * @return array
      */
@@ -388,7 +388,7 @@ class WPUF_Form_Posting {
 
     /**
      * Add post shortcode handler
-     * 
+     *
      * @param array $atts
      * @return string
      */
@@ -406,7 +406,7 @@ class WPUF_Form_Posting {
 
     /**
      * Edit post shortcode handler
-     * 
+     *
      * @param array $atts
      * @return string
      */
@@ -550,7 +550,7 @@ class WPUF_Form_Posting {
                                 break;
 
                             case 'recaptcha':
-                                $this->recaptcha( $form_field );
+                                $this->recaptcha( $form_field, $post_id );
                                 break;
 
                             case 'action_hook':
@@ -558,11 +558,15 @@ class WPUF_Form_Posting {
                                 break;
 
                             case 'really_simple_captcha':
-                                $this->really_simple_captcha( $form_field );
+                                $this->really_simple_captcha( $form_field, $post_id );
                                 break;
 
                             case 'date':
                                 $this->date( $form_field, $post_id );
+                                break;
+
+                            case 'toc':
+                                $this->toc( $form_field, $post_id );
                                 break;
 
                             default:
@@ -606,7 +610,7 @@ class WPUF_Form_Posting {
 
     /**
      * Form preview handler
-     * 
+     *
      * @return void
      */
     function preview_form() {
@@ -658,7 +662,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints required field asterisk
-     * 
+     *
      * @param array $attr
      * @return string
      */
@@ -670,7 +674,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints HTML5 required attribute
-     * 
+     *
      * @param array $attr
      * @return string
      */
@@ -682,7 +686,7 @@ class WPUF_Form_Posting {
 
     /**
      * Print required class name
-     * 
+     *
      * @param array $attr
      * @return string
      */
@@ -695,7 +699,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints form input label
-     * 
+     *
      * @param string $attr
      */
     function label( $attr ) {
@@ -708,7 +712,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a text field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -747,7 +751,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a textarea field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -796,7 +800,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a file upload field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -850,7 +854,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a image upload field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -914,7 +918,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a select or multiselect field
-     * 
+     *
      * @param array $attr
      * @param bool $multiselect
      * @param int|null $post_id
@@ -949,7 +953,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a radio field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -988,7 +992,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a checkbox field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -1026,7 +1030,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a url field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -1047,7 +1051,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a email field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -1067,7 +1071,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a repeatable field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -1187,7 +1191,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a taxonomy field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -1212,7 +1216,7 @@ class WPUF_Form_Posting {
 
                     $selected = $terms ? $terms[0] : '';
                     $required = sprintf( 'data-required="%s" data-type="select"', $attr['required'] );
-                    
+
                     $select = wp_dropdown_categories( 'show_option_none=' . __( '-- Select --', 'wpuf' ) . "&hierarchical=1&hide_empty=0&orderby=name&name=$taxonomy&id=$taxonomy&taxonomy=$taxonomy&show_count=0&echo=0&title_li=&use_desc_for_title=1&class=$taxonomy&exclude=" . $exclude . '&selected=' . $selected );
                     echo str_replace('<select', '<select ' . $required, $select);
                     break;
@@ -1238,7 +1242,7 @@ class WPUF_Form_Posting {
                         'selected' => $selected,
                         'walker' => $walker
                     ) );
-                    
+
                     echo str_replace('<select', '<select multiple="multiple" ' . $required, $select);
                     break;
 
@@ -1260,7 +1264,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a HTML field
-     * 
+     *
      * @param array $attr
      */
     function html( $attr ) {
@@ -1273,11 +1277,43 @@ class WPUF_Form_Posting {
     }
 
     /**
-     * Prints recaptcha field
-     * 
+     * Prints a HTML field
+     *
      * @param array $attr
      */
-    function recaptcha( $attr ) {
+    function toc( $attr, $post_id ) {
+
+        if ( $post_id ) {
+            return;
+        }
+
+        ?>
+        <div class="wpuf-label">
+            &nbsp;
+        </div>
+
+        <div class="wpuf-fields">
+            <span data-required="yes" data-type="radio"></span>
+
+            <textarea rows="10" cols="40" disabled="disabled" name="toc"><?php echo $attr['description']; ?></textarea>
+            <label>
+                <input type="checkbox" name="wpuf_accept_toc" required="required" /> <?php echo $attr['label']; ?>
+            </label>
+        </div>
+        <?php
+    }
+
+    /**
+     * Prints recaptcha field
+     *
+     * @param array $attr
+     */
+    function recaptcha( $attr, $post_id ) {
+
+        if ( $post_id ) {
+            return;
+        }
+
         $this->label( $attr );
 
         ?>
@@ -1289,7 +1325,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a section break
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
@@ -1304,7 +1340,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a action hook
-     * 
+     *
      * @param array $attr
      * @param int $form_id
      * @param int|null $post_id
@@ -1319,11 +1355,16 @@ class WPUF_Form_Posting {
 
     /**
      * Prints really simple captcha
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */
-    function really_simple_captcha( $attr ) {
+    function really_simple_captcha( $attr, $post_id ) {
+
+        if ( $post_id ) {
+            return;
+        }
+
         if ( !class_exists( 'ReallySimpleCaptcha') ) {
             _e( 'Error: Really Simple Captcha plugin not found!', 'wpuf' );
             return;
@@ -1346,7 +1387,7 @@ class WPUF_Form_Posting {
 
     /**
      * Prints a date field
-     * 
+     *
      * @param array $attr
      * @param int|null $post_id
      */

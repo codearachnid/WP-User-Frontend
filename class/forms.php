@@ -380,6 +380,7 @@ class WPUF_Forms {
             <button class="button" data-name="section_break" data-type="break"><?php _e( 'Section Break', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_html" data-type="html"><?php _e( 'HTML', 'wpuf' ); ?></button>
             <button class="button" data-name="action_hook" data-type="action"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
+            <button class="button" data-name="toc" data-type="action"><?php _e( 'Term &amp; Conditions', 'wpuf' ); ?></button>
         </div>
         <?php
     }
@@ -550,6 +551,10 @@ class WPUF_Forms {
 
             case 'custom_date':
                 WPUF_Form_Template::custom_date( $field_id, 'Custom Field: Date' );
+                break;
+
+            case 'toc':
+                WPUF_Form_Template::toc( $field_id, 'TOC' );
                 break;
 
 

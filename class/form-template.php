@@ -927,5 +927,32 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
         </li>
         <?php
     }
+    
+    public static function toc( $field_id, $label, $values = array() ) {
+        $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
+        $description_name = sprintf( '%s[%d][description]', self::$input_name, $field_id );
+
+        $title_value = $values ? esc_attr( $values['label'] ) : '';
+        $description_value = $values ? esc_attr( $values['description'] ) : '';
+        ?>
+        <li class="custom-field custom_html">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'toc' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'toc' ); ?>
+
+            <div class="wpuf-form-holder">
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Label', 'wpuf' ); ?></label>
+                    <input type="text" name="<?php echo $title_name; ?>" value="<?php echo esc_attr( $title_value ); ?>" />
+                </div> <!-- .wpuf-form-rows -->
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Terms & Conditions', 'wpuf' ); ?></label>
+                    <textarea class="smallipopInput" title="<?php _e( 'Insert terms and condtions here.', 'wpuf'); ?>" name="<?php echo $description_name; ?>" rows="3"><?php echo esc_html( $description_value ); ?></textarea>
+                </div> <!-- .wpuf-form-rows -->
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
 
 }
