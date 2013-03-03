@@ -533,7 +533,7 @@ class WPUF_Form_Template {
             <?php self::hidden_field( "[$field_id][template]", 'custom_image' ); ?>
 
             <div class="wpuf-form-holder">
-                <?php self::common( $field_id, 'custom_image', true, $values ); ?>
+                <?php self::common( $field_id, '', true, $values ); ?>
 
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Max. file size', 'wpuf' ); ?></label>

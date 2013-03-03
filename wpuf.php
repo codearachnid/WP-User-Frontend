@@ -110,6 +110,7 @@ class WP_User_Frontend {
 
         if (is_admin()) {
             new WPUF_Settings();
+            new WPUF_Admin_Posting();
         } else {
             new WPUF_Dashboard();
             new WPUF_Edit_Profile();
@@ -124,13 +125,6 @@ class WP_User_Frontend {
      */
     function enqueue_scripts() {
         $path = plugins_url( '', __FILE__ );
-
-        //for multisite upload limit filter
-        if ( is_multisite() ) {
-            require_once ABSPATH . '/wp-admin/includes/ms.php';
-        }
-
-        require_once ABSPATH . '/wp-admin/includes/template.php';
 
         // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
         wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );

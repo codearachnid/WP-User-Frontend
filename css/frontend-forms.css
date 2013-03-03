@@ -261,14 +261,17 @@ ul.wpuf-form li .wpuf-fields #wpuf-insert-image-container:after {
 }
 ul.wpuf-form li .wpuf-fields #wpuf-insert-image-container a#wpuf-insert-image {
   text-decoration: none;
-  float: left;
   border: 1px solid #DFDFDF;
   font-size: 11px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  padding: 2px 6px;
+  padding: 4px 6px;
   margin-right: 10px;
+}
+ul.wpuf-form li .wpuf-fields #wpuf-insert-image-container a#wpuf-insert-image .wpuf-media-icon {
+  height: 12px;
+  width: 12px;
 }
 ul.wpuf-form li .wpuf-section-wrap {
   border-bottom: 1px solid #ccc;

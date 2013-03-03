@@ -114,6 +114,7 @@ class WPUF_Forms {
         <input type="hidden" name="wpuf_form_select_nonce" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
         
         <select name="wpuf_form_select">
+            <option value="">--</option>
             <?php foreach ($forms as $form) { ?>
             <option value="<?php echo $form->ID; ?>"<?php selected($selected, $form->ID); ?>><?php echo $form->post_title; ?></option>
             <?php } ?>

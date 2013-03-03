@@ -1191,15 +1191,15 @@ class WPUF_Form_Posting {
         ?>
 
         <div class="wpuf-fields">
-            <input id="wpuf-<?php echo $attr['name']; ?>" type="text" class="datepicker" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+            <input id="wpuf-date-<?php echo $attr['name']; ?>" type="text" class="datepicker" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
         <script type="text/javascript">
             jQuery(function($) {
                 <?php if ( $attr['time'] == 'yes' ) { ?>
-                    $(".datepicker").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+                    $("#wpuf-date-<?php echo $attr['name']; ?>").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
                 <?php } else { ?>
-                    $(".datepicker").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+                    $("#wpuf-date-<?php echo $attr['name']; ?>").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
                 <?php } ?>
             });
         </script>

@@ -141,7 +141,7 @@
                     'action' : 'wpuf_file_del'
                 };
 
-                jQuery.post(wpuf_frontend.ajaxurl, data, function() {
+                jQuery.post(wpuf_frontend_upload.ajaxurl, data, function() {
                     el.parent().parent().remove();
 
                     self.count -= 1;
