@@ -105,6 +105,16 @@ class WPUF_Form_Posting {
             if ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
                 $guest_name = trim( $_POST['guest_name'] );
                 $guest_email = trim( $_POST['guest_email'] );
+                
+                // is valid email?
+                if ( !is_email( $guest_email ) ) {
+                    echo json_encode( array(
+                        'success' => false,
+                        'error' => __( 'Invalid email address.', 'wpuf' )
+                    ) );
+
+                    exit;
+                }
 
                 // check if the user email already exists
                 $user = get_user_by( 'email', $guest_email );
@@ -123,10 +133,8 @@ class WPUF_Form_Posting {
 
                     $user_id = wp_create_user( $username, $user_pass, $guest_email );
 
-                    if ( !$user_id ) {
-                        //something went wrong creating the user, set post author to the default author
-                        $post_author = $default_post_author;
-                    } else {
+                    // if its a success and no errors found
+                    if ( $user_id && !is_wp_error( $user_id ) ) {
                         update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
                         wp_new_user_notification( $user_id, $user_pass );
 
@@ -134,6 +142,9 @@ class WPUF_Form_Posting {
                         wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
 
                         $post_author = $user_id;
+                    } else {
+                        //something went wrong creating the user, set post author to the default author
+                        $post_author = $default_post_author;
                     }
                 }
 
