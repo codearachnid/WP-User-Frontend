@@ -110,6 +110,7 @@ class WP_User_Frontend {
     function instantiate() {
         new WPUF_Forms();
         new WPUF_Form_Posting();
+        new WPUF_Profile_Posting();
         new WPUF_Upload();
 
         if (is_admin()) {
