@@ -1,7 +1,7 @@
 <?php
 /**
  * WPUF Form builder template
- * 
+ *
  * @package WP User Frontend
  * @author Tareq Hasan <tareq@wedevs.com>
  */
@@ -31,7 +31,7 @@ class WPUF_Form_Template {
 
     /**
      * Legend of a form item
-     * 
+     *
      * @param string $title
      * @param array $values
      */
@@ -50,7 +50,7 @@ class WPUF_Form_Template {
 
     /**
      * Common Fields for a input field
-     * 
+     *
      * Contains required, label, meta_key, help text, css class name
      *
      * @param int $id field order
@@ -80,7 +80,7 @@ class WPUF_Form_Template {
         // var_dump($values);
         // var_dump($required, $label_value, $help_value);
         ?>
-        <div class="wpuf-form-rows">
+        <div class="wpuf-form-rows required-field">
             <label><?php _e( 'Required', 'wpuf' ); ?></label>
 
             <?php //self::hidden_field($order_name, ''); ?>
@@ -124,7 +124,7 @@ class WPUF_Form_Template {
 
     /**
      * Common fields for a text area
-     * 
+     *
      * @param int $id
      * @param array $values
      */
@@ -159,7 +159,7 @@ class WPUF_Form_Template {
 
     /**
      * Common fields for a textarea
-     * 
+     *
      * @param int $id
      * @param array $values
      */
@@ -212,7 +212,7 @@ class WPUF_Form_Template {
 
     /**
      * Hidden field helper function
-     * 
+     *
      * @param string $name
      * @param string $value
      */
@@ -222,7 +222,7 @@ class WPUF_Form_Template {
 
     /**
      * Displays a radio custom field
-     * 
+     *
      * @param int $field_id
      * @param string $name
      * @param array $values
@@ -259,11 +259,11 @@ class WPUF_Form_Template {
 
     /**
      * Displays a checkbox custom field
-     * 
+     *
      * @param int $field_id
      * @param string $name
      * @param array $values
-     */    
+     */
     function checkbox_field( $field_id, $name, $values = array() ) {
         // var_dump($values);
         $selected_name = sprintf( '%s[%d][selected]', self::$input_name, $field_id );
@@ -297,8 +297,8 @@ class WPUF_Form_Template {
 
     /**
      * Add/remove buttons for repeatable fields
-     * 
-     * @return void 
+     *
+     * @return void
      */
     public static function remove_button() {
         $add = plugins_url( 'images/add.png', dirname( __FILE__ ) );
@@ -811,7 +811,7 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
         </li>
         <?php
     }
-    
+
     public static function toc( $field_id, $label, $values = array() ) {
         $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
         $description_name = sprintf( '%s[%d][description]', self::$input_name, $field_id );

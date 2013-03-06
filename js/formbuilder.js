@@ -54,6 +54,19 @@
                 }
             });
 
+            // on change event: checkbox|radio fields
+            $('#wpuf-form-editor').on('click', 'input[type=checkbox].retype-pass', function() {
+                // $(this).prev('input[type=checkbox], input[type=radio]').val($(this).val());
+                var $self = $(this),
+                    $parent = $self.closest('.wpuf-form-rows');
+
+                if ($self.is(':checked')) {
+                    $parent.next().show().next().show();
+                } else {
+                    $parent.next().hide().next().hide();
+                }
+            });
+
             // toggle form field
             $('#wpuf-form-editor').on('click', '.wpuf-toggle', this.toggleFormField);
 
@@ -69,19 +82,8 @@
                 $formEditor.sortable({
                     placeholder: "ui-state-highlight",
                     handle: '> .wpuf-legend',
-                    distance: 5,
-                    start: function(e, ui) {
-                        // ui.item.find('.wpuf-form-holder').hide();
-                        // ui.item.css({'height':''});
-                        // ui.item.siblings('li').find('.wpuf-form-holder').hide();
-                    },
-                    stop: function(e, ui) {
-                        // ui.item.find('.wpuf-form-holder').show();
-                        // ui.item.siblings('li').find('.wpuf-form-holder').show();
-                    }
+                    distance: 5
                 });
-
-                // $formEditor.disableSelection();
             }
         },
 
@@ -102,10 +104,13 @@
             // console.log($self, data);
 
             // check if these are already inserted
-            var oneInstance = ['post_title', 'post_content', 'post_excerpt', 'featured_image'];
+            var oneInstance = ['post_title', 'post_content', 'post_excerpt', 'featured_image',
+                'user_login', 'first_name', 'last_name', 'nickname', 'user_email', 'user_url',
+                'user_bio', 'password', 'user_avatar'];
+
             if ($.inArray(name, oneInstance) >= 0) {
                 if( $formEditor.find('li.' + name).length ) {
-                    alert('You already have this in the form');
+                    alert('You already have this field in the form');
                     return false;
                 }
             }
@@ -251,29 +256,9 @@
         }
     };
 
-
+    // on DOM ready
     $(function() {
         Editor.init();
-
-        function dump_submit() {
-            $('form[name=post]').submit(function(e) {
-                e.preventDefault();
-
-                $.post(ajaxurl, $(this).serialize() + '&action=wpuf_form_dump', function(res) {
-                    $('#temp-result').html(res);
-                });
-            });
-        }
-
-        // dump_submit();
-
-        $('button.clear-area').on('click', function(event) {
-            event.preventDefault();
-
-            $('#temp-result').html(' ');
-        });
-
-
     });
 
 })(jQuery);
