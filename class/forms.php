@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Admin Form UI Builder
+ * 
+ * @package WP User Frontend
+ */
 class WPUF_Forms {
 
     private $meta_key = 'wpuf_form';
@@ -17,9 +21,9 @@ class WPUF_Forms {
         add_filter( 'manage_edit-wpuf_forms_columns', array( $this, 'admin_column' ) );
         add_action( 'manage_wpuf_forms_posts_custom_column', array( $this, 'admin_column_value' ), 10, 2 );
 
-        // ajax actions
+        // ajax actions for post forms
         add_action( 'wp_ajax_wpuf_form_dump', array( $this, 'form_dump' ) );
-        add_action( 'wp_ajax_wpuf_form_add_el', array( $this, 'ajax_add_element' ) );
+        add_action( 'wp_ajax_wpuf_form_add_el', array( $this, 'ajax_post_add_element' ) );
 
         add_action( 'save_post', array( $this, 'save_meta' ), 1, 2 ); // save the custom fields
         add_action( 'save_post', array( $this, 'form_selection_metabox_save' ), 1, 2 ); // save the custom fields
@@ -91,7 +95,7 @@ class WPUF_Forms {
 
     function do_meta_boxes() {
         remove_meta_box('submitbox', 'wpuf_forms', 'side');
-        
+
         $post_types = get_post_types( array('public' => true) );
         foreach ($post_types as $post_type) {
             add_meta_box( 'wpuf-select-form', __('WPUF Form'), array($this, 'form_selection_metabox'), $post_type, 'side', 'high' );
@@ -103,16 +107,16 @@ class WPUF_Forms {
         add_meta_box( 'wpuf-metabox', __( 'Form Editor', 'wpuf' ), array($this, 'edit_form_area'), 'wpuf_forms', 'normal', 'high' );
         add_meta_box( 'wpuf-metabox-fields', __( 'Form Elements', 'wpuf' ), array($this, 'form_elements'), 'wpuf_forms', 'side', 'core' );
     }
-    
+
     function form_selection_metabox() {
         global $post;
-        
+
         $forms = get_posts( array('post_type' => 'wpuf_forms', 'numberposts' => '-1') );
         $selected = get_post_meta( $post->ID, '_wpuf_form_id', true );
         ?>
 
         <input type="hidden" name="wpuf_form_select_nonce" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
-        
+
         <select name="wpuf_form_select">
             <option value="">--</option>
             <?php foreach ($forms as $form) { ?>
@@ -121,7 +125,7 @@ class WPUF_Forms {
         </select>
         <?php
     }
-    
+
     function form_selection_metabox_save( $post_id, $post ) {
         if ( !isset($_POST['wpuf_form_select'])) {
             return $post->ID;
@@ -428,9 +432,9 @@ class WPUF_Forms {
                 $name = ucwords( str_replace( '_', ' ', $input_field['template'] ) );
 
                 if ( $input_field['template'] == 'taxonomy') {
-                    WPUF_Form_Template::$input_field['template']( $count, $name, $input_field['name'], $input_field );
+                    WPUF_Post_Template::$input_field['template']( $count, $name, $input_field['name'], $input_field );
                 } else {
-                    WPUF_Form_Template::$input_field['template']( $count, $name, $input_field );
+                    WPUF_Post_Template::$input_field['template']( $count, $name, $input_field );
                 }
 
                 $count++;
@@ -447,7 +451,7 @@ class WPUF_Forms {
         // include dirname( __FILE__ ) . '/forms-edit.php';
     }
 
-    function ajax_add_element() {
+    function ajax_post_add_element() {
         require_once dirname( __FILE__ ) . '/form-template.php';
 
         // print_r( $_POST ); die();
@@ -458,103 +462,103 @@ class WPUF_Forms {
 
         switch ($name) {
             case 'post_title':
-                WPUF_Form_Template::post_title( $field_id, 'Post Title');
+                WPUF_Post_Template::post_title( $field_id, 'Post Title');
                 break;
 
             case 'post_content':
-                WPUF_Form_Template::post_content( $field_id, 'Post Body');
+                WPUF_Post_Template::post_content( $field_id, 'Post Body');
                 break;
 
             case 'post_excerpt':
-                WPUF_Form_Template::post_excerpt( $field_id, 'Excerpt');
+                WPUF_Post_Template::post_excerpt( $field_id, 'Excerpt');
                 break;
 
             case 'tags':
-                WPUF_Form_Template::post_tags( $field_id, 'Tags');
+                WPUF_Post_Template::post_tags( $field_id, 'Tags');
                 break;
 
             case 'featured_image':
-                WPUF_Form_Template::featured_image( $field_id, 'Featured Image');
+                WPUF_Post_Template::featured_image( $field_id, 'Featured Image');
                 break;
 
             case 'custom_text':
-                WPUF_Form_Template::custom_text( $field_id, 'Custom field: Text');
+                WPUF_Post_Template::custom_text( $field_id, 'Custom field: Text');
                 break;
 
             case 'custom_textarea':
-                WPUF_Form_Template::custom_textarea( $field_id, 'Custom field: Textarea');
+                WPUF_Post_Template::custom_textarea( $field_id, 'Custom field: Textarea');
                 break;
 
             case 'custom_select':
-                WPUF_Form_Template::custom_select( $field_id, 'Custom field: Select');
+                WPUF_Post_Template::custom_select( $field_id, 'Custom field: Select');
                 break;
 
             case 'custom_multiselect':
-                WPUF_Form_Template::custom_multiselect( $field_id, 'Custom field: Multiselect');
+                WPUF_Post_Template::custom_multiselect( $field_id, 'Custom field: Multiselect');
                 break;
 
             case 'custom_radio':
-                WPUF_Form_Template::custom_radio( $field_id, 'Custom field: Radio');
+                WPUF_Post_Template::custom_radio( $field_id, 'Custom field: Radio');
                 break;
 
             case 'custom_checkbox':
-                WPUF_Form_Template::custom_checkbox( $field_id, 'Custom field: Checkbox');
+                WPUF_Post_Template::custom_checkbox( $field_id, 'Custom field: Checkbox');
                 break;
 
             case 'custom_image':
-                WPUF_Form_Template::custom_image( $field_id, 'Custom field: Image');
+                WPUF_Post_Template::custom_image( $field_id, 'Custom field: Image');
                 break;
 
             case 'custom_file':
-                WPUF_Form_Template::custom_file( $field_id, 'Custom field: File Upload');
+                WPUF_Post_Template::custom_file( $field_id, 'Custom field: File Upload');
                 break;
 
             case 'custom_url':
-                WPUF_Form_Template::custom_url( $field_id, 'Custom field: URL');
+                WPUF_Post_Template::custom_url( $field_id, 'Custom field: URL');
                 break;
 
             case 'custom_email':
-                WPUF_Form_Template::custom_email( $field_id, 'Custom field: E-Mail');
+                WPUF_Post_Template::custom_email( $field_id, 'Custom field: E-Mail');
                 break;
 
             case 'custom_repeater':
-                WPUF_Form_Template::custom_repeater( $field_id, 'Custom field: Repeat Field');
+                WPUF_Post_Template::custom_repeater( $field_id, 'Custom field: Repeat Field');
                 break;
 
             case 'custom_html':
-                WPUF_Form_Template::custom_html( $field_id, 'HTML' );
+                WPUF_Post_Template::custom_html( $field_id, 'HTML' );
                 break;
 
             case 'category':
-                WPUF_Form_Template::taxonomy( $field_id, 'Category', $type );
+                WPUF_Post_Template::taxonomy( $field_id, 'Category', $type );
                 break;
 
             case 'taxonomy':
-                WPUF_Form_Template::taxonomy( $field_id, 'Taxonomy: ' . $type, $type );
+                WPUF_Post_Template::taxonomy( $field_id, 'Taxonomy: ' . $type, $type );
                 break;
 
             case 'section_break':
-                WPUF_Form_Template::section_break( $field_id, 'Section Break' );
+                WPUF_Post_Template::section_break( $field_id, 'Section Break' );
                 break;
 
             case 'recaptcha':
-                WPUF_Form_Template::recaptcha( $field_id, 'reCaptcha' );
+                WPUF_Post_Template::recaptcha( $field_id, 'reCaptcha' );
                 break;
 
             case 'action_hook':
-                WPUF_Form_Template::action_hook( $field_id, 'Action Hook' );
+                WPUF_Post_Template::action_hook( $field_id, 'Action Hook' );
                 break;
 
             case 'really_simple_captcha':
-                WPUF_Form_Template::really_simple_captcha( $field_id, 'Really Simple Captcha' );
+                WPUF_Post_Template::really_simple_captcha( $field_id, 'Really Simple Captcha' );
                 break;
 
             case 'custom_date':
-                WPUF_Form_Template::custom_date( $field_id, 'Custom Field: Date' );
+                WPUF_Post_Template::custom_date( $field_id, 'Custom Field: Date' );
                 break;
 
             case 'toc':
-                WPUF_Form_Template::toc( $field_id, 'TOC' );
+                WPUF_Post_Template::toc( $field_id, 'TOC' );
                 break;
 
 

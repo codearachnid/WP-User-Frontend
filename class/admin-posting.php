@@ -2,6 +2,11 @@
 
 /**
  * Admin side posting handler
+ * 
+ * Builds custom fields UI for post add/edit screen
+ * and handles value saving.
+ * 
+ * @package WP User Frontend
  */
 class WPUF_Admin_Posting {
 

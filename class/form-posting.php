@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Handles form generaton and posting for add/edit post in frontend
+ * 
+ * @package WP User Frontend
+ */
 class WPUF_Form_Posting {
 
     protected $meta_key = 'wpuf_form';
