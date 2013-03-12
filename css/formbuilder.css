@@ -1,4 +1,6 @@
 .wpuf-hide{display:none;}
+#wpuf-metabox-editor{background:#fff;}#wpuf-metabox-editor .handlediv{display:none;}
+#wpuf-metabox-editor .hndle{display:none;}
 #wpuf-metabox-fields h2{margin:0;}
 #wpuf-metabox-fields .wpuf-form-buttons{margin-bottom:10px;}
 #wpuf-metabox-fields button{margin-bottom:5px;}
@@ -9,7 +11,8 @@
 .wpuf-form-editor li .wpuf-legend:hover{cursor:move;}
 .wpuf-form-editor li .wpuf-legend .wpuf-label{float:left;width:70%;}
 .wpuf-form-editor li .wpuf-legend .wpuf-actions{float:right;}.wpuf-form-editor li .wpuf-legend .wpuf-actions a{font-size:11px;padding:2px 5px;}
-.wpuf-form-editor li .wpuf-legend .wpuf-actions a.wpuf-remove{color:#f00;}
+.wpuf-form-editor li .wpuf-legend .wpuf-actions a.wpuf-remove{background:transparent url(../images/delete.png) no-repeat 70% 50%;color:#f00;width:16px;text-indent:-9999px;display:inline-block;}
+.wpuf-form-editor li .wpuf-legend .wpuf-actions a.wpuf-toggle{background:transparent url(../images/arrows.png) no-repeat 0 2px;width:10px;text-indent:-9999px;display:inline-block;}
 .wpuf-form-editor li .wpuf-form-holder{padding:10px;}
 .wpuf-form-editor li .wpuf-form-rows{padding-bottom:3px;}.wpuf-form-editor li .wpuf-form-rows:after{clear:both;content:"";display:table;}
 .wpuf-form-editor li .wpuf-form-rows label{float:left;width:30%;font-size:12px;}

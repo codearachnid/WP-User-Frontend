@@ -453,3 +453,51 @@ function wpuf_associate_attachment( $attachment_id, $post_id ) {
         'post_parent' => $post_id
     ) );
 }
+
+/**
+ * Get user role names
+ * 
+ * @global WP_Roles $wp_roles
+ * @return array
+ */
+function wpuf_get_user_roles() {
+    global $wp_roles;
+
+    if ( !isset( $wp_roles ) )
+        $wp_roles = new WP_Roles();
+
+    return $wp_roles->get_names();
+}
+
+/**
+ * User avatar wrapper for custom uploaded avatar
+ * 
+ * @param string $avatar
+ * @param mixed $id_or_email
+ * @param int $size
+ * @param string $default
+ * @param string $alt
+ * @return string image tag of the user avatar
+ */
+function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
+
+    if ( is_numeric( $id_or_email ) ) {
+        $user = get_user_by( 'id', $id_or_email );
+    } else {
+        $user = get_user_by( 'email', $id_or_email );
+    }
+
+    // see if there is a user_avatar meta field
+    $user_avatar = get_user_meta( $user->ID, 'user_avatar', true );
+    if ( empty( $user_avatar ) ) {
+        return $avatar;
+    }
+
+    // hmm, we found something
+    $upload_dir = wp_upload_dir();
+    $image_src = $upload_dir['baseurl'] . $user_avatar;
+    
+    return sprintf('<img src="%1$s" alt="%2$s" height="%3$s" width="%3$s" class="avatar"', esc_url( $image_src ), $alt, $size);
+}
+
+add_filter( 'get_avatar', 'wpuf_get_avatar', 99, 5 );

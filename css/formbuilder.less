@@ -13,6 +13,13 @@
     display: none;
 }
 
+#wpuf-metabox-editor {
+    background: #fff;
+
+    .handlediv { display: none; }
+    .hndle { display: none; }
+}
+
 #wpuf-metabox-fields {
     h2 {
         margin:0;
@@ -94,7 +101,18 @@
                 }
 
                 a.wpuf-remove {
+                    background: transparent url(../images/delete.png) no-repeat 70% 50%;
                     color: #f00;
+                    width: 16px;
+                    text-indent: -9999px;
+                    display: inline-block;
+                }
+
+                a.wpuf-toggle {
+                    background: transparent url(../images/arrows.png) no-repeat 0 2px;
+                    width: 10px;
+                    text-indent: -9999px;
+                    display: inline-block;
                 }
             }
         }

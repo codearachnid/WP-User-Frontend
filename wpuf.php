@@ -36,7 +36,7 @@ function wpuf_autoload( $class ) {
     $class = str_replace( 'WPUF_', '', $class );
     $class = explode( '_', $class );
 
-    $class_name = isset( $class[1] ) ? $class[0] . '-' . $class[1] : $class[0];
+    $class_name = implode( '-', $class);
     $filename = dirname( __FILE__ ) . '/class/' . strtolower( $class_name ) . '.php';
 
     if ( file_exists( $filename ) ) {
@@ -169,7 +169,7 @@ class WP_User_Frontend {
      * @author Tareq Hasan
      */
     function load_textdomain() {
-        $locale = apply_filters( 'wpuf_locale', get_locale() );
+        $locale = apply_filters( 'plugin_locale', get_locale() );
         $mofile = dirname( __FILE__ ) . "/languages/wpuf-$locale.mo";
 
         if ( file_exists( $mofile ) ) {

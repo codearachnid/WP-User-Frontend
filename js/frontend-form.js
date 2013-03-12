@@ -5,7 +5,7 @@
             $('.wpuf-form').on('click', 'img.wpuf-clone-field', this.cloneField);
             $('.wpuf-form').on('click', 'img.wpuf-remove-field', this.removeField);
 
-            $('#wpuf-form-add').on('submit', this.handleForm);
+            $('#wpuf-form-add').on('submit', this.formSubmit);
 
             // image insert
             // this.insertImage();
@@ -34,11 +34,51 @@
             }
         },
 
-        handleForm: function(e) {
+        formSubmit: function(e) {
             e.preventDefault();
 
-            var self = $(this),
-                temp,
+            var form = $(this),
+                submitButton = form.find('input[type=submit]')
+                form_data = WP_User_Frontend.validateForm(form);
+
+            if (form_data) {
+
+                // send the request
+                form.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
+                submitButton.attr('disabled', 'disabled').addClass('button-primary-disabled');
+
+                $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
+                    // var res = $.parseJSON(res);
+                    console.log(res);
+
+                    if ( res.success) {
+                        if( res.show_message == true) {
+                            form.after( '<div class="wpuf-success">' + res.message + '</div>');
+                            form.remove();
+
+                            //focus
+                            $('html, body').animate({
+                                scrollTop: $('.wpuf-success').offset().top - 100
+                            }, 'fast');
+
+                        } else {
+                            window.location = res.redirect_to;
+                        }
+
+                    } else {
+                        alert( res.error );
+                        submitButton.removeAttr('disabled');
+                    }
+
+                    submitButton.removeClass('button-primary-disabled');
+                    form.find('span.wpuf-loading').remove();
+                });
+            }
+        },
+
+        validateForm: function( self ) {
+
+            var temp,
                 temp_val = '',
                 error = false,
                 error_items = [];
@@ -178,8 +218,7 @@
             }
 
             var form_data = self.serialize(),
-                rich_texts = [],
-                submitButton = self.find('input[type=submit]');
+                rich_texts = [];
 
             // grab rich texts from tinyMCE
             $('.wpuf-rich-validation').each(function (index, item) {
@@ -191,36 +230,7 @@
 
             // append them to the form var
             form_data = form_data + '&' + rich_texts.join('&');
-
-            // send the request
-            self.find('li.wpuf-submit').append('<span class="wpuf-loading"></span>');
-            submitButton.attr('disabled', 'disabled').addClass('button-primary-disabled');
-            
-            $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
-                // var res = $.parseJSON(res);
-
-                if ( res.success) {
-                    if( res.show_message == true) {
-                        self.after( '<div class="wpuf-success">' + res.message + '</div>');
-                        self.remove();
-
-                        //focus
-                        $('html, body').animate({
-                            scrollTop: $('.wpuf-success').offset().top - 100
-                        }, 'fast');
-
-                    } else {
-                        window.location = res.redirect_to;
-                    }
-
-                } else {
-                    alert( res.error );
-                    submitButton.removeAttr('disabled');
-                }
-
-                submitButton.removeClass('button-primary-disabled');
-                self.find('span.wpuf-loading').remove();
-            });
+            return form_data;
         },
 
         addErrorNotice: function(form) {

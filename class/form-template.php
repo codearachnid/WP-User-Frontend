@@ -38,7 +38,7 @@ class WPUF_Form_Template {
     public static function legend( $title = 'Field Name', $values = array() ) {
         $field_label = $values ? ': <strong>' . $values['label'] . '</strong>' : '';
         ?>
-        <div class="wpuf-legend">
+        <div class="wpuf-legend" title="<?php _e( 'Click and Drag to rearrange', 'wpuf'); ?>">
             <div class="wpuf-label"><?php echo $title . $field_label; ?></div>
             <div class="wpuf-actions">
                 <a href="#" class="wpuf-remove"><?php _e( 'Remove', 'wpuf' ); ?></a>
@@ -93,13 +93,13 @@ class WPUF_Form_Template {
 
         <div class="wpuf-form-rows">
             <label><?php _e( 'Field Label', 'wpuf' ); ?></label>
-            <input type="text" data-type="label" name="<?php echo $label_name; ?>" value="<?php echo $label_value; ?>">
+            <input type="text" data-type="label" name="<?php echo $label_name; ?>" value="<?php echo $label_value; ?>" class="smallipopInput" title="<?php _e( 'Enter a title of this field', 'wpuf' ); ?>">
         </div> <!-- .wpuf-form-rows -->
 
         <?php if ( $custom_field ) { ?>
             <div class="wpuf-form-rows">
                 <label><?php _e( 'Meta Key', 'wpuf' ); ?></label>
-                <input type="text" name="<?php echo $field_name; ?>" value="<?php echo $field_name_value; ?>">
+                <input type="text" name="<?php echo $field_name; ?>" value="<?php echo $field_name_value; ?>" class="smallipopInput" title="<?php _e( 'Name of the meta key this field will save to', 'wpuf' ); ?>">
                 <input type="hidden" name="<?php echo $is_meta_name; ?>" value="yes">
             </div> <!-- .wpuf-form-rows -->
         <?php } else { ?>
@@ -111,12 +111,12 @@ class WPUF_Form_Template {
 
         <div class="wpuf-form-rows">
             <label><?php _e( 'Help text', 'wpuf' ); ?></label>
-            <textarea name="<?php echo $help_name; ?>"><?php echo $help_value; ?></textarea>
+            <textarea name="<?php echo $help_name; ?>" class="smallipopInput" title="<?php _e( 'Give the user some information about this field', 'wpuf' ); ?>"><?php echo $help_value; ?></textarea>
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
             <label><?php _e( 'CSS Class Name', 'wpuf' ); ?></label>
-            <input type="text" name="<?php echo $css_name; ?>" value="<?php echo $css_value; ?>">
+            <input type="text" name="<?php echo $css_name; ?>" value="<?php echo $css_value; ?>" class="smallipopInput" title="<?php _e( 'Add a CSS class name for this field', 'wpuf' ); ?>">
         </div> <!-- .wpuf-form-rows -->
 
         <?php
@@ -264,7 +264,7 @@ class WPUF_Form_Template {
      * @param string $name
      * @param array $values
      */
-    function checkbox_field( $field_id, $name, $values = array() ) {
+    function common_checkbox( $field_id, $name, $values = array() ) {
         // var_dump($values);
         $selected_name = sprintf( '%s[%d][selected]', self::$input_name, $field_id );
         $input_name = sprintf( '%s[%d][%s]', self::$input_name, $field_id, $name );
@@ -317,12 +317,12 @@ class WPUF_Form_Template {
         return ob_get_clean();
     }
 
-    public static function custom_text( $field_id, $label, $values = array() ) {
+    public static function text_field( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_text">
+        <li class="custom-field text_field">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'text' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_text' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'text_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -332,12 +332,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_textarea( $field_id, $label, $values = array() ) {
+    public static function textarea_field( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_textarea">
+        <li class="custom-field textarea_field">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'textarea' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_textarea' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'textarea_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -347,12 +347,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_radio( $field_id, $label, $values = array() ) {
+    public static function radio_field( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_radio">
+        <li class="custom-field radio_field">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'radio' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_radio' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'radio_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -369,12 +369,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_checkbox( $field_id, $label, $values = array() ) {
+    public static function checkbox_field( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_checkbox">
+        <li class="custom-field checkbox_field">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'checkbox' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_checkbox' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'checkbox_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -383,7 +383,7 @@ class WPUF_Form_Template {
                     <label><?php _e( 'Options', 'wpuf' ); ?></label>
 
                     <div class="wpuf-form-sub-fields">
-                        <?php self::checkbox_field( $field_id, 'options', $values ); ?>
+                        <?php self::common_checkbox( $field_id, 'options', $values ); ?>
                     </div> <!-- .wpuf-form-sub-fields -->
                 </div> <!-- .wpuf-form-rows -->
             </div> <!-- .wpuf-form-holder -->
@@ -391,12 +391,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_select( $field_id, $label, $values = array() ) {
+    public static function dropdown_field( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_select">
+        <li class="custom-field dropdown_field">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'select' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_select' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'dropdown_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -413,12 +413,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_multiselect( $field_id, $label, $values = array() ) {
+    public static function multiple_select( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_multiselect">
+        <li class="custom-field multiple_select">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'multiselect' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_multiselect' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'multiple_select' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -435,7 +435,7 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_image( $field_id, $label, $values = array() ) {
+    public static function image_upload( $field_id, $label, $values = array() ) {
         $max_size_name = sprintf('%s[%d][max_size]', self::$input_name, $field_id);
         $max_files_name = sprintf('%s[%d][count]', self::$input_name, $field_id);
 
@@ -445,10 +445,10 @@ class WPUF_Form_Template {
         $help = esc_attr( __( 'Enter maximum upload size limit in MB', 'wpuf' ) );
         $count = esc_attr( __( 'Number of images can be uploaded', 'wpuf' ) );
         ?>
-        <li class="custom-field custom_image">
+        <li class="custom-field image_upload">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'image_upload' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_image' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'image_upload' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -467,7 +467,7 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_file( $field_id, $label, $values = array() ) {
+    public static function file_upload( $field_id, $label, $values = array() ) {
         $max_size_name = sprintf('%s[%d][max_size]', self::$input_name, $field_id);
         $max_files_name = sprintf('%s[%d][count]', self::$input_name, $field_id);
         $extensions_name = sprintf('%s[%d][extension][]', self::$input_name, $field_id);
@@ -486,7 +486,7 @@ class WPUF_Form_Template {
         <li class="custom-field custom_image">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'file_upload' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_file' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'file_upload' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -519,12 +519,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_url( $field_id, $label, $values = array() ) {
+    public static function website_url( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_url">
+        <li class="custom-field website_url">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'url' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_url' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'website_url' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -534,12 +534,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_email( $field_id, $label, $values = array() ) {
+    public static function eamil_address( $field_id, $label, $values = array() ) {
         ?>
-        <li class="custom-field custom_email">
+        <li class="custom-field eamil_address">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'email' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_email' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'eamil_address' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -549,7 +549,7 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function custom_repeater( $field_id, $label, $values = array() ) {
+    public static function repeat_field( $field_id, $label, $values = array() ) {
         $tpl = '%s[%d][%s]';
 
         $enable_column_name = sprintf( '%s[%d][multiple]', self::$input_name, $field_id );
@@ -568,7 +568,7 @@ class WPUF_Form_Template {
         <li class="custom-field custom_repeater">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'repeat' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_repeater' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'repeat_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
@@ -774,7 +774,7 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
         <?php
     }
 
-    public static function custom_date( $field_id, $label, $values = array() ) {
+    public static function date_field( $field_id, $label, $values = array() ) {
         $format_name = sprintf('%s[%d][format]', self::$input_name, $field_id);
         $time_name = sprintf('%s[%d][time]', self::$input_name, $field_id);
 
@@ -786,7 +786,7 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
         <li class="custom-field custom_image">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'date' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'custom_date' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'date_field' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>

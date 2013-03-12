@@ -32,7 +32,7 @@ class WPUF_Settings {
      * @since 1.0
      */
     function admin_menu() {
-        add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'WP User Frontend', 'wpuf' ), 'delete_others_pages', 'wpuf-admin-opt', array($this, 'plugin_page'), null );
+        add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'User Frontend', 'wpuf' ), 'delete_others_pages', 'wpuf-admin-opt', array($this, 'plugin_page'), null, 55 );
         add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'delete_others_pages', 'wpuf-settings', array($this, 'plugin_page') );
     }
 

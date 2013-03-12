@@ -150,7 +150,7 @@ class WPUF_Post_Template extends WPUF_Form_Template {
 
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Exclude terms', 'wpuf' ); ?></label>
-                    <input type="text" class="smallipopInput" name="<?php echo $exclude_name; ?>" title="Enter the term ID's as comma separated to exclude in the form" value="<?php echo $exclude_value; ?>" />
+                    <input type="text" class="smallipopInput" name="<?php echo $exclude_name; ?>" title="<?php _e( 'Enter the term IDs as comma separated (without space) to exclude in the form.', 'wpuf' ); ?>" value="<?php echo $exclude_value; ?>" />
                 </div> <!-- .wpuf-form-rows -->
 
             </div> <!-- .wpuf-form-holder -->

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Handles form generaton and posting for add/edit post in frontend
  *
@@ -20,6 +21,15 @@ class WPUF_Form_Posting {
 
         // form preview
         add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
+    }
+
+    function send_error( $error ) {
+        echo json_encode( array(
+            'success' => false,
+            'error' => $error
+        ) );
+
+        die();
     }
 
     /**
@@ -44,147 +54,53 @@ class WPUF_Form_Posting {
         return $results;
     }
 
-    /**
-     * New/Edit post submit handler
-     *
-     * @return void
-     */
-    function submit_post() {
-        check_ajax_referer( 'wpuf_form_add' );
+    function validate_rs_captcha() {
+        $rs_captcha_input = isset( $_POST['rs_captcha'] ) ? $_POST['rs_captcha'] : '';
+        $rs_captcha_file = isset( $_POST['rs_captcha_val'] ) ? $_POST['rs_captcha_val'] : '';
 
-        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+        if ( class_exists( 'ReallySimpleCaptcha' ) ) {
+            $captcha_instance = new ReallySimpleCaptcha();
 
-        $form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
-        $form_vars = $this->get_input_fields( $form_id );
-        $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+            if ( !$captcha_instance->check( $rs_captcha_file, $rs_captcha_input ) ) {
 
-        list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
-        // var_dump($post_vars, $taxonomy_vars, $meta_vars);
+                $this->send_error( __( 'Really Simple Captcha validation failed', 'wpuf' ) );
 
-        // search if rs captcha is there
-        if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
-            $rs_captcha_input = isset( $_POST['rs_captcha'] ) ? $_POST['rs_captcha'] : '';
-            $rs_captcha_file = isset( $_POST['rs_captcha_val'] ) ? $_POST['rs_captcha_val'] : '';
-
-            if ( class_exists( 'ReallySimpleCaptcha' ) ) {
-                $captcha_instance = new ReallySimpleCaptcha();
-
-                if ( !$captcha_instance->check( $rs_captcha_file, $rs_captcha_input ) ) {
-                    echo json_encode( array(
-                        'success' => false,
-                        'error' => __( 'Really Simple Captcha validation failed', 'wpuf' )
-                    ) );
-
-                    exit;
-                } else {
-                    // validation success, remove the files
-                    $captcha_instance->remove( $rs_captcha_file );
-                }
+            } else {
+                // validation success, remove the files
+                $captcha_instance->remove( $rs_captcha_file );
             }
         }
+    }
 
-        // check recaptcha
-        if ( $this->search( $post_vars, 'input_type', 'recaptcha' ) ) {
-            $recap_challenge = isset( $_POST['recaptcha_challenge_field'] ) ? $_POST['recaptcha_challenge_field'] : '';
-            $recap_response = isset( $_POST['recaptcha_response_field'] ) ? $_POST['recaptcha_response_field'] : '';
-            $private_key = wpuf_get_option( 'recaptcha_private' );
+    function validate_re_captcha() {
+        $recap_challenge = isset( $_POST['recaptcha_challenge_field'] ) ? $_POST['recaptcha_challenge_field'] : '';
+        $recap_response = isset( $_POST['recaptcha_response_field'] ) ? $_POST['recaptcha_response_field'] : '';
+        $private_key = wpuf_get_option( 'recaptcha_private' );
 
-            $resp = recaptcha_check_answer( $private_key, $_SERVER["REMOTE_ADDR"], $recap_challenge, $recap_response );
+        $resp = recaptcha_check_answer( $private_key, $_SERVER["REMOTE_ADDR"], $recap_challenge, $recap_response );
 
-            if ( !$resp->is_valid ) {
-                echo json_encode( array(
-                    'success' => false,
-                    'error' => __( 'reCAPTCHA validation failed', 'wpuf' )
-                ) );
+        if ( !$resp->is_valid ) {
+            $this->send_error( __( 'reCAPTCHA validation failed', 'wpuf' ) );
+        }
+    }
 
-                exit;
-            }
+    function guess_username( $email, $firstname = '', $lastname = '' ) {
+        // username from email address
+        $username = sanitize_user( substr( $email, 0, strpos( $email, '@' ) ) );
+
+        if (!username_exists( $username ) ) {
+            return $username;
         }
 
-        $post_author = null;
-        $default_post_author = wpuf_get_option( 'default_post_owner' );
-
-        // Guest Stuffs: check for guest post
-        if ( !is_user_logged_in() ) {
-            if ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
-                $guest_name = trim( $_POST['guest_name'] );
-                $guest_email = trim( $_POST['guest_email'] );
-
-                // is valid email?
-                if ( !is_email( $guest_email ) ) {
-                    echo json_encode( array(
-                        'success' => false,
-                        'error' => __( 'Invalid email address.', 'wpuf' )
-                    ) );
-
-                    exit;
-                }
-
-                // check if the user email already exists
-                $user = get_user_by( 'email', $guest_email );
-                if ( $user ) {
-                    $post_author = $user->ID;
-                } else {
-
-                    // user not found, lets register him
-                    // username from email address
-                    $username = sanitize_user( substr( $email, 0, strpos( $email, '@' ) ) );
-                    $user_pass = wp_generate_password( 12, false );
-
-                    if ( username_exists( $username ) ) {
-                        $username = str_replace( ' ', '_', $guest_name ) . rand( 1, 99 );
-                    }
-
-                    $user_id = wp_create_user( $username, $user_pass, $guest_email );
-
-                    // if its a success and no errors found
-                    if ( $user_id && !is_wp_error( $user_id ) ) {
-                        update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
-                        wp_new_user_notification( $user_id, $user_pass );
-
-                        // update display name to full name
-                        wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
-
-                        $post_author = $user_id;
-                    } else {
-                        //something went wrong creating the user, set post author to the default author
-                        $post_author = $default_post_author;
-                    }
-                }
-
-                // guest post is enabled and details are off
-            } elseif ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false' ) {
-                $post_author = $default_post_author;
-            }
-
-            // the user must be logged in already
-        } else {
-            $post_author = get_current_user_id();
+        // try to add some random number in username
+        // and may be we got our username
+        $username .= rand(1, 199);
+        if ( !username_exists( $username ) ) {
+            return $username;
         }
+    }
 
-        $postarr = array(
-            'post_type' => $form_settings['post_type'],
-            'post_status' => $form_settings['post_status'],
-            'post_author' => $post_author,
-            'post_title' => isset( $_POST['post_title'] ) ? trim( $_POST['post_title'] ) : '',
-            'post_content' => isset( $_POST['post_content'] ) ? trim( $_POST['post_content'] ) : '',
-            'post_excerpt' => isset( $_POST['post_excerpt'] ) ? trim( $_POST['post_excerpt'] ) : '',
-        );
-
-        if ( isset( $_POST['category'] ) ) {
-            $category = $_POST['category'];
-            $postarr['post_category'] = is_array( $category ) ? $category : array($category);
-        }
-
-        if ( isset( $_POST['tags'] ) ) {
-            $postarr['tags_input'] = explode( ',', $_POST['tags'] );
-        }
-
-        // if post_id is passed, we update the post
-        if ( isset( $_POST['post_id'] ) ) {
-            $postarr['ID'] = $_POST['post_id'];
-        }
-
+    function prepare_meta_fields( $meta_vars ) {
         // loop through custom fields
         // skip files, put in a key => value paired array for later executation
         // process repeatable fields separately
@@ -252,6 +168,114 @@ class WPUF_Form_Posting {
             }
         } //end foreach
 
+        return array( $meta_key_value, $multi_repeated, $files );
+    }
+
+    /**
+     * New/Edit post submit handler
+     *
+     * @return void
+     */
+    function submit_post() {
+        check_ajax_referer( 'wpuf_form_add' );
+
+        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+
+        $form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
+        $form_vars = $this->get_input_fields( $form_id );
+        $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+
+        list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
+        // var_dump($post_vars, $taxonomy_vars, $meta_vars);
+
+        // search if rs captcha is there
+        if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
+            $this->validate_rs_captcha();
+        }
+
+        // check recaptcha
+        if ( $this->search( $post_vars, 'input_type', 'recaptcha' ) ) {
+            $this->validate_re_captcha();
+        }
+
+        $post_author = null;
+        $default_post_author = wpuf_get_option( 'default_post_owner' );
+
+        // Guest Stuffs: check for guest post
+        if ( !is_user_logged_in() ) {
+            if ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
+                $guest_name = trim( $_POST['guest_name'] );
+                $guest_email = trim( $_POST['guest_email'] );
+
+                // is valid email?
+                if ( !is_email( $guest_email ) ) {
+                    $this->send_error( __( 'Invalid email address.', 'wpuf' ) );
+                }
+
+                // check if the user email already exists
+                $user = get_user_by( 'email', $guest_email );
+                if ( $user ) {
+                    $post_author = $user->ID;
+                } else {
+
+                    // user not found, lets register him
+                    // username from email address
+                    $username = $this->guess_username( $guest_email );
+                    $user_pass = wp_generate_password( 12, false );
+
+                    $user_id = wp_create_user( $username, $user_pass, $guest_email );
+
+                    // if its a success and no errors found
+                    if ( $user_id && !is_wp_error( $user_id ) ) {
+                        update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
+                        wp_new_user_notification( $user_id, $user_pass );
+
+                        // update display name to full name
+                        wp_update_user( array('ID' => $user_id, 'display_name' => $guest_name) );
+
+                        $post_author = $user_id;
+                    } else {
+                        //something went wrong creating the user, set post author to the default author
+                        $post_author = $default_post_author;
+                    }
+                }
+
+                // guest post is enabled and details are off
+            } elseif ( $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'false' ) {
+                $post_author = $default_post_author;
+            }
+
+            // the user must be logged in already
+        } else {
+            $post_author = get_current_user_id();
+        }
+
+        $postarr = array(
+            'post_type' => $form_settings['post_type'],
+            'post_status' => $form_settings['post_status'],
+            'post_author' => $post_author,
+            'post_title' => isset( $_POST['post_title'] ) ? trim( $_POST['post_title'] ) : '',
+            'post_content' => isset( $_POST['post_content'] ) ? trim( $_POST['post_content'] ) : '',
+            'post_excerpt' => isset( $_POST['post_excerpt'] ) ? trim( $_POST['post_excerpt'] ) : '',
+        );
+
+        if ( isset( $_POST['category'] ) ) {
+            $category = $_POST['category'];
+            $postarr['post_category'] = is_array( $category ) ? $category : array($category);
+        }
+
+        if ( isset( $_POST['tags'] ) ) {
+            $postarr['tags_input'] = explode( ',', $_POST['tags'] );
+        }
+
+        // if post_id is passed, we update the post
+        if ( isset( $_POST['post_id'] ) ) {
+            $postarr['ID'] = $_POST['post_id'];
+        }
+
+        // prepare the meta vars
+        list( $meta_key_value, $multi_repeated, $files ) = $this->prepare_meta_fields( $meta_vars );
+
         // print_r( $postarr );
         // print_r( $meta_key_value );
         // print_r( $multi_repeated );
@@ -259,7 +283,6 @@ class WPUF_Form_Posting {
         // print_r( $_POST );
         // print_r( $taxonomy_vars );
         // die();
-
         // ############ It's Time to Save the World ###############
         $postarr = apply_filters( 'wpuf_add_post_args', $postarr, $form_id, $form_settings, $form_vars );
         $post_id = wp_insert_post( $postarr );
@@ -355,7 +378,7 @@ class WPUF_Form_Posting {
         echo json_encode( array(
             'success' => false,
             'error' => __( 'Something went wrong', 'wpuf' )
-        ));
+        ) );
 
         exit;
     }
@@ -471,7 +494,7 @@ class WPUF_Form_Posting {
 
             <?php if ( !$preview ) { ?>
                 <form id="wpuf-form-add" action="" method="post">
-            <?php } ?>
+                <?php } ?>
 
                 <ul class="wpuf-form">
 
@@ -497,134 +520,148 @@ class WPUF_Form_Posting {
                             </div>
                         </li>
 
-                    <?php } ?>
-
-                    <?php
-                    foreach ($form_vars as $key => $form_field) {
-
-                        $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
-                        $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
-
-                        printf( '<li class="wpuf-el %s%s">', $el_name, $class_name );
-
-                        switch ($form_field['input_type']) {
-                            case 'text':
-                                $this->text( $form_field, $post_id );
-                                break;
-
-                            case 'textarea':
-                                $this->textarea( $form_field, $post_id );
-                                break;
-
-                            case 'image_upload':
-                                $this->image_upload( $form_field, $post_id );
-                                break;
-
-                            case 'select':
-                                $this->select( $form_field, false, $post_id );
-                                break;
-
-                            case 'multiselect':
-                                $this->select( $form_field, true, $post_id );
-                                break;
-
-                            case 'radio':
-                                $this->radio( $form_field, $post_id );
-                                break;
-
-                            case 'checkbox':
-                                $this->checkbox( $form_field, $post_id );
-                                break;
-
-                            case 'file_upload':
-                                $this->file_upload( $form_field, $post_id );
-                                break;
-
-                            case 'url':
-                                $this->url( $form_field, $post_id );
-                                break;
-
-                            case 'email':
-                                $this->email( $form_field, $post_id );
-                                break;
-
-                            case 'password':
-                                $this->password( $form_field, $post_id );
-                                break;
-
-                            case 'repeat':
-                                $this->repeat( $form_field, $post_id );
-                                break;
-
-                            case 'taxonomy':
-                                $this->taxonomy( $form_field, $post_id );
-                                break;
-
-                            case 'section_break':
-                                $this->section_break( $form_field, $post_id );
-                                break;
-
-                            case 'html':
-                                $this->html( $form_field );
-                                break;
-
-                            case 'recaptcha':
-                                $this->recaptcha( $form_field, $post_id );
-                                break;
-
-                            case 'action_hook':
-                                $this->action_hook( $form_field, $form_id, $post_id, $form_settings );
-                                break;
-
-                            case 'really_simple_captcha':
-                                $this->really_simple_captcha( $form_field, $post_id );
-                                break;
-
-                            case 'date':
-                                $this->date( $form_field, $post_id );
-                                break;
-
-                            case 'toc':
-                                $this->toc( $form_field, $post_id );
-                                break;
-
-                            default:
-                                # code...
-                                break;
-                        }
-
-                        echo '</li>';
-                        ?>
-
                         <?php
-                    } //end foreach
+                    }
+
+                    $this->render_items( $form_vars, $post_id );
+                    $this->submit_button( $form_id, $form_settings, $post_id );
                     ?>
-                    <li class="wpuf-submit">
-                        <div class="wpuf-label">
-                            &nbsp;
-                        </div>
 
-                        <?php wp_nonce_field( 'wpuf_form_add' );  ?>
-                        <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
-                        <input type="hidden" name="action" value="wpuf_submit_post">
-
-                        <?php if( $post_id ) { ?>
-                            <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
-                            <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
-                        <?php } else { ?>
-                            <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
-                        <?php } ?>
-
-
-                    </li>
                 </ul>
 
-            <?php if ( !$preview ) { ?>
+                <?php if ( !$preview ) { ?>
                 </form>
             <?php } ?>
 
             <?php
         } //endif
+    }
+
+    /**
+     * Render form items
+     *
+     * @param array $form_vars
+     * @param int|null $post_id
+     * @param string $type type of the form. post or user
+     */
+    function render_items( $form_vars, $post_id, $type = 'post' ) {
+
+        foreach ($form_vars as $key => $form_field) {
+
+            $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
+            $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
+
+            printf( '<li class="wpuf-el %s%s">', $el_name, $class_name );
+
+            switch ($form_field['input_type']) {
+                case 'text':
+                    $this->text( $form_field, $post_id, $type );
+                    break;
+
+                case 'textarea':
+                    $this->textarea( $form_field, $post_id, $type );
+                    break;
+
+                case 'image_upload':
+                    $this->image_upload( $form_field, $post_id, $type );
+                    break;
+
+                case 'select':
+                    $this->select( $form_field, false, $post_id, $type );
+                    break;
+
+                case 'multiselect':
+                    $this->select( $form_field, true, $post_id, $type );
+                    break;
+
+                case 'radio':
+                    $this->radio( $form_field, $post_id, $type );
+                    break;
+
+                case 'checkbox':
+                    $this->checkbox( $form_field, $post_id, $type );
+                    break;
+
+                case 'file_upload':
+                    $this->file_upload( $form_field, $post_id, $type );
+                    break;
+
+                case 'url':
+                    $this->url( $form_field, $post_id, $type );
+                    break;
+
+                case 'email':
+                    $this->email( $form_field, $post_id, $type );
+                    break;
+
+                case 'password':
+                    $this->password( $form_field, $post_id );
+                    break;
+
+                case 'repeat':
+                    $this->repeat( $form_field, $post_id, $type );
+                    break;
+
+                case 'taxonomy':
+                    $this->taxonomy( $form_field, $post_id, $type );
+                    break;
+
+                case 'section_break':
+                    $this->section_break( $form_field, $post_id );
+                    break;
+
+                case 'html':
+                    $this->html( $form_field );
+                    break;
+
+                case 'recaptcha':
+                    $this->recaptcha( $form_field, $post_id );
+                    break;
+
+                case 'action_hook':
+                    $this->action_hook( $form_field, $form_id, $post_id, $form_settings );
+                    break;
+
+                case 'really_simple_captcha':
+                    $this->really_simple_captcha( $form_field, $post_id );
+                    break;
+
+                case 'date':
+                    $this->date( $form_field, $post_id, $type );
+                    break;
+
+                case 'toc':
+                    $this->toc( $form_field, $post_id );
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+
+            echo '</li>';
+        } //end foreach
+    }
+
+    function submit_button( $form_id, $form_settings, $post_id ) {
+        ?>
+        <li class="wpuf-submit">
+            <div class="wpuf-label">
+                &nbsp;
+            </div>
+
+            <?php wp_nonce_field( 'wpuf_form_add' ); ?>
+            <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
+            <input type="hidden" name="action" value="wpuf_submit_post">
+
+            <?php if ( $post_id ) { ?>
+                <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
+                <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
+            <?php } else { ?>
+                <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
+            <?php } ?>
+        </li>
+        <?php
     }
 
     /**
@@ -640,35 +677,35 @@ class WPUF_Form_Posting {
 
             <!doctype html>
             <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <title>Form Preview</title>
-                <link rel="stylesheet" href="<?php echo plugins_url( '/css/frontend-forms.css', dirname( __FILE__ ) ); ?>">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Form Preview</title>
+                    <link rel="stylesheet" href="<?php echo plugins_url( '/css/frontend-forms.css', dirname( __FILE__ ) ); ?>">
 
-                <style type="text/css">
-                    body {
-                        margin: 0;
-                        padding: 0;
-                        background: #eee;
-                    }
+                    <style type="text/css">
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            background: #eee;
+                        }
 
-                    .container {
-                        width: 700px;
-                        margin: 0 auto;
-                        margin-top: 20px;
-                        padding: 20px;
-                        background: #fff;
-                        border: 1px solid #DFDFDF;
-                        -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-                        box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <?php $this->render_form( $form_id, null, true ); ?>
-                </div>
-            </body>
+                        .container {
+                            width: 700px;
+                            margin: 0 auto;
+                            margin-top: 20px;
+                            padding: 20px;
+                            background: #fff;
+                            border: 1px solid #DFDFDF;
+                            -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                            box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <?php $this->render_form( $form_id, null, true ); ?>
+                    </div>
+                </body>
             </html>
 
             <?php
@@ -730,28 +767,79 @@ class WPUF_Form_Posting {
     }
 
     /**
+     * Check if its a meta field
+     *
+     * @param array $attr
+     * @return boolean
+     */
+    function is_meta( $attr ) {
+        if ( isset( $attr['is_meta'] ) && $attr['is_meta'] == 'yes' ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get a meta value
+     *
+     * @param int $object_id user_ID or post_ID
+     * @param string $meta_key
+     * @param string $type post or user
+     * @param bool $single
+     * @return string
+     */
+    function get_meta( $object_id, $meta_key, $type = 'post', $single = true ) {
+        if ( !$object_id ) {
+            return '';
+        }
+
+        if ( $type == 'post' ) {
+            return get_post_meta( $object_id, $meta_key, $single );
+        }
+
+        return get_user_meta( $object_id, $meta_key, $single );
+    }
+
+    function get_user_data( $user_id, $field ) {
+        return get_user_by( 'id', $user_id )->$field;
+    }
+
+    /**
      * Prints a text field
      *
      * @param array $attr
      * @param int|null $post_id
      */
-    function text( $attr, $post_id ) {
-        if ($post_id) {
-            if ($attr['is_meta'] == 'yes') {
-                $value = get_post_meta( $post_id, $attr['name'], true );
+    function text( $attr, $post_id, $type = 'post' ) {
+        // checking for user profile username
+        $username = false;
+
+        if ( $post_id ) {
+
+            if ( $this->is_meta( $attr ) ) {
+                $value = $this->get_meta( $post_id, $attr['name'], $type );
+
             } else {
 
-                if ($attr['name'] == 'tags') {
+                // applicable for post tags
+                if ( $type == 'post' && $attr['name'] == 'tags' ) {
                     $post_tags = wp_get_post_tags( $post_id );
                     $tagsarray = array();
                     foreach ($post_tags as $tag) {
                         $tagsarray[] = $tag->name;
                     }
-                    $value = implode( ', ', $tagsarray );
-                } else {
-                    $value = get_post_field( $attr['name'], $post_id );
-                }
 
+                    $value = implode( ', ', $tagsarray );
+                } elseif ( $type == 'post' ) {
+                    $value = get_post_field( $attr['name'], $post_id );
+                } elseif ( $type == 'user' ) {
+                    $value = get_user_by( 'id', $post_id )->$attr['name'];
+
+                    if ( $attr['name'] == 'user_login' ) {
+                        $username = true;
+                    }
+                }
             }
         } else {
             $value = $attr['default'];
@@ -761,7 +849,7 @@ class WPUF_Form_Posting {
         ?>
 
         <div class="wpuf-fields">
-            <input class="textfield<?php echo $this->required_class( $attr ); ?>" id="wpuf-<?php echo $attr['name']; ?>" type="text" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+            <input class="textfield<?php echo $this->required_class( $attr ); ?>" id="wpuf-<?php echo $attr['name']; ?>" type="text" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" <?php echo $username ? 'disabled' : ''; ?> />
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
 
@@ -774,14 +862,20 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function textarea( $attr, $post_id ) {
+    function textarea( $attr, $post_id, $type ) {
         $req_class = ( $attr['required'] == 'yes' ) ? 'required' : 'rich-editor';
 
-        if ($post_id) {
-            if ($attr['is_meta'] == 'yes') {
-                $value = get_post_meta( $post_id, $attr['name'], true );
+        if ( $post_id ) {
+            if ( $this->is_meta( $attr ) ) {
+                $value = $this->get_meta( $post_id, $attr['name'], $type, true );
             } else {
-                $value = get_post_field( $attr['name'], $post_id );
+
+                if ( $type == 'post' ) {
+                    $value = get_post_field( $attr['name'], $post_id );
+                } else {
+                    $value = $this->get_user_data( $post_id, $attr['name'] );
+                }
+
             }
         } else {
             $value = $attr['default'];
@@ -792,7 +886,7 @@ class WPUF_Form_Posting {
 
         <div class="wpuf-fields">
 
-            <?php if( isset( $attr['insert_image']) && $attr['insert_image'] == 'yes') { ?>
+            <?php if ( isset( $attr['insert_image'] ) && $attr['insert_image'] == 'yes' ) { ?>
                 <div id="wpuf-insert-image-container">
                     <a class="wpuf-button" id="wpuf-insert-image" href="#">
                         <span class="wpuf-media-icon"></span>
@@ -806,7 +900,6 @@ class WPUF_Form_Posting {
 
                 printf( '<span class="wpuf-rich-validation" data-required="%s" data-type="rich" data-id="%s"></span>', $attr['required'], $attr['name'] );
                 wp_editor( $value, $attr['name'], array('editor_height' => $attr['rows'], 'quicktags' => false, 'media_buttons' => false, 'editor_class' => $req_class) );
-
             } else {
                 ?>
                 <textarea class="textareafield<?php echo $this->required_class( $attr ); ?>" id="<?php echo $attr['name']; ?>" name="<?php echo $attr['name']; ?>" data-required="<?php echo $attr['required'] ?>" data-type="textarea"<?php $this->required_html5( $attr ); ?> placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" rows="<?php echo $attr['rows']; ?>" cols="<?php echo $attr['cols']; ?>"><?php echo esc_textarea( $value ) ?></textarea>
@@ -823,7 +916,7 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function file_upload( $attr, $post_id ) {
+    function file_upload( $attr, $post_id, $type ) {
 
         $this->label( $attr );
 
@@ -837,7 +930,7 @@ class WPUF_Form_Posting {
             $allowed_ext = '*';
         }
 
-        $uploaded_items = $post_id ? get_post_meta( $post_id, $attr['name'] ) : array();
+        $uploaded_items = $post_id ? $this->get_meta( $post_id, $attr['name'], $type, false ) : array();
         ?>
 
         <div class="wpuf-fields">
@@ -877,22 +970,29 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function image_upload( $attr, $post_id ) {
+    function image_upload( $attr, $post_id, $type ) {
 
         $has_featured_image = false;
         $has_images = false;
 
-        if ($post_id) {
-            if ($attr['is_meta'] == 'yes') {
-                $images = get_post_meta( $post_id, $attr['name'] );
+        if ( $post_id ) {
+            if ( $this->is_meta( $attr ) ) {
+                $images = $this->get_meta( $post_id, $attr['name'], $type, false );
                 $has_images = true;
             } else {
-                // it's a featured image then
-                $thumb_id = get_post_thumbnail_id( $post_id );
 
-                if ($thumb_id) {
+                if ( $type == 'post' ) {
+                    // it's a featured image then
+                    $thumb_id = get_post_thumbnail_id( $post_id );
+
+                    if ( $thumb_id ) {
+                        $has_featured_image = true;
+                        $featured_image = WPUF_Upload::attach_html( $thumb_id );
+                    }
+                } else {
+                    // it must be a user avatar
                     $has_featured_image = true;
-                    $featured_image = WPUF_Upload::attach_html( $thumb_id );
+                    $featured_image = get_avatar( $post_id );
                 }
             }
         }
@@ -942,8 +1042,14 @@ class WPUF_Form_Posting {
      * @param bool $multiselect
      * @param int|null $post_id
      */
-    function select( $attr, $multiselect = false, $post_id ) {
-        $selected = isset( $attr['selected'] ) ? $attr['selected'] : '';
+    function select( $attr, $multiselect = false, $post_id, $type ) {
+        if ( $post_id ) {
+            $selected = $this->get_meta( $post_id, $attr['name'], $type );
+            $selected = $multiselect ? explode( $this->separator, $selected ) : $selected;
+        } else {
+            $selected = isset( $attr['selected'] ) ? $attr['selected'] : '';
+            $selected = $multiselect ? ( is_array( $selected ) ? $selected : array() ) : $selected;
+        }
 
         $multi = $multiselect ? ' multiple="multiple"' : '';
         $data_type = $multiselect ? 'multiselect' : 'select';
@@ -958,8 +1064,9 @@ class WPUF_Form_Posting {
                 <?php
                 if ( $attr['options'] && count( $attr['options'] ) > 0 ) {
                     foreach ($attr['options'] as $option) {
+                        $current_select = $multiselect ? selected( in_array( $option, $selected), true, false ) : selected( $selected, $option, false );
                         ?>
-                        <option value="<?php echo esc_attr( $option ); ?>"<?php selected( $selected, $option ); ?>><?php echo $option; ?></option>
+                        <option value="<?php echo esc_attr( $option ); ?>"<?php echo $current_select; ?>><?php echo $option; ?></option>
                         <?php
                     }
                 }
@@ -976,11 +1083,11 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function radio( $attr, $post_id ) {
+    function radio( $attr, $post_id, $type ) {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : '';
 
-        if ($post_id) {
-            $selected = get_post_meta( $post_id, $attr['name'], true );
+        if ( $post_id ) {
+            $selected = $this->get_meta( $post_id, $attr['name'], $type, true );
         }
 
         $this->label( $attr );
@@ -1015,11 +1122,11 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function checkbox( $attr, $post_id ) {
+    function checkbox( $attr, $post_id, $type ) {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : array();
 
-        if ($post_id) {
-            $selected = explode( $this->separator, get_post_meta( $post_id, $attr['name'], true ) );
+        if ( $post_id ) {
+            $selected = explode( $this->separator, $this->get_meta( $post_id, $attr['name'], $type, true ) );
         }
 
         $this->label( $attr );
@@ -1053,9 +1160,18 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function url( $attr, $post_id ) {
+    function url( $attr, $post_id, $type ) {
 
-        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
+        if ( $post_id ) {
+            if ( $this->is_meta( $attr ) ) {
+                $value = $this->get_meta( $post_id, $attr['name'], $type, true );
+            } else {
+                //must be user profile url
+                $value = $this->get_user_data( $post_id, $attr['name'] );
+            }
+        } else {
+            $value = $attr['default'];
+        }
 
         $this->label( $attr );
         ?>
@@ -1074,10 +1190,19 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function email( $attr, $post_id ) {
-        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
+    function email( $attr, $post_id, $type = 'post' ) {
+        if ( $post_id ) {
+            if ( $this->is_meta( $attr ) ) {
+                $value = $this->get_meta( $post_id, $attr['name'], $type, true );
+            } else {
+                //must be user email
+                $value = $this->get_user_data( $post_id, $attr['name'] );
+            }
+        } else {
+            $value = $attr['default'];
+        }
 
-        $this->label( $attr, $post_id );
+        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -1092,31 +1217,29 @@ class WPUF_Form_Posting {
      * Prints a email field
      *
      * @param array $attr
-     * @param int|null $post_id
      */
-    function password( $attr, $post_id ) {
-        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : $attr['default'];
-
-        $this->label( $attr, $post_id );
+    function password( $attr ) {
+        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
-            <input id="pass1" type="password" class="password" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="pass1" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+            <input id="pass1" type="password" class="password" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="pass1" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="" size="<?php echo esc_attr( $attr['size'] ) ?>" />
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
 
-        <?php if ( $attr['repeat_pass'] == 'yes' ) {
+        <?php
+        if ( $attr['repeat_pass'] == 'yes' ) {
             echo '</li>';
             echo '<li>';
 
-            $this->label( array('name' => $attr['pass2'], 'label' => $attr['re_pass_label'], 'required' => 'yes') );
+            $this->label( array('name' => 'pass2', 'label' => $attr['re_pass_label'], 'required' => 'yes') );
             ?>
 
             <div class="wpuf-fields">
-                <input id="pass2" type="password" class="password" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="pass2" value="<?php echo esc_attr( $value ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
+                <input id="pass2" type="password" class="password" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="pass2" value="" size="<?php echo esc_attr( $attr['size'] ) ?>" />
             </div>
 
-        <?php
+            <?php
         }
 
         if ( $attr['repeat_pass'] == 'yes' && $attr['pass_strength'] == 'yes' ) {
@@ -1144,7 +1267,6 @@ class WPUF_Form_Posting {
             </div>
             <?php
         }
-
         ?>
 
         <?php
@@ -1156,7 +1278,7 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function repeat( $attr, $post_id ) {
+    function repeat( $attr, $post_id, $type ) {
         $add = plugins_url( 'images/add.png', dirname( __FILE__ ) );
         $remove = plugins_url( 'images/remove.png', dirname( __FILE__ ) );
 
@@ -1187,13 +1309,13 @@ class WPUF_Form_Posting {
                     <tbody>
 
                         <?php
-                        $items = $post_id ? get_post_meta( $post_id, $attr['name'] ) : array();
+                        $items = $post_id ? $this->get_meta( $post_id, $attr['name'], $type, false ) : array();
                         // var_dump($items);
 
-                        if ($items) {
+                        if ( $items ) {
                             foreach ($items as $item_val) {
-                                $column_vals = explode( $this->separator, $item_val);
-                            ?>
+                                $column_vals = explode( $this->separator, $item_val );
+                                ?>
 
                                 <tr>
                                     <?php for ($count = 0; $count < $num_columns; $count++) { ?>
@@ -1207,7 +1329,7 @@ class WPUF_Form_Posting {
                                     </td>
                                 </tr>
 
-                            <?php } //endforeach ?>
+                            <?php } //endforeach  ?>
 
                         <?php } else { ?>
 
@@ -1233,11 +1355,11 @@ class WPUF_Form_Posting {
 
                 <table>
                     <?php
-                    $items = $post_id ? explode( $this->separator, get_post_meta( $post_id, $attr['name'], true ) ) : array();
+                    $items = $post_id ? explode( $this->separator, $this->get_meta( $post_id, $attr['name'], $type, true ) ) : array();
 
-                    if ($items) {
+                    if ( $items ) {
                         foreach ($items as $item) {
-                        ?>
+                            ?>
                             <tr>
                                 <td>
                                     <input id="wpuf-<?php echo $attr['name']; ?>" type="text" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>[]" placeholder="<?php echo esc_attr( $attr['placeholder'] ); ?>" value="<?php echo esc_attr( $item ) ?>" size="<?php echo esc_attr( $attr['size'] ) ?>" />
@@ -1247,7 +1369,7 @@ class WPUF_Form_Posting {
                                     <img style="cursor:pointer;" class="wpuf-remove-field" alt="remove this choice" title="remove this choice" src="<?php echo $remove; ?>">
                                 </td>
                             </tr>
-                        <?php } //endforeach ?>
+                        <?php } //endforeach  ?>
                     <?php } else { ?>
 
                         <tr>
@@ -1299,7 +1421,7 @@ class WPUF_Form_Posting {
                     $required = sprintf( 'data-required="%s" data-type="select"', $attr['required'] );
 
                     $select = wp_dropdown_categories( 'show_option_none=' . __( '-- Select --', 'wpuf' ) . "&hierarchical=1&hide_empty=0&orderby=name&name=$taxonomy&id=$taxonomy&taxonomy=$taxonomy&show_count=0&echo=0&title_li=&use_desc_for_title=1&class=$taxonomy&exclude=" . $exclude . '&selected=' . $selected );
-                    echo str_replace('<select', '<select ' . $required, $select);
+                    echo str_replace( '<select', '<select ' . $required, $select );
                     break;
 
                 case 'multiselect':
@@ -1322,9 +1444,9 @@ class WPUF_Form_Posting {
                         'exclude' => $exclude,
                         'selected' => $selected,
                         'walker' => $walker
-                    ) );
+                            ) );
 
-                    echo str_replace('<select', '<select multiple="multiple" ' . $required, $select);
+                    echo str_replace( '<select', '<select multiple="multiple" ' . $required, $select );
                     break;
 
                 case 'checkbox':
@@ -1367,7 +1489,6 @@ class WPUF_Form_Posting {
         if ( $post_id ) {
             return;
         }
-
         ?>
         <div class="wpuf-label">
             &nbsp;
@@ -1396,10 +1517,9 @@ class WPUF_Form_Posting {
         }
 
         $this->label( $attr );
-
         ?>
         <div class="wpuf-fields">
-            <?php echo recaptcha_get_html( wpuf_get_option('recaptcha_public') ); ?>
+            <?php echo recaptcha_get_html( wpuf_get_option( 'recaptcha_public' ) ); ?>
         </div>
         <?php
     }
@@ -1446,7 +1566,7 @@ class WPUF_Form_Posting {
             return;
         }
 
-        if ( !class_exists( 'ReallySimpleCaptcha') ) {
+        if ( !class_exists( 'ReallySimpleCaptcha' ) ) {
             _e( 'Error: Really Simple Captcha plugin not found!', 'wpuf' );
             return;
         }
@@ -1472,9 +1592,9 @@ class WPUF_Form_Posting {
      * @param array $attr
      * @param int|null $post_id
      */
-    function date( $attr, $post_id ) {
+    function date( $attr, $post_id, $type ) {
 
-        $value = $post_id ? get_post_meta( $post_id, $attr['name'], true ) : '';
+        $value = $post_id ? $this->get_meta( $post_id, $attr['name'], $type, true ) : '';
 
         $this->label( $attr );
         ?>
@@ -1485,11 +1605,11 @@ class WPUF_Form_Posting {
         </div>
         <script type="text/javascript">
             jQuery(function($) {
-                <?php if ( $attr['time'] == 'yes' ) { ?>
-                    $("#wpuf-date-<?php echo $attr['name']; ?>").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
-                <?php } else { ?>
-                    $("#wpuf-date-<?php echo $attr['name']; ?>").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
-                <?php } ?>
+        <?php if ( $attr['time'] == 'yes' ) { ?>
+            $("#wpuf-date-<?php echo $attr['name']; ?>").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+        <?php } else { ?>
+            $("#wpuf-date-<?php echo $attr['name']; ?>").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+        <?php } ?>
             });
         </script>
 
