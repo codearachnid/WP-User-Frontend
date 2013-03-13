@@ -70,6 +70,13 @@ function wpuf_settings_fields() {
     $settings_fields = array(
         'wpuf_general' => apply_filters( 'wpuf_options_others', array(
             array(
+                'name' => 'fixed_form_element',
+                'label' => __( 'Fixed Form Elements ', 'wpuf' ),
+                'desc' => __( 'Show fixed form elements sidebar in form editor', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'on'
+            ),
+            array(
                 'name' => 'post_notification',
                 'label' => __( 'New post notification', 'wpuf' ),
                 'desc' => __( 'A mail will be sent to admin when a new post is created', 'wpuf' ),

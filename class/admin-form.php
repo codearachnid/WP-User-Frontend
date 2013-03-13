@@ -20,6 +20,7 @@ class WPUF_Admin_Form {
 
         add_action( 'admin_enqueue_scripts', array($this, 'enqueue_scripts') );
         add_action( 'admin_footer-edit.php', array($this, 'add_form_button_style') );
+        add_action( 'admin_footer-post.php', array($this, 'add_form_button_style') );
 
         add_action( 'admin_head', array( $this, 'menu_icon' ) );
 
@@ -82,6 +83,8 @@ class WPUF_Admin_Form {
         if ( !in_array( $post_type, array( 'wpuf_forms', 'wpuf_profile') ) ) {
             return;
         }
+        
+        $fixed_sidebar = wpuf_get_option( 'fixed_form_element');
         ?>
         <style type="text/css">
             .wrap .add-new-h2, .wrap .add-new-h2:active {
@@ -89,6 +92,13 @@ class WPUF_Admin_Form {
                 color: #fff;
                 text-shadow: 0 1px 1px #446E81;
             }
+            
+            <?php if ( $fixed_sidebar == 'on' ) { ?>
+            #wpuf-metabox-fields{
+                position: fixed;
+                bottom: 10px;
+            }
+            <?php } ?>
         </style>
         <?php
     }
