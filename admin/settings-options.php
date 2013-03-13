@@ -54,6 +54,10 @@ function wpuf_settings_sections() {
         //     'title' => __( 'Payments', 'wpuf' )
         // ),
         array(
+            'id' => 'wpuf_profile',
+            'title' => __( 'Profile', 'wpuf' )
+        ),
+        array(
             'id' => 'wpuf_support',
             'title' => __( 'Support', 'wpuf' )
         ),
@@ -285,6 +289,8 @@ function wpuf_settings_fields() {
                 'options' => wpuf_get_gateways()
             ),
         ) ),
+        'wpuf_profile' => array(
+        ),
         'wpuf_support' => apply_filters( 'wpuf_options_support', array(
             array(
                 'name' => 'support',
@@ -319,3 +325,39 @@ function wpuf_settings_fields() {
 
     return apply_filters( 'wpuf_settings_fields', $settings_fields );
 }
+
+function wpuf_settings_field_profile( $form ) {
+    $user_roles = wpuf_get_user_roles();
+    $forms = get_posts(  array(
+        'numberposts' => -1,
+        'post_type' => 'wpuf_profile'
+    ) );
+
+    $val = get_option( 'wpuf_profile', array() );
+    ?>
+
+    <p style="padding-left: 10px; font-style: italic; font-size: 13px;">
+        <?php _e( 'Select profile forms for user roles. These forms will be used for edit profiles in frontend.', 'wpuf' ); ?>
+    </p>
+    <table class="form-table">
+        <?php
+        foreach ($user_roles as $role => $name ) {
+            $current = isset( $val['roles'][$role] ) ? $val['roles'][$role] : '';
+            ?>
+            <tr valign="top">
+                <th scrope="row"><?php echo $name; ?></th>
+                <td>
+                    <select name="wpuf_profile[roles][<?php echo $role; ?>]">
+                        <option value=""><?php _e( ' - select - ', 'wpuf' ); ?></option>
+                        <?php foreach ( $forms as $form ) { ?>
+                            <option value="<?php echo $form->ID; ?>"<?php selected( $current, $form->ID ); ?>><?php echo $form->post_title; ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+    <?php
+}
+
+add_action( 'wsa_form_bottom_wpuf_profile', 'wpuf_settings_field_profile' );

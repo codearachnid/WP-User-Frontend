@@ -1,7 +1,7 @@
 <?php
 /**
  * Themed Edit Profile page based on shortcode
- * 
+ *
  * @package WP User Frontend
  */
 class WPUF_Edit_Profile {

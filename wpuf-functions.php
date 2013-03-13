@@ -213,11 +213,11 @@ function wpuf_list_users() {
  *
  * @return string HTML content, if not displaying.
  */
-function wpuf_get_pages() {
+function wpuf_get_pages( $post_type = 'page' ) {
     global $wpdb;
 
     $array = array();
-    $pages = get_pages();
+    $pages = get_pages( array( 'post_type' => $post_type ) );
     if ( $pages ) {
         foreach ($pages as $page) {
             $array[$page->ID] = $page->post_title;
@@ -371,11 +371,11 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
     require_once ABSPATH . '/wp-admin/includes/template.php';
 
     $walker = new WPUF_Walker_Category_Checklist();
-    
+
     $args = array(
         'taxonomy' => $tax,
     );
-    
+
     if ( $post_id ) {
         $args['selected_cats'] = wp_get_object_terms( $post_id, $tax, array('fields' => 'ids') );
     } elseif ($selected_cats ) {
@@ -383,7 +383,7 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
     } else {
         $args['selected_cats'] = array();
     }
-    
+
     $categories = (array) get_terms($tax, array('get' => 'all', 'exclude' => $exclude));
 
     echo '<ul class="wpuf-category-checklist">';
@@ -441,9 +441,9 @@ function wpuf_allowed_extensions() {
 
 /**
  * Associate attachemnt to a post
- * 
+ *
  * @since 2.0
- * 
+ *
  * @param type $attachment_id
  * @param type $post_id
  */
@@ -456,7 +456,7 @@ function wpuf_associate_attachment( $attachment_id, $post_id ) {
 
 /**
  * Get user role names
- * 
+ *
  * @global WP_Roles $wp_roles
  * @return array
  */
@@ -471,7 +471,7 @@ function wpuf_get_user_roles() {
 
 /**
  * User avatar wrapper for custom uploaded avatar
- * 
+ *
  * @param string $avatar
  * @param mixed $id_or_email
  * @param int $size
@@ -496,7 +496,7 @@ function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
     // hmm, we found something
     $upload_dir = wp_upload_dir();
     $image_src = $upload_dir['baseurl'] . $user_avatar;
-    
+
     return sprintf('<img src="%1$s" alt="%2$s" height="%3$s" width="%3$s" class="avatar"', esc_url( $image_src ), $alt, $size);
 }
 
