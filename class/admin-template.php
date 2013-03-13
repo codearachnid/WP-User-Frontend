@@ -5,29 +5,9 @@
  * @package WP User Frontend
  * @author Tareq Hasan <tareq@wedevs.com>
  */
-class WPUF_Form_Template {
+class WPUF_Admin_Template {
 
     static $input_name = 'wpuf_input';
-
-    function __construct() {
-
-    }
-
-    /**
-     * Initializes the WPUF_Form_Template() class
-     *
-     * Checks for an existing WPUF_Form_Template() instance
-     * and if it doesn't find one, creates it.
-     */
-    public static function init() {
-        static $instance = false;
-
-        if ( !$instance ) {
-            $instance = new WPUF_Form_Template();
-        }
-
-        return $instance;
-    }
 
     /**
      * Legend of a form item
@@ -392,6 +372,9 @@ class WPUF_Form_Template {
     }
 
     public static function dropdown_field( $field_id, $label, $values = array() ) {
+        $first_name = sprintf('%s[%d][first]', self::$input_name, $field_id);
+        $first_value = $values ? $values['first'] : ' - select -';
+        $help = esc_attr( __( 'First element of the select dropdown. Leave this empty if you don\'t want to show this field', 'wpuf' ) );
         ?>
         <li class="custom-field dropdown_field">
             <?php self::legend( $label, $values ); ?>
@@ -400,6 +383,11 @@ class WPUF_Form_Template {
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
+                
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Select Text', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" name="<?php echo $first_name; ?>" value="<?php echo $first_value; ?>" title="<?php echo $help; ?>">
+                </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Options', 'wpuf' ); ?></label>
@@ -414,6 +402,9 @@ class WPUF_Form_Template {
     }
 
     public static function multiple_select( $field_id, $label, $values = array() ) {
+        $first_name = sprintf('%s[%d][first]', self::$input_name, $field_id);
+        $first_value = $values ? $values['first'] : ' - select -';
+        $help = esc_attr( __( 'First element of the select dropdown. Leave this empty if you don\'t want to show this field', 'wpuf' ) );
         ?>
         <li class="custom-field multiple_select">
             <?php self::legend( $label, $values ); ?>
@@ -422,6 +413,11 @@ class WPUF_Form_Template {
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
+                
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Select Text', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" name="<?php echo $first_name; ?>" value="<?php echo $first_value; ?>" title="<?php echo $help; ?>">
+                </div> <!-- .wpuf-form-rows -->
 
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Options', 'wpuf' ); ?></label>
@@ -534,12 +530,12 @@ class WPUF_Form_Template {
         <?php
     }
 
-    public static function eamil_address( $field_id, $label, $values = array() ) {
+    public static function email_address( $field_id, $label, $values = array() ) {
         ?>
         <li class="custom-field eamil_address">
             <?php self::legend( $label, $values ); ?>
             <?php self::hidden_field( "[$field_id][input_type]", 'email' ); ?>
-            <?php self::hidden_field( "[$field_id][template]", 'eamil_address' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'email_address' ); ?>
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>

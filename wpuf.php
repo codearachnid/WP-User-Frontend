@@ -8,10 +8,6 @@ Version: 2.0
 Author URI: http://tareq.weDevs.com
 */
 
-if ( !class_exists( 'WeDevs_Settings_API' ) ) {
-    require_once dirname( __FILE__ ) . '/class/class.settings-api.php';
-}
-
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/admin/settings-options.php';
 
@@ -46,6 +42,11 @@ function wpuf_autoload( $class ) {
 
 spl_autoload_register( 'wpuf_autoload' );
 
+/**
+ * Main bootstrap class for WP User Frontend
+ * 
+ * @package WP User Frontend
+ */
 class WP_User_Frontend {
 
     function __construct() {
@@ -103,22 +104,31 @@ class WP_User_Frontend {
         // $wpdb->query( $sql_transaction );
     }
 
+    /**
+     * Manage task on plugin deactivation
+     * 
+     * @return void
+     */
     function uninstall() {
 
     }
 
+    /**
+     * Instantiate the classes
+     * 
+     * @return void
+     */
     function instantiate() {
-        new WPUF_Forms();
-        new WPUF_Form_Posting();
-        new WPUF_Profile_Posting();
+        
         new WPUF_Upload();
+        new WPUF_Frontend_Form_Post(); // requires for form preview
 
         if (is_admin()) {
-            new WPUF_Settings();
+            new WPUF_Admin_Settings();
+            new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
-        } else {
-            new WPUF_Dashboard();
-            new WPUF_Edit_Profile();
+        } else {  
+            new WPUF_Frontend_Form_Profile();
         }
     }
 
@@ -169,12 +179,7 @@ class WP_User_Frontend {
      * @author Tareq Hasan
      */
     function load_textdomain() {
-        $locale = apply_filters( 'plugin_locale', get_locale() );
-        $mofile = dirname( __FILE__ ) . "/languages/wpuf-$locale.mo";
-
-        if ( file_exists( $mofile ) ) {
-            load_textdomain( 'wpuf', $mofile );
-        }
+        load_plugin_textdomain( 'wfp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
     }
 
     /**

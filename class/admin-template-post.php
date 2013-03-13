@@ -4,11 +4,7 @@
  *
  * @package WP User Frontend
  */
-class WPUF_Post_Template extends WPUF_Form_Template {
-
-    function __construct() {
-        parent::__construct();
-    }
+class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
 
     public static function post_title( $field_id, $label, $values = array() ) {
         ?>

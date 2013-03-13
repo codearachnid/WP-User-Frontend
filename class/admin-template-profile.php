@@ -5,7 +5,7 @@
  *
  * @package WP User Frontend
  */
-class WPUF_Profile_Template extends WPUF_Form_Template {
+class WPUF_Admin_Template_Profile extends WPUF_Admin_Template {
 
     public static function user_login( $field_id, $label, $values = array() ) {
         ?>

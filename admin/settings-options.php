@@ -290,6 +290,13 @@ function wpuf_settings_fields() {
             ),
         ) ),
         'wpuf_profile' => array(
+            array(
+                'name' => 'register_link_override',
+                'label' => __( 'Registration link override', 'wpuf' ),
+                'desc' => __( 'Override registration link. <em>(check if you have any custom registration page)</em>', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'off'
+            ),
         ),
         'wpuf_support' => apply_filters( 'wpuf_options_support', array(
             array(
@@ -337,7 +344,7 @@ function wpuf_settings_field_profile( $form ) {
     ?>
 
     <p style="padding-left: 10px; font-style: italic; font-size: 13px;">
-        <?php _e( 'Select profile forms for user roles. These forms will be used for edit profiles in frontend.', 'wpuf' ); ?>
+        <?php _e( 'Select profile forms for user roles. These forms will be used for edit profiles in backend to populate custom fields based on user role.', 'wpuf' ); ?>
     </p>
     <table class="form-table">
         <?php

@@ -6,7 +6,7 @@
  * @author Tareq Hasan
  * @package WP User Frontend
  */
-class WPUF_Dashboard {
+class WPUF_Frontend_Dashboard {
 
     function __construct() {
         add_shortcode( 'wpuf_dashboard', array($this, 'shortcode') );
@@ -250,5 +250,3 @@ class WPUF_Dashboard {
     }
 
 }
-
-$wpuf_dashboard = new WPUF_Dashboard();

@@ -4,9 +4,10 @@
  *
  * @package WP User Frontend
  */
-class WPUF_Forms {
+class WPUF_Admin_Form {
 
-    private $meta_key = 'wpuf_form';
+    private $form_data_key = 'wpuf_form';
+    private $form_settings_key = 'wpuf_form_settings';
 
     /**
      * Add neccessary actions and filters
@@ -28,7 +29,7 @@ class WPUF_Forms {
 
         // meta boxes
         add_action( 'add_meta_boxes', array($this, 'add_meta_box_form_select') );
-        add_action( 'add_meta_boxes_wpuf_forms', array($this, 'add_meta_box') );
+        add_action( 'add_meta_boxes_wpuf_forms', array($this, 'add_meta_box_post') );
         add_action( 'add_meta_boxes_wpuf_profile', array($this, 'add_meta_box_profile') );
 
 
@@ -42,7 +43,7 @@ class WPUF_Forms {
         add_action( 'wp_ajax_wpuf_form_dump', array( $this, 'form_dump' ) );
         add_action( 'wp_ajax_wpuf_form_add_el', array( $this, 'ajax_post_add_element' ) );
 
-        add_action( 'save_post', array( $this, 'save_meta' ), 1, 2 ); // save the custom fields
+        add_action( 'save_post', array( $this, 'save_form_meta' ), 1, 2 ); // save the custom fields
         add_action( 'save_post', array( $this, 'form_selection_metabox_save' ), 1, 2 ); // save the custom fields
     }
 
@@ -226,19 +227,31 @@ class WPUF_Forms {
         }
     }
 
+    /**
+     * Duplicate form row action link
+     * 
+     * @param array $actions
+     * @param object $post
+     * @return array
+     */
     function row_action_duplicate($actions, $post) {
         if ( !current_user_can( 'activate_plugins' ) ) {
-            return;
+            return $actions;
         }
 
         if ( !in_array( $post->post_type, array( 'wpuf_forms', 'wpuf_profile') ) ) {
-            return;
+            return $actions;
         }
 
         $actions['duplicate'] = '<a href="' . esc_url( add_query_arg( array( 'action' => 'wpuf_duplicate', 'id' => $post->ID, '_wpnonce' => wp_create_nonce( 'wpuf_duplicate' ) ), admin_url( 'admin.php' ) ) ) . '" title="' . esc_attr( sprintf( __( 'Duplicate form', 'wpuf' ), $title ) ) . '">' . __( 'Duplicate', 'wpuf' ) . '</a>';
         return $actions;
     }
 
+    /**
+     * Form Duplication handler
+     * 
+     * @return type
+     */
     function duplicate_form() {
         check_admin_referer( 'wpuf_duplicate' );
 
@@ -262,11 +275,11 @@ class WPUF_Forms {
         $form_id = wp_insert_post( $new_form );
 
         if ( $form_id ) {
-            $form_settings = get_post_meta( $post_id, 'wpuf_form_settings', true );
-            $form_vars = get_post_meta( $post_id, $this->meta_key, true );
+            $form_settings = get_post_meta( $post_id, $this->form_settings_key, true );
+            $form_vars = get_post_meta( $post_id, $this->form_data_key, true );
 
-            update_post_meta( $form_id, 'wpuf_form_settings', $form_settings );
-            update_post_meta( $form_id, $this->meta_key, $form_vars );
+            update_post_meta( $form_id, $this->form_settings_key, $form_settings );
+            update_post_meta( $form_id, $this->form_data_key, $form_vars );
 
             $location = admin_url( 'edit.php?post_type=' . $post->post_type );
             wp_redirect( $location );
@@ -282,6 +295,8 @@ class WPUF_Forms {
      * @return void
      */
     function add_meta_box_form_select() {
+        
+        // remove the submit div, because submit button placed on form elements
         remove_meta_box('submitdiv', 'wpuf_forms', 'side');
         remove_meta_box('submitdiv', 'wpuf_profile', 'side');
 
@@ -296,9 +311,7 @@ class WPUF_Forms {
      *
      * @return void
      */
-    function add_meta_box() {
-        // add_meta_box( 'wpuf-metabox-settings', __( 'Form Settings', 'wpuf' ), array($this, 'form_settings_posts'), 'wpuf_forms', 'normal', 'high' );
-        // add_meta_box( 'wpuf-metabox', __( 'Form Editor', 'wpuf' ), array($this, 'edit_form_area'), 'wpuf_forms', 'normal', 'high' );
+    function add_meta_box_post() {
         add_meta_box( 'wpuf-metabox-editor', __( 'Form Editor', 'wpuf' ), array($this, 'metabox_post_form'), 'wpuf_forms', 'normal', 'high' );
         add_meta_box( 'wpuf-metabox-fields', __( 'Form Elements', 'wpuf' ), array($this, 'form_elements_post'), 'wpuf_forms', 'side', 'core' );
     }
@@ -431,6 +444,7 @@ class WPUF_Forms {
 
         $redirect_to = isset( $form_settings['redirect_to'] ) ? $form_settings['redirect_to'] : 'post';
         $message = isset( $form_settings['message'] ) ? $form_settings['message'] : __( 'Post saved', 'wpuf' );
+        $update_message = isset( $form_settings['update_message'] ) ? $form_settings['update_message'] : __( 'Post updated successfully', 'wpuf' );
         $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
         $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
         $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Submit', 'wpuf' );
@@ -553,6 +567,124 @@ class WPUF_Forms {
                     <textarea rows="3" cols="40" name="wpuf_settings[message]"><?php echo esc_textarea( $message ); ?></textarea>
                 </td>
             </tr>
+            </tr>
+
+            <tr class="wpuf-same-page">
+                <th><?php _e( 'Post Update Message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="3" cols="40" name="wpuf_settings[update_message]"><?php echo esc_textarea( $update_message ); ?></textarea>
+                </td>
+            </tr>
+
+            <tr class="wpuf-page-id">
+                <th><?php _e( 'Page', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[page_id]">
+                        <?php
+                        $pages = get_posts(  array( 'numberposts' => -1, 'post_type' => 'page') );
+
+                        foreach ($pages as $page) {
+                            printf('<option value="%s"%s>%s</option>', $page->ID, selected( $page_id, $page->ID, false ), esc_attr( $page->post_title ) );
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="wpuf-url">
+                <th><?php _e( 'Custom URL', 'wpuf' ); ?></th>
+                <td>
+                    <input type="url" name="wpuf_settings[url]" value="<?php echo esc_attr( $url ); ?>">
+                </td>
+            </tr>
+
+            <tr class="wpuf-submit-text">
+                <th><?php _e( 'Submit Post Button text', 'wpuf' ); ?></th>
+                <td>
+                    <input type="text" name="wpuf_settings[submit_text]" value="<?php echo esc_attr( $submit_text ); ?>">
+                </td>
+            </tr>
+
+            <tr class="wpuf-update-text">
+                <th><?php _e( 'Update Post Button text', 'wpuf' ); ?></th>
+                <td>
+                    <input type="text" name="wpuf_settings[update_text]" value="<?php echo esc_attr( $update_text ); ?>">
+                </td>
+            </tr>
+        </table>
+        <?php
+    }
+    
+    /**
+     * Display settings for user profile builder
+     *
+     * @return void
+     */
+    function form_settings_profile() {
+        global $post;
+
+        $form_settings = get_post_meta( $post->ID, 'wpuf_form_settings', true );
+
+        $role_selected = isset( $form_settings['role'] ) ? $form_settings['role'] : 'subscriber';
+        $redirect_to = isset( $form_settings['redirect_to'] ) ? $form_settings['redirect_to'] : 'post';
+        $message = isset( $form_settings['message'] ) ? $form_settings['message'] : __( 'Registration successful', 'wpuf' );
+        $update_message = isset( $form_settings['update_message'] ) ? $form_settings['update_message'] : __( 'Profile updated successfully', 'wpuf' );
+        $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
+        $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
+        $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Register', 'wpuf' );
+        $update_text = isset( $form_settings['update_text'] ) ? $form_settings['update_text'] : __( 'Update Profile', 'wpuf' );
+
+        ?>
+        <table class="form-table">
+            <tr class="wpuf-post-type">
+                <th><?php _e( 'User Role', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[role]">
+                        <?php
+                        $user_roles = wpuf_get_user_roles();
+                        foreach ($user_roles as $role => $label) {
+                            printf('<option value="%s"%s>%s</option>', $role, selected( $role_selected, $role, false ), $label );
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="wpuf-redirect-to">
+                <th><?php _e( 'Redirect To', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[redirect_to]">
+                        <?php
+                        $redirect_options = array(
+                            'same' => __( 'Same Page', 'wpuf' ),
+                            'page' => __( 'To a page', 'wpuf' ),
+                            'url' => __( 'To a custom URL', 'wpuf' )
+                        );
+
+                        foreach ($redirect_options as $to => $label) {
+                            printf('<option value="%s"%s>%s</option>', $to, selected( $redirect_to, $to, false ), $label );
+                        }
+                        ?>
+                    </select>
+                    <div class="description">
+                        <?php _e( 'After successfull submit, where the page will redirect to', 'wpuf' ) ?>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="wpuf-same-page">
+                <th><?php _e( 'Registration success message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="3" cols="40" name="wpuf_settings[message]"><?php echo esc_textarea( $message ); ?></textarea>
+                </td>
+            </tr>
+
+            <tr class="wpuf-same-page">
+                <th><?php _e( 'Update profile message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="3" cols="40" name="wpuf_settings[update_message]"><?php echo esc_textarea( $update_message ); ?></textarea>
+                </td>
+            </tr>
 
             <tr class="wpuf-page-id">
                 <th><?php _e( 'Page', 'wpuf' ); ?></th>
@@ -640,106 +772,39 @@ class WPUF_Forms {
         </div>
         <?php
     }
-
-    /**
-     * Display settings for user profile builder
-     *
-     * @return void
-     */
-    function form_settings_profile() {
-        global $post;
-
-        $form_settings = get_post_meta( $post->ID, 'wpuf_form_settings', true );
-
-        $role_selected = isset( $form_settings['role'] ) ? $form_settings['role'] : 'subscriber';
-        $redirect_to = isset( $form_settings['redirect_to'] ) ? $form_settings['redirect_to'] : 'post';
-        $message = isset( $form_settings['message'] ) ? $form_settings['message'] : __( 'Registration Successfull', 'wpuf' );
-        $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
-        $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
-        $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Register', 'wpuf' );
-        $update_text = isset( $form_settings['update_text'] ) ? $form_settings['update_text'] : __( 'Update Profile', 'wpuf' );
-
+    
+    function form_elements_common() {
         ?>
-        <table class="form-table">
-            <tr class="wpuf-post-type">
-                <th><?php _e( 'User Role', 'wpuf' ); ?></th>
-                <td>
-                    <select name="wpuf_settings[role]">
-                        <?php
-                        $user_roles = wpuf_get_user_roles();
-                        foreach ($user_roles as $role => $label) {
-                            printf('<option value="%s"%s>%s</option>', $role, selected( $role_selected, $role, false ), $label );
-                        }
-                        ?>
-                    </select>
-                </td>
-            </tr>
+        <h2><?php _e( 'Custom Fields', 'wpuf' ); ?></h2>
+        <div class="wpuf-form-buttons">
+            <button class="button" data-name="custom_text" data-type="text" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Text', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_textarea" data-type="textarea" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Textarea', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_select" data-type="select" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Dropdown', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_multiselect" data-type="multiselect" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Multi Select', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_radio" data-type="radio" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Radio', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_checkbox" data-type="checkbox" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Checkbox', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_image" data-type="image" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Image Upload', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_file" data-type="file" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'File Upload', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_url" data-type="url" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'URL', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_email" data-type="email" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Email', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_repeater" data-type="repeat" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_date" data-type="date" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Date', 'wpuf' ); ?></button>
 
-            <tr class="wpuf-redirect-to">
-                <th><?php _e( 'Redirect To', 'wpuf' ); ?></th>
-                <td>
-                    <select name="wpuf_settings[redirect_to]">
-                        <?php
-                        $redirect_options = array(
-                            'same' => __( 'Same Page', 'wpuf' ),
-                            'page' => __( 'To a page', 'wpuf' ),
-                            'url' => __( 'To a custom URL', 'wpuf' )
-                        );
+            <?php do_action( 'wpuf_form_buttons_custom' ); ?>
+        </div>
+        
+        <h2><?php _e( 'Others', 'wpuf' ); ?></h2>
+        <div class="wpuf-form-buttons">
+            <button class="button" data-name="recaptcha" data-type="captcha" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
+            <button class="button" data-name="really_simple_captcha" data-type="rscaptcha" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Really Simple Captcha', 'wpuf' ); ?></button>
+            <button class="button" data-name="section_break" data-type="break" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Section Break', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_html" data-type="html" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'HTML', 'wpuf' ); ?></button>
+            <button class="button" data-name="action_hook" data-type="action" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
+            <button class="button" data-name="toc" data-type="action" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Term &amp; Conditions', 'wpuf' ); ?></button>
 
-                        foreach ($redirect_options as $to => $label) {
-                            printf('<option value="%s"%s>%s</option>', $to, selected( $redirect_to, $to, false ), $label );
-                        }
-                        ?>
-                    </select>
-                    <div class="description">
-                        <?php _e( 'After successfull submit, where the page will redirect to', 'wpuf' ) ?>
-                    </div>
-                </td>
-            </tr>
-
-            <tr class="wpuf-same-page">
-                <th><?php _e( 'Message to show', 'wpuf' ); ?></th>
-                <td>
-                    <textarea rows="3" cols="40" name="wpuf_settings[message]"><?php echo esc_textarea( $message ); ?></textarea>
-                </td>
-            </tr>
-
-            <tr class="wpuf-page-id">
-                <th><?php _e( 'Page', 'wpuf' ); ?></th>
-                <td>
-                    <select name="wpuf_settings[page_id]">
-                        <?php
-                        $pages = get_posts(  array( 'numberposts' => -1, 'post_type' => 'page') );
-
-                        foreach ($pages as $page) {
-                            printf('<option value="%s"%s>%s</option>', $page->ID, selected( $page_id, $page->ID, false ), esc_attr( $page->post_title ) );
-                        }
-                        ?>
-                    </select>
-                </td>
-            </tr>
-
-            <tr class="wpuf-url">
-                <th><?php _e( 'Custom URL', 'wpuf' ); ?></th>
-                <td>
-                    <input type="url" name="wpuf_settings[url]" value="<?php echo esc_attr( $url ); ?>">
-                </td>
-            </tr>
-
-            <tr class="wpuf-submit-text">
-                <th><?php _e( 'Submit Button text', 'wpuf' ); ?></th>
-                <td>
-                    <input type="text" name="wpuf_settings[submit_text]" value="<?php echo esc_attr( $submit_text ); ?>">
-                </td>
-            </tr>
-
-            <tr class="wpuf-update-text">
-                <th><?php _e( 'Update Button text', 'wpuf' ); ?></th>
-                <td>
-                    <input type="text" name="wpuf_settings[update_text]" value="<?php echo esc_attr( $update_text ); ?>">
-                </td>
-            </tr>
-        </table>
+            <?php do_action( 'wpuf_form_buttons_other' ); ?>
+        </div>
+        
         <?php
     }
 
@@ -764,23 +829,6 @@ class WPUF_Forms {
             <?php do_action( 'wpuf_form_buttons_post' ); ?>
         </div>
 
-        <h2><?php _e( 'Custom Fields', 'wpuf' ); ?></h2>
-        <div class="wpuf-form-buttons">
-            <button class="button" data-name="custom_text" data-type="text" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Text', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_textarea" data-type="textarea" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Textarea', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_select" data-type="select" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Dropdown', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_multiselect" data-type="multiselect" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Multi Select', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_radio" data-type="radio" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Radio', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_checkbox" data-type="checkbox" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Checkbox', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_image" data-type="image" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Image Upload', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_file" data-type="file" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'File Upload', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_url" data-type="url" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'URL', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_email" data-type="email" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Email', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_repeater" data-type="repeat" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_date" data-type="date" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Date', 'wpuf' ); ?></button>
-
-            <?php do_action( 'wpuf_form_buttons_custom' ); ?>
-        </div>
 
         <h2><?php _e( 'Custom Taxonomies', 'wpuf' ); ?></h2>
         <div class="wpuf-form-buttons">
@@ -797,19 +845,10 @@ class WPUF_Forms {
             }?>
         </div>
 
-        <h2><?php _e( 'Others', 'wpuf' ); ?></h2>
-        <div class="wpuf-form-buttons">
-            <button class="button" data-name="recaptcha" data-type="captcha" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
-            <button class="button" data-name="really_simple_captcha" data-type="rscaptcha" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Really Simple Captcha', 'wpuf' ); ?></button>
-            <button class="button" data-name="section_break" data-type="break" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Section Break', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_html" data-type="html" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'HTML', 'wpuf' ); ?></button>
-            <button class="button" data-name="action_hook" data-type="action" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
-            <button class="button" data-name="toc" data-type="action" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Term &amp; Conditions', 'wpuf' ); ?></button>
-
-            <?php do_action( 'wpuf_form_buttons_other' ); ?>
-        </div>
+        
         <?php
 
+        $this->form_elements_common();
         $this->publish_button();
     }
 
@@ -838,37 +877,8 @@ class WPUF_Forms {
             <?php do_action( 'wpuf_form_buttons_user' ); ?>
         </div>
 
-        <h2><?php _e( 'Custom Fields', 'wpuf' ); ?></h2>
-        <div class="wpuf-form-buttons">
-            <button class="button" data-name="custom_text" data-type="text"><?php _e( 'Text', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_textarea" data-type="textarea"><?php _e( 'Textarea', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_select" data-type="select"><?php _e( 'Dropdown', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_multiselect" data-type="multiselect"><?php _e( 'Multi Select', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_radio" data-type="radio"><?php _e( 'Radio', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_checkbox" data-type="checkbox"><?php _e( 'Checkbox', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_image" data-type="image"><?php _e( 'Image Upload', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_file" data-type="file"><?php _e( 'File Upload', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_url" data-type="url"><?php _e( 'URL', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_email" data-type="email"><?php _e( 'Email', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_repeater" data-type="repeat"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_date" data-type="date"><?php _e( 'Date', 'wpuf' ); ?></button>
-
-            <?php do_action( 'wpuf_form_buttons_custom' ); ?>
-        </div>
-
-        <h2><?php _e( 'Others', 'wpuf' ); ?></h2>
-        <div class="wpuf-form-buttons">
-            <button class="button" data-name="recaptcha" data-type="captcha"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
-            <button class="button" data-name="really_simple_captcha" data-type="rscaptcha"><?php _e( 'Really Simple Captcha', 'wpuf' ); ?></button>
-            <button class="button" data-name="section_break" data-type="break"><?php _e( 'Section Break', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_html" data-type="html"><?php _e( 'HTML', 'wpuf' ); ?></button>
-            <button class="button" data-name="action_hook" data-type="action"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
-            <button class="button" data-name="toc" data-type="action"><?php _e( 'Term &amp; Conditions', 'wpuf' ); ?></button>
-
-            <?php do_action( 'wpuf_form_buttons_other' ); ?>
-        </div>
         <?php
-
+        $this->form_elements_common();
         $this->publish_button();
     }
 
@@ -879,7 +889,7 @@ class WPUF_Forms {
      * @param object $post
      * @return int|void
      */
-    function save_meta( $post_id, $post ) {
+    function save_form_meta( $post_id, $post ) {
         if ( !isset($_POST['wpuf_form_editor'])) {
             return $post->ID;
         }
@@ -894,8 +904,8 @@ class WPUF_Forms {
         }
 
         // var_dump($_POST); die();
-        update_post_meta( $post->ID, $this->meta_key, $_POST['wpuf_input'] );
-        update_post_meta( $post->ID, 'wpuf_form_settings', $_POST['wpuf_settings'] );
+        update_post_meta( $post->ID, $this->form_data_key, $_POST['wpuf_input'] );
+        update_post_meta( $post->ID, $this->form_settings_key, $_POST['wpuf_settings'] );
     }
 
     /**
@@ -907,7 +917,7 @@ class WPUF_Forms {
     function edit_form_area() {
         global $post, $pagenow;
 
-        $form_inputs = get_post_meta( $post->ID, $this->meta_key, true );
+        $form_inputs = get_post_meta( $post->ID, $this->form_data_key, true );
         ?>
 
         <input type="hidden" name="wpuf_form_editor" id="wpuf_form_editor" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
@@ -925,9 +935,9 @@ class WPUF_Forms {
                 $name = ucwords( str_replace( '_', ' ', $input_field['template'] ) );
 
                 if ( $input_field['template'] == 'taxonomy') {
-                    WPUF_Post_Template::$input_field['template']( $count, $name, $input_field['name'], $input_field );
+                    WPUF_Admin_Template_Post::$input_field['template']( $count, $name, $input_field['name'], $input_field );
                 } else {
-                    WPUF_Post_Template::$input_field['template']( $count, $name, $input_field );
+                    WPUF_Admin_Template_Post::$input_field['template']( $count, $name, $input_field );
                 }
 
                 $count++;
@@ -965,7 +975,7 @@ class WPUF_Forms {
             foreach ($form_inputs as $order => $input_field) {
                 $name = ucwords( str_replace( '_', ' ', $input_field['template'] ) );
 
-                WPUF_Profile_Template::$input_field['template']( $count, $name, $input_field );
+                WPUF_Admin_Template_Profile::$input_field['template']( $count, $name, $input_field );
 
                 $count++;
             }
@@ -982,9 +992,6 @@ class WPUF_Forms {
      * @return void
      */
     function ajax_post_add_element() {
-        require_once dirname( __FILE__ ) . '/form-template.php';
-
-        // print_r( $_POST ); die();
 
         $name = $_POST['name'];
         $type = $_POST['type'];
@@ -992,139 +999,139 @@ class WPUF_Forms {
 
         switch ($name) {
             case 'post_title':
-                WPUF_Post_Template::post_title( $field_id, 'Post Title');
+                WPUF_Admin_Template_Post::post_title( $field_id, 'Post Title');
                 break;
 
             case 'post_content':
-                WPUF_Post_Template::post_content( $field_id, 'Post Body');
+                WPUF_Admin_Template_Post::post_content( $field_id, 'Post Body');
                 break;
 
             case 'post_excerpt':
-                WPUF_Post_Template::post_excerpt( $field_id, 'Excerpt');
+                WPUF_Admin_Template_Post::post_excerpt( $field_id, 'Excerpt');
                 break;
 
             case 'tags':
-                WPUF_Post_Template::post_tags( $field_id, 'Tags');
+                WPUF_Admin_Template_Post::post_tags( $field_id, 'Tags');
                 break;
 
             case 'featured_image':
-                WPUF_Post_Template::featured_image( $field_id, 'Featured Image');
+                WPUF_Admin_Template_Post::featured_image( $field_id, 'Featured Image');
                 break;
 
             case 'custom_text':
-                WPUF_Post_Template::text_field( $field_id, 'Custom field: Text');
+                WPUF_Admin_Template_Post::text_field( $field_id, 'Custom field: Text');
                 break;
 
             case 'custom_textarea':
-                WPUF_Post_Template::textarea_field( $field_id, 'Custom field: Textarea');
+                WPUF_Admin_Template_Post::textarea_field( $field_id, 'Custom field: Textarea');
                 break;
 
             case 'custom_select':
-                WPUF_Post_Template::dropdown_field( $field_id, 'Custom field: Select');
+                WPUF_Admin_Template_Post::dropdown_field( $field_id, 'Custom field: Select');
                 break;
 
             case 'custom_multiselect':
-                WPUF_Post_Template::multiple_select( $field_id, 'Custom field: Multiselect');
+                WPUF_Admin_Template_Post::multiple_select( $field_id, 'Custom field: Multiselect');
                 break;
 
             case 'custom_radio':
-                WPUF_Post_Template::radio_field( $field_id, 'Custom field: Radio');
+                WPUF_Admin_Template_Post::radio_field( $field_id, 'Custom field: Radio');
                 break;
 
             case 'custom_checkbox':
-                WPUF_Post_Template::checkbox_field( $field_id, 'Custom field: Checkbox');
+                WPUF_Admin_Template_Post::checkbox_field( $field_id, 'Custom field: Checkbox');
                 break;
 
             case 'custom_image':
-                WPUF_Post_Template::image_upload( $field_id, 'Custom field: Image');
+                WPUF_Admin_Template_Post::image_upload( $field_id, 'Custom field: Image');
                 break;
 
             case 'custom_file':
-                WPUF_Post_Template::file_upload( $field_id, 'Custom field: File Upload');
+                WPUF_Admin_Template_Post::file_upload( $field_id, 'Custom field: File Upload');
                 break;
 
             case 'custom_url':
-                WPUF_Post_Template::website_url( $field_id, 'Custom field: URL');
+                WPUF_Admin_Template_Post::website_url( $field_id, 'Custom field: URL');
                 break;
 
             case 'custom_email':
-                WPUF_Post_Template::eamil_address( $field_id, 'Custom field: E-Mail');
+                WPUF_Admin_Template_Post::email_address( $field_id, 'Custom field: E-Mail');
                 break;
 
             case 'custom_repeater':
-                WPUF_Post_Template::repeat_field( $field_id, 'Custom field: Repeat Field');
+                WPUF_Admin_Template_Post::repeat_field( $field_id, 'Custom field: Repeat Field');
                 break;
 
             case 'custom_html':
-                WPUF_Post_Template::custom_html( $field_id, 'HTML' );
+                WPUF_Admin_Template_Post::custom_html( $field_id, 'HTML' );
                 break;
 
             case 'category':
-                WPUF_Post_Template::taxonomy( $field_id, 'Category', $type );
+                WPUF_Admin_Template_Post::taxonomy( $field_id, 'Category', $type );
                 break;
 
             case 'taxonomy':
-                WPUF_Post_Template::taxonomy( $field_id, 'Taxonomy: ' . $type, $type );
+                WPUF_Admin_Template_Post::taxonomy( $field_id, 'Taxonomy: ' . $type, $type );
                 break;
 
             case 'section_break':
-                WPUF_Post_Template::section_break( $field_id, 'Section Break' );
+                WPUF_Admin_Template_Post::section_break( $field_id, 'Section Break' );
                 break;
 
             case 'recaptcha':
-                WPUF_Post_Template::recaptcha( $field_id, 'reCaptcha' );
+                WPUF_Admin_Template_Post::recaptcha( $field_id, 'reCaptcha' );
                 break;
 
             case 'action_hook':
-                WPUF_Post_Template::action_hook( $field_id, 'Action Hook' );
+                WPUF_Admin_Template_Post::action_hook( $field_id, 'Action Hook' );
                 break;
 
             case 'really_simple_captcha':
-                WPUF_Post_Template::really_simple_captcha( $field_id, 'Really Simple Captcha' );
+                WPUF_Admin_Template_Post::really_simple_captcha( $field_id, 'Really Simple Captcha' );
                 break;
 
             case 'custom_date':
-                WPUF_Post_Template::date_field( $field_id, 'Custom Field: Date' );
+                WPUF_Admin_Template_Post::date_field( $field_id, 'Custom Field: Date' );
                 break;
 
             case 'toc':
-                WPUF_Post_Template::toc( $field_id, 'TOC' );
+                WPUF_Admin_Template_Post::toc( $field_id, 'TOC' );
                 break;
 
             case 'user_login':
-                WPUF_Profile_Template::user_login( $field_id, __( 'Username', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::user_login( $field_id, __( 'Username', 'wpuf' ) );
                 break;
 
             case 'first_name':
-                WPUF_Profile_Template::first_name( $field_id, __( 'First Name', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::first_name( $field_id, __( 'First Name', 'wpuf' ) );
                 break;
 
             case 'last_name':
-                WPUF_Profile_Template::last_name( $field_id, __( 'Last Name', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::last_name( $field_id, __( 'Last Name', 'wpuf' ) );
                 break;
 
             case 'nickname':
-                WPUF_Profile_Template::nickname( $field_id, __( 'Nickname', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::nickname( $field_id, __( 'Nickname', 'wpuf' ) );
                 break;
 
             case 'user_email':
-                WPUF_Profile_Template::user_email( $field_id, __( 'E-mail', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::user_email( $field_id, __( 'E-mail', 'wpuf' ) );
                 break;
 
             case 'user_url':
-                WPUF_Profile_Template::user_url( $field_id, __( 'Website', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::user_url( $field_id, __( 'Website', 'wpuf' ) );
                 break;
 
             case 'user_bio':
-                WPUF_Profile_Template::description( $field_id, __( 'Biographical Info', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::description( $field_id, __( 'Biographical Info', 'wpuf' ) );
                 break;
 
             case 'password':
-                WPUF_Profile_Template::password( $field_id, __( 'Password', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::password( $field_id, __( 'Password', 'wpuf' ) );
                 break;
 
             case 'user_avatar':
-                WPUF_Profile_Template::avatar( $field_id, __( 'Avatar', 'wpuf' ) );
+                WPUF_Admin_Template_Profile::avatar( $field_id, __( 'Avatar', 'wpuf' ) );
                 break;
 
 

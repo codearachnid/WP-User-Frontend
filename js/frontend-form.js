@@ -53,8 +53,7 @@
 
                     if ( res.success) {
                         if( res.show_message == true) {
-                            form.after( '<div class="wpuf-success">' + res.message + '</div>');
-                            form.remove();
+                            form.before( '<div class="wpuf-success">' + res.message + '</div>');
 
                             //focus
                             $('html, body').animate({

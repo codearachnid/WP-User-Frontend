@@ -88,7 +88,7 @@ class WPUF_Admin_Posting {
         <input type="hidden" name="wpuf_cf_update" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
         <input type="hidden" name="wpuf_cf_form_id" value="<?php echo $form_id; ?>" />
 
-        <table class="form-table">
+        <table class="form-table wpuf-cf-table">
             <tbody>
                 <?php foreach ($custom_fields as $attr) { ?>
                     <tr valign="top">
@@ -435,6 +435,11 @@ class WPUF_Admin_Posting {
           color: #ffffff;
           background-color: #bd362f;
           *background-color: #a9302a;
+        }
+        
+        .wpuf-cf-table table th,
+        .wpuf-cf-table table td{
+            padding-left: 0 !important;
         }
 
         </style>

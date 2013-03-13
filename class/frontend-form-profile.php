@@ -5,19 +5,14 @@
  *
  * @package WP User Frontend
  */
-class WPUF_Profile_Posting extends WPUF_Form_Posting {
-
-    protected $meta_key = 'wpuf_form';
-    protected $separator = ', ';
-    protected $config_id = '_wpuf_form_id';
+class WPUF_Frontend_Form_Profile extends WPUF_Frontend_Form {
 
     function __construct() {
         add_shortcode( 'wpuf_profile', array($this, 'shortcode_handler') );
 
         // ajax requests
         add_action( 'wp_ajax_nopriv_wpuf_submit_register', array($this, 'user_register') );
-
-        add_action( 'wp_ajax_wpuf_submit_editprofile', array($this, 'update_profile') );
+        add_action( 'wp_ajax_wpuf_update_profile', array($this, 'update_profile') );
     }
 
     /**
@@ -32,8 +27,20 @@ class WPUF_Profile_Posting extends WPUF_Form_Posting {
 
         $form_vars = get_post_meta( $id, $this->meta_key, true );
         $form_settings = get_post_meta( $id, 'wpuf_form_settings', true );
+        
+        if ( !$form_vars ) {
+            return;
+        }
+
 
         if ( $type == 'profile' && is_user_logged_in() ) {
+
+            if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'profile_update' ) {
+                echo '<div class="wpuf-success">';
+                echo $form_settings['update_message'];
+                echo '</div>';
+            }
+
             $this->profile_edit( $id, $form_vars, $form_settings );
         } elseif ( $type == 'registration' && !is_user_logged_in() ) {
             $this->profile_edit( $id, $form_vars, $form_settings );
@@ -57,6 +64,13 @@ class WPUF_Profile_Posting extends WPUF_Form_Posting {
     }
 
     function submit_button( $form_id, $form_settings ) {
+
+        // lets guess its a registration form
+        // give the chance to fire action for default register form
+        if ( !is_user_logged_in() ) {
+            do_action('register_form');
+        }
+
         ?>
         <li class="wpuf-submit">
             <div class="wpuf-label">
@@ -65,6 +79,7 @@ class WPUF_Profile_Posting extends WPUF_Form_Posting {
 
             <?php wp_nonce_field( 'wpuf_form_add' ); ?>
             <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
+            <input type="hidden" name="page_id" value="<?php echo get_the_ID(); ?>">
 
             <?php if ( is_user_logged_in() ) { ?>
                 <input type="hidden" name="action" value="wpuf_update_profile">
@@ -156,8 +171,15 @@ class WPUF_Profile_Posting extends WPUF_Form_Posting {
             $password = wp_generate_password();
         }
 
-        // prepare meta fields
-        list( $meta_key_value, $multi_repeated, $files ) = $this->prepare_meta_fields( $meta_vars );
+        // default WP registration hook
+        $errors = new WP_Error();
+        do_action( 'register_post', $username, $user_email, $errors );
+
+        $errors = apply_filters( 'registration_errors', $errors, $sanitized_user_login, $user_email );
+
+        if ( $errors->get_error_code() ) {
+            $this->send_error( $errors->get_error_message() );
+        }
 
         // seems like we don't have any error. Lets register the user
         $user_id = wp_create_user( $username, $password, $user_email );
@@ -181,56 +203,8 @@ class WPUF_Profile_Posting extends WPUF_Form_Posting {
 
             if ( $user_id ) {
 
-                // set featured image if there's any
-                if ( isset( $_POST['wpuf_files']['avatar'] ) ) {
-                    $attachment_id = $_POST['wpuf_files']['avatar'][0];
-
-                    $upload_dir = wp_upload_dir();
-                    $uploaded_file = wp_get_attachment_url( $attachment_id );
-                    $relative_url = str_replace( $upload_dir['baseurl'], '', $uploaded_file );
-
-                    if ( function_exists( 'wp_get_image_editor' ) ) {
-                        // try to crop the photo if it's big
-                        $file_path = $upload_dir['basedir'] . $relative_url;
-
-                        // as the image upload process generated a bunch of images
-                        // try delete the intermediate sizes.
-                        $ext = strrchr( $file_path, '.');
-                        $file_path_w_ext = str_replace( $ext, '', $file_path );
-                        $small_url = $file_path_w_ext . '-avatar' . $ext;
-                        $relative_url = str_replace( $upload_dir['basedir'], '', $small_url);
-
-                        $editor = wp_get_image_editor( $file_path );
-
-                        if ( !is_wp_error( $editor ) ) {
-                            $editor->resize( 100, 100, true );
-                            $editor->save( $small_url );
-
-                            // if the file creation successfull, delete the original attachment
-                            if ( file_exists( $small_url ) ) {
-                                wp_delete_attachment( $attachment_id, true );
-                            }
-                        }
-                    }
-
-                    update_user_meta($user_id, 'user_avatar', $relative_url);
-                }
-
-                // save all custom fields
-                foreach ($meta_key_value as $meta_key => $meta_value) {
-                    update_user_meta( $user_id, $meta_key, $meta_value );
-                }
-
-                // save any multicolumn repeatable fields
-                foreach ($multi_repeated as $repeat_key => $repeat_value) {
-                    // first, delete any previous repeatable fields
-                    delete_user_meta( $user_id, $repeat_key );
-
-                    // now add them
-                    foreach ($repeat_value as $repeat_field) {
-                        add_user_meta( $user_id, $repeat_key, $repeat_field );
-                    }
-                } //foreach
+                // update meta fields
+                $this->update_user_meta( $meta_vars, $user_id );
 
                 // send user notification
                 wp_new_user_notification( $user_id, $password );
@@ -268,6 +242,155 @@ class WPUF_Profile_Posting extends WPUF_Form_Posting {
             'error' => __( 'Something went wrong', 'wpuf' )
         ) );
 
+        exit;
+    }
+
+    function update_user_meta( $meta_vars, $user_id ) {
+        // prepare meta fields
+        list( $meta_key_value, $multi_repeated, $files ) = $this->prepare_meta_fields( $meta_vars );
+
+        // set featured image if there's any
+        if ( isset( $_POST['wpuf_files']['avatar'] ) ) {
+            $attachment_id = $_POST['wpuf_files']['avatar'][0];
+
+            $upload_dir = wp_upload_dir();
+            $uploaded_file = wp_get_attachment_url( $attachment_id );
+            $relative_url = str_replace( $upload_dir['baseurl'], '', $uploaded_file );
+
+            if ( function_exists( 'wp_get_image_editor' ) ) {
+                // try to crop the photo if it's big
+                $file_path = $upload_dir['basedir'] . $relative_url;
+
+                // as the image upload process generated a bunch of images
+                // try delete the intermediate sizes.
+                $ext = strrchr( $file_path, '.');
+                $file_path_w_ext = str_replace( $ext, '', $file_path );
+                $small_url = $file_path_w_ext . '-avatar' . $ext;
+                $relative_url = str_replace( $upload_dir['basedir'], '', $small_url);
+
+                $editor = wp_get_image_editor( $file_path );
+
+                if ( !is_wp_error( $editor ) ) {
+                    $editor->resize( 100, 100, true );
+                    $editor->save( $small_url );
+
+                    // if the file creation successfull, delete the original attachment
+                    if ( file_exists( $small_url ) ) {
+                        wp_delete_attachment( $attachment_id, true );
+                    }
+                }
+            }
+
+            // delete any previous avatar
+            $prev_avatar = update_user_meta($user_id, 'user_avatar', true );
+            if ( !empty( $prev_avatar ) ) {
+                $prev_avatar_path = $upload_dir['basedir'] . $prev_avatar;
+
+                if ( file_exists( $prev_avatar_path ) ) {
+                    unlink( $prev_avatar_path );
+                }
+            }
+
+            // now update new user avatar
+            update_user_meta($user_id, 'user_avatar', $relative_url);
+        }
+
+        // save all custom fields
+        foreach ($meta_key_value as $meta_key => $meta_value) {
+            update_user_meta( $user_id, $meta_key, $meta_value );
+        }
+
+        // save any multicolumn repeatable fields
+        foreach ($multi_repeated as $repeat_key => $repeat_value) {
+            // first, delete any previous repeatable fields
+            delete_user_meta( $user_id, $repeat_key );
+
+            // now add them
+            foreach ($repeat_value as $repeat_field) {
+                add_user_meta( $user_id, $repeat_key, $repeat_field );
+            }
+        } //foreach
+    }
+
+    function update_profile() {
+        check_ajax_referer( 'wpuf_form_add' );
+
+        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+
+        $form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
+        $form_vars = $this->get_input_fields( $form_id );
+        $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+
+        list( $user_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
+
+
+        $user_id = get_current_user_id();
+        $userdata = array(
+            'ID' => $user_id,
+            'first_name' => $this->search( $user_vars, 'name', 'first_name' ) ? $_POST['first_name'] : '',
+            'last_name' => $this->search( $user_vars, 'name', 'last_name' ) ? $_POST['last_name'] : '',
+            'nickname' => $this->search( $user_vars, 'name', 'nickname' ) ? $_POST['nickname'] : '',
+            'user_url' => $this->search( $user_vars, 'name', 'user_url' ) ? $_POST['user_url'] : '',
+            'description' => $this->search( $user_vars, 'name', 'description' ) ? $_POST['description'] : '',
+        );
+
+        // check if password filled out
+        // verify password
+        if ( $pass_element = $this->search($user_vars, 'name', 'password') ) {
+            $pass_element = current( $pass_element );
+            $password = $_POST['pass1'];
+            $password_repeat = $_POST['pass2'];
+
+            // check only if it's filled
+            if ( $pass_length = strlen( $password) ) {
+
+                // min length check
+                if ( $pass_length < intval( $pass_element['min_length'] ) ) {
+                    $this->send_error( sprintf( __( 'Password must be %s character long', 'wpuf' ), $pass_element['min_length'] ) );
+                }
+
+                // repeat password check
+                if ( $password != $password_repeat ) {
+                    $this->send_error( __( 'Password didn\'t match', 'wpuf' ) );
+                }
+
+                // seems like he want to change the password
+                $userdata['user_pass'] = $password;
+            }
+        }
+
+        $userdata = apply_filters( 'wpuf_update_profile_vars', $userdata, $form_id, $form_settings );
+        $user_id = wp_update_user( $userdata );
+
+        if ( $user_id ) {
+            // update meta fields
+            $this->update_user_meta( $meta_vars, $user_id );
+
+            do_action( 'wpuf_update_profile', $user_id, $form_id, $form_settings );
+        }
+
+        //redirect URL
+        $show_message = false;
+        if ( $form_settings['redirect_to'] == 'page' ) {
+            $redirect_to = get_permalink( $form_settings['page_id'] );
+        } elseif ( $form_settings['redirect_to'] == 'url' ) {
+            $redirect_to = $form_settings['url'];
+        } elseif ( $form_settings['redirect_to'] == 'same' ) {
+            $redirect_to = get_permalink( $_POST['page_id'] );
+            $redirect_to = add_query_arg( array( 'msg' => 'profile_update' ), $redirect_to );
+        }
+
+        // send the response
+        $response = array(
+            'success' => true,
+            'redirect_to' => $redirect_to,
+            'show_message' => $show_message,
+            'message' => $form_settings['update_message'],
+        );
+
+        $response = apply_filters( 'wpuf_update_profile_resp', $response, $user_id, $form_id, $form_settings );
+
+        echo json_encode( $response );
         exit;
     }
 

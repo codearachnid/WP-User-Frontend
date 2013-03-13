@@ -5,11 +5,16 @@
  *
  * @author Tareq Hasan
  */
-class WPUF_Settings {
+class WPUF_Admin_Settings {
 
     private $settings_api;
 
     function __construct() {
+
+        if ( !class_exists( 'WeDevs_Settings_API' ) ) {
+            require_once dirname( __FILE__ ) . '/class.settings-api.php';
+        }
+        
         $this->settings_api = new WeDevs_Settings_API();
 
         add_action( 'admin_init', array($this, 'admin_init') );
@@ -71,4 +76,5 @@ class WPUF_Settings {
         </div>
         <?php
     }
+
 }
