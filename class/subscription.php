@@ -228,7 +228,7 @@ class WPUF_Subscription {
         //$post = get_post( $post_id );
         $sql = $wpdb->prepare( "SELECT p.ID, p.post_status
             FROM $wpdb->posts p, $wpdb->postmeta m
-            WHERE p.ID = m.post_id AND p.post_status <> 'publish' AND m.meta_key = 'wpuf_order_id' AND m.meta_value = '$order_id'" );
+            WHERE p.ID = m.post_id AND p.post_status <> 'publish' AND m.meta_key = 'wpuf_order_id' AND m.meta_value = %s", $order_id );
 
         $post = $wpdb->get_row( $sql );
 
