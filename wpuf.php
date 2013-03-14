@@ -180,7 +180,7 @@ class WP_User_Frontend {
      * @author Tareq Hasan
      */
     function load_textdomain() {
-        load_plugin_textdomain( 'wfp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+        load_plugin_textdomain( 'wpuf', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
     }
 
     /**
