@@ -483,6 +483,12 @@ function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
 
     if ( is_numeric( $id_or_email ) ) {
         $user = get_user_by( 'id', $id_or_email );
+    } elseif ( is_object( $id_or_email ) ) {
+        if ( $id_or_email->user_id != '0' ) {
+            $user = get_user_by( 'id', $id_or_email->user_id );
+        } else {
+            return $avatar;
+        }
     } else {
         $user = get_user_by( 'email', $id_or_email );
     }
