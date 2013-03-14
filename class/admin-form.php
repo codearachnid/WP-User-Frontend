@@ -83,7 +83,7 @@ class WPUF_Admin_Form {
         if ( !in_array( $post_type, array( 'wpuf_forms', 'wpuf_profile') ) ) {
             return;
         }
-        
+
         $fixed_sidebar = wpuf_get_option( 'fixed_form_element');
         ?>
         <style type="text/css">
@@ -92,7 +92,7 @@ class WPUF_Admin_Form {
                 color: #fff;
                 text-shadow: 0 1px 1px #446E81;
             }
-            
+
             <?php if ( $fixed_sidebar == 'on' ) { ?>
             #wpuf-metabox-fields{
                 position: fixed;
@@ -239,7 +239,7 @@ class WPUF_Admin_Form {
 
     /**
      * Duplicate form row action link
-     * 
+     *
      * @param array $actions
      * @param object $post
      * @return array
@@ -259,7 +259,7 @@ class WPUF_Admin_Form {
 
     /**
      * Form Duplication handler
-     * 
+     *
      * @return type
      */
     function duplicate_form() {
@@ -305,7 +305,7 @@ class WPUF_Admin_Form {
      * @return void
      */
     function add_meta_box_form_select() {
-        
+
         // remove the submit div, because submit button placed on form elements
         remove_meta_box('submitdiv', 'wpuf_forms', 'side');
         remove_meta_box('submitdiv', 'wpuf_profile', 'side');
@@ -579,13 +579,6 @@ class WPUF_Admin_Form {
             </tr>
             </tr>
 
-            <tr class="wpuf-same-page">
-                <th><?php _e( 'Post Update Message', 'wpuf' ); ?></th>
-                <td>
-                    <textarea rows="3" cols="40" name="wpuf_settings[update_message]"><?php echo esc_textarea( $update_message ); ?></textarea>
-                </td>
-            </tr>
-
             <tr class="wpuf-page-id">
                 <th><?php _e( 'Page', 'wpuf' ); ?></th>
                 <td>
@@ -614,6 +607,96 @@ class WPUF_Admin_Form {
                     <input type="text" name="wpuf_settings[submit_text]" value="<?php echo esc_attr( $submit_text ); ?>">
                 </td>
             </tr>
+        </table>
+        <?php
+    }
+
+    /**
+     * Displays settings on post form builder
+     *
+     * @global object $post
+     */
+    function form_settings_posts_edit() {
+        global $post;
+
+        $form_settings = get_post_meta( $post->ID, 'wpuf_form_settings', true );
+
+        $post_status_selected = isset( $form_settings['edit_post_status'] ) ? $form_settings['edit_post_status'] : 'publish';
+
+        $redirect_to = isset( $form_settings['edit_redirect_to'] ) ? $form_settings['edit_redirect_to'] : 'same';
+        $update_message = isset( $form_settings['update_message'] ) ? $form_settings['update_message'] : __( 'Post updated successfully', 'wpuf' );
+        $page_id = isset( $form_settings['edit_page_id'] ) ? $form_settings['edit_page_id'] : 0;
+        $url = isset( $form_settings['edit_url'] ) ? $form_settings['edit_url'] : '';
+        $update_text = isset( $form_settings['update_text'] ) ? $form_settings['update_text'] : __( 'Update', 'wpuf' );
+        ?>
+        <table class="form-table">
+
+            <tr class="wpuf-post-status">
+                <th><?php _e( 'Set Post Status to', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[edit_post_status]">
+                        <?php
+                        $statuses = get_post_statuses();
+
+                        foreach ($statuses as $status => $label) {
+                            printf('<option value="%s"%s>%s</option>', $status, selected( $post_status_selected, $status, false ), $label );
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="wpuf-redirect-to">
+                <th><?php _e( 'Redirect To', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[edit_redirect_to]">
+                        <?php
+                        $redirect_options = array(
+                            'post' => __( 'Newly created post', 'wpuf' ),
+                            'same' => __( 'Same Page', 'wpuf' ),
+                            'page' => __( 'To a page', 'wpuf' ),
+                            'url' => __( 'To a custom URL', 'wpuf' )
+                        );
+
+                        foreach ($redirect_options as $to => $label) {
+                            printf('<option value="%s"%s>%s</option>', $to, selected( $redirect_to, $to, false ), $label );
+                        }
+                        ?>
+                    </select>
+                    <div class="description">
+                        <?php _e( 'After successfull submit, where the page will redirect to', $domain = 'default' ) ?>
+                    </div>
+                </td>
+            </tr>
+
+            <tr class="wpuf-same-page">
+                <th><?php _e( 'Post Update Message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="3" cols="40" name="wpuf_settings[update_message]"><?php echo esc_textarea( $update_message ); ?></textarea>
+                </td>
+            </tr>
+
+            <tr class="wpuf-page-id">
+                <th><?php _e( 'Page', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[edit_page_id]">
+                        <?php
+                        $pages = get_posts(  array( 'numberposts' => -1, 'post_type' => 'page') );
+
+                        foreach ($pages as $page) {
+                            printf('<option value="%s"%s>%s</option>', $page->ID, selected( $page_id, $page->ID, false ), esc_attr( $page->post_title ) );
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="wpuf-url">
+                <th><?php _e( 'Custom URL', 'wpuf' ); ?></th>
+                <td>
+                    <input type="url" name="wpuf_settings[edit_url]" value="<?php echo esc_attr( $url ); ?>">
+                </td>
+            </tr>
 
             <tr class="wpuf-update-text">
                 <th><?php _e( 'Update Post Button text', 'wpuf' ); ?></th>
@@ -624,7 +707,117 @@ class WPUF_Admin_Form {
         </table>
         <?php
     }
-    
+
+    /**
+     * Displays settings on post form builder
+     *
+     * @global object $post
+     */
+    function form_settings_posts_notification() {
+        global $post;
+
+        $new_mail_body = "Hi Admin,\r\n";
+        $new_mail_body .= "A new post has been created in your site %stiename% (%siteurl%).\r\n\r\n";
+
+        $edit_mail_body = "Hi Admin,\r\n";
+        $edit_mail_body .= "The post \"%post_title%\" has been updated.\r\n\r\n";
+
+        $mail_body = "Here is the details:\r\n";
+        $mail_body .= "Post Title: %post_title%\r\n";
+        $mail_body .= "Content: %post_content%\r\n";
+        $mail_body .= "Author: %author%\r\n";
+        $mail_body .= "Post URL: %permalink%\r\n";
+        $mail_body .= "Edit URL: %editlink%";
+
+        $form_settings = get_post_meta( $post->ID, 'wpuf_form_settings', true );
+
+        $new_notificaton = isset( $form_settings['notification']['new'] ) ? $form_settings['notification']['new'] : 'on';
+        $new_to = isset( $form_settings['notification']['new_to'] ) ? $form_settings['notification']['new_to'] : get_option( 'admin_email' );
+        $new_subject = isset( $form_settings['notification']['new_subject'] ) ? $form_settings['notification']['new_subject'] : __( 'New post created', 'wpuf' );
+        $new_body = isset( $form_settings['notification']['new_body'] ) ? $form_settings['notification']['new_body'] : $new_mail_body . $mail_body;
+
+        $edit_notificaton = isset( $form_settings['notification']['edit'] ) ? $form_settings['notification']['edit'] : 'off';
+        $edit_to = isset( $form_settings['notification']['edit_to'] ) ? $form_settings['notification']['edit_to'] : get_option( 'admin_email' );
+        $edit_subject = isset( $form_settings['notification']['edit_subject'] ) ? $form_settings['notification']['edit_subject'] : __( 'A post has been edited', 'wpuf' );
+        $edit_body = isset( $form_settings['notification']['edit_body'] ) ? $form_settings['notification']['edit_body'] : $edit_mail_body . $mail_body;
+        ?>
+
+        <h3><?php _e( 'New Post Notificatoin', 'wpuf' ); ?></h3>
+
+        <table class="form-table">
+            <tr>
+                <th><?php _e( 'Notification', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="hidden" name="wpuf_settings[notification][new]" value="off">
+                        <input type="checkbox" name="wpuf_settings[notification][new]" value="on"<?php checked( $new_notificaton, 'on' ); ?>>
+                        <?php _e( 'Enable post notification', 'wpuf' ); ?>
+                    </label>
+                </td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'To', 'wpuf' ); ?></th>
+                <td>
+                    <input type="text" name="wpuf_settings[notification][new_to]" class="regular-text" value="<?php echo esc_attr( $new_to ) ?>">
+                </td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'Subject', 'wpuf' ); ?></th>
+                <td><input type="text" name="wpuf_settings[notification][new_subject]" class="regular-text" value="<?php echo esc_attr( $new_subject ) ?>"></td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'Message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="6" cols="60" name="wpuf_settings[notification][new_body]"><?php echo esc_textarea( $new_body ) ?></textarea>
+                </td>
+            </tr>
+        </table>
+
+        <h3><?php _e( 'Update Post Notificatoin', 'wpuf' ); ?></h3>
+
+        <table class="form-table">
+            <tr>
+                <th><?php _e( 'Notification', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="hidden" name="wpuf_settings[notification][edit]" value="off">
+                        <input type="checkbox" name="wpuf_settings[notification][edit]" value="on"<?php checked( $edit_notificaton, 'on' ); ?>>
+                        <?php _e( 'Enable post notification', 'wpuf' ); ?>
+                    </label>
+                </td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'To', 'wpuf' ); ?></th>
+                <td><input type="text" name="wpuf_settings[notification][edit_to]" class="regular-text" value="<?php echo esc_attr( $edit_to ) ?>"></td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'Subject', 'wpuf' ); ?></th>
+                <td><input type="text" name="wpuf_settings[notification][edit_subject]" class="regular-text" value="<?php echo esc_attr( $edit_subject ) ?>"></td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'Message', 'wpuf' ); ?></th>
+                <td>
+                    <textarea rows="6" cols="60" name="wpuf_settings[notification][edit_body]"><?php echo esc_textarea( $edit_body ) ?></textarea>
+                </td>
+            </tr>
+        </table>
+
+        <h3><?php _e( 'You may use in message:', 'wpuf' ); ?></h3>
+        <p>
+            <code>%post_title%</code>, <code>%post_content%</code>, <code>%post_excerpt%</code>, <code>%tags%</code>, <code>%category%</code>,
+            <code>%author%</code>, <code>%sitename%</code>, <code>%siteurl%</code>, <code>%permalink%</code>, <code>%editlink%</code>
+            <br><code>%custom_{NAME_OF_CUSTOM_FIELD}%</code> e.g: <code>%custom_website_url%</code> for <code>website_url</code> meta field
+            </p>
+
+        <?php
+    }
+
     /**
      * Display settings for user profile builder
      *
@@ -739,8 +932,10 @@ class WPUF_Admin_Form {
         ?>
 
         <h2 class="nav-tab-wrapper">
-            <a href="#wpuf-metabox" class="nav-tab" id="wpuf_general-tab"><?php _e( 'From Editor', 'wpuf' ); ?></a>
-            <a href="#wpuf-metabox-settings" class="nav-tab" id="wpuf_dashboard-tab"><?php _e( 'Settings', 'wpuf' ); ?></a>
+            <a href="#wpuf-metabox" class="nav-tab" id="wpuf-editor-tab"><?php _e( 'From Editor', 'wpuf' ); ?></a>
+            <a href="#wpuf-metabox-settings" class="nav-tab" id="wpuf-post-settings-tab"><?php _e( 'Post Settings', 'wpuf' ); ?></a>
+            <a href="#wpuf-metabox-settings-update" class="nav-tab" id="wpuf-edit-settings-tab"><?php _e( 'Edit Settings', 'wpuf' ); ?></a>
+            <a href="#wpuf-metabox-notification" class="nav-tab" id="wpuf-notification-tab"><?php _e( 'Notification', 'wpuf' ); ?></a>
 
             <?php do_action( 'wpuf_post_form_tab' ); ?>
         </h2>
@@ -752,6 +947,14 @@ class WPUF_Admin_Form {
 
             <div id="wpuf-metabox-settings" class="group">
                 <?php $this->form_settings_posts(); ?>
+            </div>
+
+            <div id="wpuf-metabox-settings-update" class="group">
+                <?php $this->form_settings_posts_edit(); ?>
+            </div>
+
+            <div id="wpuf-metabox-notification" class="group">
+                <?php $this->form_settings_posts_notification(); ?>
             </div>
 
             <?php do_action( 'wpuf_post_form_tab_content' ); ?>
@@ -782,39 +985,42 @@ class WPUF_Admin_Form {
         </div>
         <?php
     }
-    
+
     function form_elements_common() {
+        $title = esc_attr( __( 'Click to add to the editor', 'wpuf' ) );
         ?>
         <h2><?php _e( 'Custom Fields', 'wpuf' ); ?></h2>
         <div class="wpuf-form-buttons">
-            <button class="button" data-name="custom_text" data-type="text" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Text', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_textarea" data-type="textarea" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Textarea', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_select" data-type="select" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Dropdown', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_multiselect" data-type="multiselect" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Multi Select', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_radio" data-type="radio" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Radio', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_checkbox" data-type="checkbox" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Checkbox', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_image" data-type="image" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Image Upload', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_file" data-type="file" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'File Upload', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_url" data-type="url" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'URL', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_email" data-type="email" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Email', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_repeater" data-type="repeat" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_date" data-type="date" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Date', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_text" data-type="text" title="<?php echo $title; ?>"><?php _e( 'Text', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_textarea" data-type="textarea" title="<?php echo $title; ?>"><?php _e( 'Textarea', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_select" data-type="select" title="<?php echo $title; ?>"><?php _e( 'Dropdown', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_date" data-type="date" title="<?php echo $title; ?>"><?php _e( 'Date', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_multiselect" data-type="multiselect" title="<?php echo $title; ?>"><?php _e( 'Multi Select', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_radio" data-type="radio" title="<?php echo $title; ?>"><?php _e( 'Radio', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_checkbox" data-type="checkbox" title="<?php echo $title; ?>"><?php _e( 'Checkbox', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_image" data-type="image" title="<?php echo $title; ?>"><?php _e( 'Image Upload', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_file" data-type="file" title="<?php echo $title; ?>"><?php _e( 'File Upload', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_url" data-type="url" title="<?php echo $title; ?>"><?php _e( 'URL', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_email" data-type="email" title="<?php echo $title; ?>"><?php _e( 'Email', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_repeater" data-type="repeat" title="<?php echo $title; ?>"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
+
+            <button class="button" data-name="custom_map" data-type="map" title="<?php echo $title; ?>"><?php _e( 'Google Maps', 'wpuf' ); ?></button>
 
             <?php do_action( 'wpuf_form_buttons_custom' ); ?>
         </div>
-        
+
         <h2><?php _e( 'Others', 'wpuf' ); ?></h2>
         <div class="wpuf-form-buttons">
-            <button class="button" data-name="recaptcha" data-type="captcha" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
-            <button class="button" data-name="really_simple_captcha" data-type="rscaptcha" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Really Simple Captcha', 'wpuf' ); ?></button>
-            <button class="button" data-name="section_break" data-type="break" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Section Break', 'wpuf' ); ?></button>
-            <button class="button" data-name="custom_html" data-type="html" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'HTML', 'wpuf' ); ?></button>
-            <button class="button" data-name="action_hook" data-type="action" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
-            <button class="button" data-name="toc" data-type="action" title="<?php _e( 'Click to add to the editor', 'wpuf' ); ?>"><?php _e( 'Term &amp; Conditions', 'wpuf' ); ?></button>
+            <button class="button" data-name="recaptcha" data-type="captcha" title="<?php echo $title; ?>"><?php _e( 'reCaptcha', 'wpuf' ); ?></button>
+            <button class="button" data-name="really_simple_captcha" data-type="rscaptcha" title="<?php echo $title; ?>"><?php _e( 'Really Simple Captcha', 'wpuf' ); ?></button>
+            <button class="button" data-name="section_break" data-type="break" title="<?php echo $title; ?>"><?php _e( 'Section Break', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_html" data-type="html" title="<?php echo $title; ?>"><?php _e( 'HTML', 'wpuf' ); ?></button>
+            <button class="button" data-name="action_hook" data-type="action" title="<?php echo $title; ?>"><?php _e( 'Action Hook', 'wpuf' ); ?></button>
+            <button class="button" data-name="toc" data-type="action" title="<?php echo $title; ?>"><?php _e( 'Term &amp; Conditions', 'wpuf' ); ?></button>
 
             <?php do_action( 'wpuf_form_buttons_other' ); ?>
         </div>
-        
+
         <?php
     }
 
@@ -855,7 +1061,7 @@ class WPUF_Admin_Form {
             }?>
         </div>
 
-        
+
         <?php
 
         $this->form_elements_common();
@@ -1102,6 +1308,10 @@ class WPUF_Admin_Form {
 
             case 'custom_date':
                 WPUF_Admin_Template_Post::date_field( $field_id, 'Custom Field: Date' );
+                break;
+
+            case 'custom_map':
+                WPUF_Admin_Template_Post::google_map( $field_id, 'Custom Field: Google Map' );
                 break;
 
             case 'toc':

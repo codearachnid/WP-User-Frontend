@@ -77,17 +77,6 @@ function wpuf_settings_fields() {
                 'default' => 'on'
             ),
             array(
-                'name' => 'post_notification',
-                'label' => __( 'New post notification', 'wpuf' ),
-                'desc' => __( 'A mail will be sent to admin when a new post is created', 'wpuf' ),
-                'type' => 'select',
-                'default' => 'yes',
-                'options' => array(
-                    'yes' => __( 'Yes', 'wpuf' ),
-                    'no' => __( 'No', 'wpuf' )
-                )
-            ),
-            array(
                 'name' => 'enable_post_edit',
                 'label' => __( 'Users can edit post?', 'wpuf' ),
                 'desc' => __( 'Users will be able to edit their own posts', 'wpuf' ),

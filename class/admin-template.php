@@ -383,7 +383,7 @@ class WPUF_Admin_Template {
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
-                
+
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Select Text', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $first_name; ?>" value="<?php echo $first_value; ?>" title="<?php echo $help; ?>">
@@ -413,7 +413,7 @@ class WPUF_Admin_Template {
 
             <div class="wpuf-form-holder">
                 <?php self::common( $field_id, '', true, $values ); ?>
-                
+
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Select Text', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $first_name; ?>" value="<?php echo $first_value; ?>" title="<?php echo $help; ?>">
@@ -800,6 +800,52 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
                             <?php self::hidden_field( "[$field_id][time]", 'no' ); ?>
                             <input type="checkbox" name="<?php echo $time_name ?>" value="yes"<?php checked( $time_value, 'yes' ); ?> />
                             <?php _e( 'Enable time input', 'wpuf' ); ?>
+                        </label>
+                    </div>
+                </div> <!-- .wpuf-form-rows -->
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
+
+    public static function google_map( $field_id, $label, $values = array() ) {
+        $zoom_name = sprintf('%s[%d][zoom]', self::$input_name, $field_id);
+        $address_name = sprintf('%s[%d][address]', self::$input_name, $field_id);
+        $default_pos_name = sprintf('%s[%d][default_pos]', self::$input_name, $field_id);
+
+        $zoom_value = $values ? $values['zoom'] : '12';
+        $address_value = $values ? $values['address'] : 'yes';
+        $default_pos_value = $values ? $values['default_pos'] : '';
+
+        $zoom_help = esc_attr( __( 'Set the map zoom level', 'wpuf' ) );
+        $pos_help = esc_attr( __( 'Enter default latitude and longitude to center the map', 'wpuf' ) );
+        ?>
+        <li class="custom-field custom_image">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'map' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'google_map' ); ?>
+
+            <div class="wpuf-form-holder">
+                <?php self::common( $field_id, '', true, $values ); ?>
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Zoom Level', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" name="<?php echo $zoom_name; ?>" value="<?php echo $zoom_value; ?>" title="<?php echo $zoom_help; ?>">
+                </div> <!-- .wpuf-form-rows -->
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Default Co-ordinate', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" name="<?php echo $default_pos_name; ?>" value="<?php echo $default_pos_value; ?>" title="<?php echo $pos_help; ?>">
+                </div> <!-- .wpuf-form-rows -->
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Address Button', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <label>
+                            <?php self::hidden_field( "[$field_id][address]", 'no' ); ?>
+                            <input type="checkbox" name="<?php echo $address_name ?>" value="yes"<?php checked( $address_value, 'yes' ); ?> />
+                            <?php _e( 'Show address find button', 'wpuf' ); ?>
                         </label>
                     </div>
                 </div> <!-- .wpuf-form-rows -->

@@ -13,7 +13,9 @@
 
             // Form Settings
             $('#wpuf-metabox-settings').on('change', 'select[name="wpuf_settings[redirect_to]"]', this.settingsRedirect);
+            $('#wpuf-metabox-settings-update').on('change', 'select[name="wpuf_settings[edit_redirect_to]"]', this.settingsRedirect);
             $('select[name="wpuf_settings[redirect_to]"]').change();
+            $('select[name="wpuf_settings[edit_redirect_to]"]').change();
 
             // Form settings: Guest post
             $('#wpuf-metabox-settings').on('change', 'input[type=checkbox][name="wpuf_settings[guest_post]"]', this.settingsGuest);

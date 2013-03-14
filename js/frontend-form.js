@@ -54,6 +54,9 @@
                     if ( res.success) {
                         if( res.show_message == true) {
                             form.before( '<div class="wpuf-success">' + res.message + '</div>');
+                            form.slideUp( 'fast', function() {
+                                remove();
+                            });
 
                             //focus
                             $('html, body').animate({

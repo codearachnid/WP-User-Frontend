@@ -54,7 +54,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
         if ( !$form_id ) {
             return __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' );
         }
-        
+
         if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'post_updated' ) {
             echo '<div class="wpuf-success">';
             echo $form_settings['update_message'];
@@ -179,6 +179,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
 
         // ############ It's Time to Save the World ###############
         if ( $is_update ) {
+            $postarr['post_status'] = $form_settings['edit_post_status'];
             $postarr = apply_filters( 'wpuf_update_post_args', $postarr, $form_id, $form_settings, $form_vars );
         } else {
             $postarr = apply_filters( 'wpuf_add_post_args', $postarr, $form_id, $form_settings, $form_vars );
@@ -245,42 +246,57 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
             do_action( 'wpuf_add_post_after_insert', $post_id, $form_id, $form_settings, $form_vars );
 
             //send mail notification
-            if ( wpuf_get_option( 'post_notification' ) == 'yes' ) {
-                wpuf_notify_post_mail( $userdata, $post_id );
+            if ( $is_update ) {
+                if ( $form_settings['notification']['edit'] == 'on' ) {
+                    $mail_body = $this->prepare_mail_body( $form_settings['notification']['edit_body'], $post_author, $post_id );
+                    wp_mail( $form_settings['notification']['edit_to'], $form_settings['notification']['edit_subject'], $mail_body );
+                }
+            } else {
+                if ( $form_settings['notification']['new'] == 'on' ) {
+                    $mail_body = $this->prepare_mail_body( $form_settings['notification']['new_body'], $post_author, $post_id );
+                    wp_mail( $form_settings['notification']['new_to'], $form_settings['notification']['new_subject'], $mail_body );
+                }
             }
 
             //redirect URL
             $show_message = false;
-            if ( $form_settings['redirect_to'] == 'page' ) {
-                $redirect_to = get_permalink( $form_settings['page_id'] );
-            } elseif ( $form_settings['redirect_to'] == 'url' ) {
-                $redirect_to = $form_settings['url'];
-            } elseif ( $form_settings['redirect_to'] == 'same' ) {
-                
-                // for update post, redirect to the same page with a message
-                if ( $is_update ) {
+
+            if ( $is_update ) {
+                if ( $form_settings['edit_redirect_to'] == 'page' ) {
+                    $redirect_to = get_permalink( $form_settings['edit_page_id'] );
+                } elseif ( $form_settings['edit_redirect_to'] == 'url' ) {
+                    $redirect_to = $form_settings['edit_url'];
+                } elseif ( $form_settings['edit_redirect_to'] == 'same' ) {
                     $redirect_to = add_query_arg( array(
                         'pid' => $post_id,
                         '_wpnonce' => wp_create_nonce('wpuf_edit'),
                         'msg' => 'post_updated'
-                         ), get_permalink( $_POST['page_id'] ) 
+                         ), get_permalink( $_POST['page_id'] )
                     );
                 } else {
-                    $show_message = true;
+                    $redirect_to = get_permalink( $post_id );
                 }
-                
+
             } else {
-                $redirect_to = get_permalink( $post_id );
+                if ( $form_settings['redirect_to'] == 'page' ) {
+                    $redirect_to = get_permalink( $form_settings['page_id'] );
+                } elseif ( $form_settings['redirect_to'] == 'url' ) {
+                    $redirect_to = $form_settings['url'];
+                } elseif ( $form_settings['redirect_to'] == 'same' ) {
+                    $show_message = true;
+                } else {
+                    $redirect_to = get_permalink( $post_id );
+                }
             }
+
+
 
             // send the response
             $response = array(
                 'success' => true,
-                'post_id' => $post_id,
                 'redirect_to' => $redirect_to,
                 'show_message' => $show_message,
-                'message' => $form_settings['message'],
-                'remove_form' => false
+                'message' => $form_settings['message']
             );
 
             echo json_encode( $response );
@@ -288,6 +304,44 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
         }
 
         $this->send_error( __( 'Something went wrong', 'wpuf' ) );
+    }
+
+    function prepare_mail_body( $content, $user_id, $post_id ) {
+        $user = get_user_by( 'id', $user_id );
+        $post = get_post( $post_id );
+
+        // var_dump($post);
+
+        $post_field_search = array( '%post_title%', '%post_content%', '%post_excerpt%', '%tags%', '%category%',
+            '%author%', '%sitename%', '%siteurl%', '%permalink%', '%editlink%' );
+
+        $post_field_replace = array(
+            $post->post_title,
+            $post->post_content,
+            $post->post_excerpt,
+            get_the_term_list( $post_id, 'post_tag', '', ', '),
+            get_the_term_list( $post_id, 'category', '', ', '),
+            $user->display_name,
+            get_bloginfo( 'name' ),
+            home_url(),
+            get_permalink( $post_id ),
+            admin_url( 'post.php?action=edit&post=' . $post_id )
+        );
+
+        $content = str_replace( $post_field_search, $post_field_replace, $content );
+
+        // custom fields
+        preg_match_all( '/%custom_([\w-]*)\b%/', $content, $matches);
+        list( $search, $replace ) = $matches;
+
+        if ( $replace ) {
+            foreach ($replace as $index => $meta_key ) {
+                $value = get_post_meta( $post_id, $meta_key );
+                $content = str_replace( $search[$index], implode( '; ', $value ), $content );
+            }
+        }
+
+        return $content;
     }
 
 }

@@ -44,7 +44,7 @@ spl_autoload_register( 'wpuf_autoload' );
 
 /**
  * Main bootstrap class for WP User Frontend
- * 
+ *
  * @package WP User Frontend
  */
 class WP_User_Frontend {
@@ -106,7 +106,7 @@ class WP_User_Frontend {
 
     /**
      * Manage task on plugin deactivation
-     * 
+     *
      * @return void
      */
     function uninstall() {
@@ -115,11 +115,11 @@ class WP_User_Frontend {
 
     /**
      * Instantiate the classes
-     * 
+     *
      * @return void
      */
     function instantiate() {
-        
+
         new WPUF_Upload();
         new WPUF_Frontend_Form_Post(); // requires for form preview
 
@@ -127,8 +127,9 @@ class WP_User_Frontend {
             new WPUF_Admin_Settings();
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
-        } else {  
+        } else {
             new WPUF_Frontend_Form_Profile();
+            new WPUF_Frontend_Dashboard();
         }
     }
 
