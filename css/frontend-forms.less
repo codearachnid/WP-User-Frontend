@@ -87,6 +87,17 @@
     background: #E0FFE0;
 }
 
+.wpuf-info {
+    background-color: #fef5be;
+    border: 2px solid #fdd425;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    padding: 5px 10px;
+    margin: 0 0 10px 0;
+    font-size: 13px;
+}
+
 ul.wpuf-form {
     list-style: none !important;
     margin: 0 !important;
@@ -364,6 +375,65 @@ ul.wpuf-form {
     }
 }
 
+.wpuf_sub_info {
+    padding: 0;
+    margin: 10px 5px;
+    border: 1px solid green;
+    border-radius: 5px;
+
+    h3{
+        margin: 0 0 5px 0 !important;
+        background: green;
+        color: #fff !important;
+        padding: 3px 10px !important;
+        font-weight: bold;
+    }
+
+    .text{
+        padding: 5px 10px;
+    }
+}
+
+
+ul.wpuf_packs {
+    overflow: hidden;
+    margin: 35px 0 15px;
+
+    li {
+        background: #EEEEEE;
+        border: 1px solid #DDDDDD;
+        border-radius: 5px 5px 5px 5px;
+        float: left;
+        list-style: none outside none;
+        margin: 25px 25px 10px 0;
+        padding: 5px;
+        position: relative;
+        width: 200px;
+    }
+
+    h3 {
+        padding: 10px !important;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    p {
+        padding: 0 10px;
+        margin-bottom: 8px;
+    }
+
+    .cost {
+        background: red;
+        border-radius: 30px 30px 30px 30px;
+        color: #FFFFFF;
+        margin: -16px -12px 0 0;
+        padding: 10px 8px 8px;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }
@@ -388,24 +458,24 @@ ul.wpuf-form {
     display: none;
     background-color: #eee;
     border-color: #ddd !important;
-}
 
-#pass-strength-result.bad {
-    background-color: #ffb78c;
-    border-color: #ff853c !important;
-}
+    &.bad {
+        background-color: #ffb78c;
+        border-color: #ff853c !important;
+    }
 
-#pass-strength-result.good {
-    background-color: #ffec8b;
-    border-color: #fc0 !important;
-}
+    &.good {
+        background-color: #ffec8b;
+        border-color: #fc0 !important;
+    }
 
-#pass-strength-result.short {
-    background-color: #ffa0a0;
-    border-color: #f04040 !important;
-}
+    &.short {
+        background-color: #ffa0a0;
+        border-color: #f04040 !important;
+    }
 
-#pass-strength-result.strong {
-    background-color: #c3ff88;
-    border-color: #8dff1c !important;
+    &.strong {
+        background-color: #c3ff88;
+        border-color: #8dff1c !important;
+    }
 }

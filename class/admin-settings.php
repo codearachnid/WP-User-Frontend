@@ -12,9 +12,12 @@ class WPUF_Admin_Settings {
     function __construct() {
 
         if ( !class_exists( 'WeDevs_Settings_API' ) ) {
-            require_once dirname( __FILE__ ) . '/class.settings-api.php';
+            require_once dirname( dirname( __FILE__ ) ) . '/lib/class.settings-api.php';
         }
         
+        require_once dirname( dirname( __FILE__ ) ) . '/admin/subscription.php';
+        require_once dirname( dirname( __FILE__ ) ) . '/admin/transaction.php';
+
         $this->settings_api = new WeDevs_Settings_API();
 
         add_action( 'admin_init', array($this, 'admin_init') );
@@ -38,6 +41,8 @@ class WPUF_Admin_Settings {
      */
     function admin_menu() {
         add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'User Frontend', 'wpuf' ), 'delete_others_pages', 'wpuf-admin-opt', array($this, 'plugin_page'), null, 55 );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Subscription', 'wpuf' ), __( 'Subscription', 'wpuf' ), 'activate_plugins', 'wpuf_subscription', 'wpuf_subscription_admin' );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Transaction', 'wpuf' ), __( 'Transaction', 'wpuf' ), 'activate_plugins', 'wpuf_transaction', 'wpuf_transaction' );
         add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'delete_others_pages', 'wpuf-settings', array($this, 'plugin_page') );
     }
 

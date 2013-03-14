@@ -24,8 +24,20 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
     function add_post_shortcode( $atts ) {
         extract( shortcode_atts( array('id' => 0), $atts ) );
         ob_start();
+        
+        $form_settings = get_post_meta( $id, 'wpuf_form_settings', true );
+        $info = apply_filters( 'wpuf_addpost_notice', '' );
+        $user_can_post = apply_filters( 'wpuf_can_post', 'yes' );
 
-        $this->render_form( $id );
+        if ( $user_can_post == 'yes' ) {
+
+            do_action( 'wpuf_add_post_form_top', $id, $form_settings );
+
+            $this->render_form( $id );
+        } else {
+            echo '<div class="info">' . $info . '</div>';
+        }
+
 
         $content = ob_get_contents();
         ob_end_clean();
@@ -60,9 +72,8 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
             echo $form_settings['update_message'];
             echo '</div>';
         }
-
+        
         $this->render_form( $form_id, $post_id );
-
 
         $content = ob_get_contents();
         ob_end_clean();
@@ -242,16 +253,24 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
                 }
             }
 
-            //plugin API to extend the functionality
-            do_action( 'wpuf_add_post_after_insert', $post_id, $form_id, $form_settings, $form_vars );
 
-            //send mail notification
+            
             if ( $is_update ) {
+                
+                // plugin API to extend the functionality
+                do_action( 'wpuf_edit_post_after_update', $post_id, $form_id, $form_settings, $form_vars );
+                
+                //send mail notification
                 if ( $form_settings['notification']['edit'] == 'on' ) {
                     $mail_body = $this->prepare_mail_body( $form_settings['notification']['edit_body'], $post_author, $post_id );
                     wp_mail( $form_settings['notification']['edit_to'], $form_settings['notification']['edit_subject'], $mail_body );
                 }
             } else {
+                
+                // plugin API to extend the functionality
+                do_action( 'wpuf_add_post_after_insert', $post_id, $form_id, $form_settings, $form_vars );
+                
+                // send mail notification
                 if ( $form_settings['notification']['new'] == 'on' ) {
                     $mail_body = $this->prepare_mail_body( $form_settings['notification']['new_body'], $post_author, $post_id );
                     wp_mail( $form_settings['notification']['new_to'], $form_settings['notification']['new_subject'], $mail_body );
@@ -289,8 +308,6 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
                 }
             }
 
-
-
             // send the response
             $response = array(
                 'success' => true,
@@ -298,6 +315,12 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
                 'show_message' => $show_message,
                 'message' => $form_settings['message']
             );
+            
+            if ( $is_update ) {
+                $response = apply_filters( 'wpuf_edit_post_redirect', $response, $post_id, $form_id, $form_settings );
+            } else {
+                $response = apply_filters( 'wpuf_add_post_redirect', $response, $post_id, $form_id, $form_settings );
+            }
 
             echo json_encode( $response );
             exit;

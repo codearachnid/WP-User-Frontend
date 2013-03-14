@@ -233,16 +233,16 @@ function wpuf_get_pages( $post_type = 'page' ) {
  * @return array
  */
 function wpuf_get_gateways( $context = 'admin' ) {
-//    $gateways = WPUF_Payment::get_payment_gateways();
+   $gateways = WPUF_Payment::get_payment_gateways();
     $return = array();
 
-//    foreach ($gateways as $id => $gate) {
-//        if ( $context == 'admin' ) {
-//            $return[$id] = $gate['admin_label'];
-//        } else {
-//            $return[$id] = $gate['checkout_label'];
-//        }
-//    }
+   foreach ($gateways as $id => $gate) {
+       if ( $context == 'admin' ) {
+           $return[$id] = $gate['admin_label'];
+       } else {
+           $return[$id] = $gate['checkout_label'];
+       }
+   }
 
     return $return;
 }
@@ -438,6 +438,63 @@ function wpuf_allowed_extensions() {
     return apply_filters( 'wpuf_allowed_extensions', $extesions );
 }
 
+/**
+ * Adds notices on add post form if any
+ *
+ * @param string $text
+ * @return string
+ */
+function wpuf_addpost_notice( $text ) {
+    $user = wp_get_current_user();
+
+    if ( is_user_logged_in() ) {
+        $lock = ( $user->wpuf_postlock == 'yes' ) ? 'yes' : 'no';
+
+        if ( $lock == 'yes' ) {
+            return $user->wpuf_lock_cause;
+        }
+
+        $force_pack = wpuf_get_option( 'force_pack' );
+
+        if ( $force_pack == 'yes' && WPUF_Subscription::has_user_error() ) {
+            return __( 'You must purchase a pack before posting', 'wpuf' );
+        }
+    }
+
+    return $text;
+}
+
+add_filter( 'wpuf_addpost_notice', 'wpuf_addpost_notice' );
+
+
+/**
+ * Adds the filter to the add post form if the user can post or not
+ *
+ * @param string $perm permission type. "yes" or "no"
+ * @return string permission type. "yes" or "no"
+ */
+function wpuf_can_post( $perm ) {
+    $user = wp_get_current_user();
+
+    if ( is_user_logged_in() ) {
+        $lock = ( $user->wpuf_postlock == 'yes' ) ? 'yes' : 'no';
+
+        if ( $lock == 'yes' ) {
+            return 'no';
+        }
+
+        $force_pack = wpuf_get_option( 'force_pack' );
+
+        if ( $force_pack == 'yes' && WPUF_Subscription::has_user_error() ) {
+            return 'no';
+        }
+    }
+
+    return $perm;
+}
+
+add_filter( 'wpuf_can_post', 'wpuf_can_post' );
+
 
 /**
  * Associate attachemnt to a post
@@ -457,6 +514,8 @@ function wpuf_associate_attachment( $attachment_id, $post_id ) {
 /**
  * Get user role names
  *
+ * @since 2.0
+ *
  * @global WP_Roles $wp_roles
  * @return array
  */
@@ -471,6 +530,8 @@ function wpuf_get_user_roles() {
 
 /**
  * User avatar wrapper for custom uploaded avatar
+ *
+ * @since 2.0
  *
  * @param string $avatar
  * @param mixed $id_or_email

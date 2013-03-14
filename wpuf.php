@@ -10,6 +10,7 @@ Author URI: http://tareq.weDevs.com
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/admin/settings-options.php';
+require_once dirname( __FILE__ ) . '/lib/gateway/paypal.php';
 
 // add reCaptcha library if not found
 if ( !function_exists( 'recaptcha_get_html' ) ) {
@@ -100,8 +101,8 @@ class WP_User_Frontend {
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 
-        // $wpdb->query( $sql_subscription );
-        // $wpdb->query( $sql_transaction );
+        $wpdb->query( $sql_subscription );
+        $wpdb->query( $sql_transaction );
     }
 
     /**
@@ -122,6 +123,8 @@ class WP_User_Frontend {
 
         new WPUF_Upload();
         new WPUF_Frontend_Form_Post(); // requires for form preview
+        new WPUF_Payment();
+        new WPUF_Subscription();
 
         if (is_admin()) {
             new WPUF_Admin_Settings();

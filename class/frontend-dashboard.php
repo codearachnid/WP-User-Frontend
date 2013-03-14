@@ -68,6 +68,7 @@ class WPUF_Frontend_Dashboard {
             'paged' => $pagenum
         );
 
+        $original_post = $post;
         $dashboard_query = new WP_Query( $args );
         $post_type_obj = get_post_type_object( $post_type );
         ?>
@@ -141,7 +142,7 @@ class WPUF_Frontend_Dashboard {
 
                             <?php
                             if ( $charging_enabled == 'yes' ) {
-                                $order_id = get_post_meta( $post->ID, 'wpuf_order_id', true );
+                                $order_id = get_post_meta( $post->ID, '_wpuf_order_id', true );
                                 ?>
                                 <td>
                                     <?php if ( $post->post_status == 'pending' && $order_id ) { ?>
@@ -151,18 +152,19 @@ class WPUF_Frontend_Dashboard {
                             <?php } ?>
 
                             <td>
-                                <?php if ( wpuf_get_option( 'enable_post_edit' ) == 'yes' ) { ?>
-                                    <?php
+                                <?php
+                                if ( wpuf_get_option( 'enable_post_edit' ) == 'yes' ) {
                                     $edit_page = (int) wpuf_get_option( 'edit_page_id' );
-                                    $url = get_permalink( $edit_page );
+                                    $url = add_query_arg(array( 'pid' => $post->ID ), get_permalink( $edit_page ) );
                                     ?>
-                                    <a href="<?php echo wp_nonce_url( $url . '?pid=' . $post->ID, 'wpuf_edit' ); ?>"><?php _e( 'Edit', 'wpuf' ); ?></a>
-                                <?php } else { ?>
-                                    &nbsp;
+                                    <a href="<?php echo wp_nonce_url( $url, 'wpuf_edit' ); ?>"><?php _e( 'Edit', 'wpuf' ); ?></a>
                                 <?php } ?>
 
-                                <?php if ( wpuf_get_option( 'enable_post_del' ) == 'yes' ) { ?>
-                                    <a href="<?php echo wp_nonce_url( "?action=del&pid=" . $post->ID, 'wpuf_del' ) ?>" onclick="return confirm('Are you sure to delete this post?');"><span style="color: red;"><?php _e( 'Delete', 'wpuf' ); ?></span></a>
+                                <?php
+                                if ( wpuf_get_option( 'enable_post_del' ) == 'yes' ) {
+                                    $del_url = add_query_arg( array('action' => 'del', 'pid' => get_permalink( $original_post )) );
+                                    ?>
+                                    <a href="<?php echo wp_nonce_url( $del_url, 'wpuf_del' ) ?>" onclick="return confirm('Are you sure to delete?');"><span style="color: red;"><?php _e( 'Delete', 'wpuf' ); ?></span></a>
                                 <?php } ?>
                             </td>
                         </tr>

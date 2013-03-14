@@ -49,10 +49,10 @@ function wpuf_settings_sections() {
             'id' => 'wpuf_dashboard',
             'title' => __( 'Dashboard', 'wpuf' )
         ),
-        // array(
-        //     'id' => 'wpuf_payment',
-        //     'title' => __( 'Payments', 'wpuf' )
-        // ),
+         array(
+             'id' => 'wpuf_payment',
+             'title' => __( 'Payments', 'wpuf' )
+         ),
         array(
             'id' => 'wpuf_profile',
             'title' => __( 'Profile', 'wpuf' )
