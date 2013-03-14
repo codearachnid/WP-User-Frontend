@@ -253,7 +253,7 @@ class WPUF_Admin_Form {
             return $actions;
         }
 
-        $actions['duplicate'] = '<a href="' . esc_url( add_query_arg( array( 'action' => 'wpuf_duplicate', 'id' => $post->ID, '_wpnonce' => wp_create_nonce( 'wpuf_duplicate' ) ), admin_url( 'admin.php' ) ) ) . '" title="' . esc_attr( sprintf( __( 'Duplicate form', 'wpuf' ), $title ) ) . '">' . __( 'Duplicate', 'wpuf' ) . '</a>';
+        $actions['duplicate'] = '<a href="' . esc_url( add_query_arg( array( 'action' => 'wpuf_duplicate', 'id' => $post->ID, '_wpnonce' => wp_create_nonce( 'wpuf_duplicate' ) ), admin_url( 'admin.php' ) ) ) . '" title="' . esc_attr( __( 'Duplicate form', 'wpuf' ) ) . '">' . __( 'Duplicate', 'wpuf' ) . '</a>';
         return $actions;
     }
 
