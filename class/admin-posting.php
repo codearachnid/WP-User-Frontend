@@ -218,9 +218,8 @@ class WPUF_Admin_Posting extends WPUF_Render_Form {
                 padding-left: 0 !important;
             }
 
-            .wpuf-cf-table .required {
-                color: red;
-            }
+            .wpuf-cf-table .required { color: red;}
+            .wpuf-cf-table textarea { width: 400px; }
 
         </style>
         <?php
