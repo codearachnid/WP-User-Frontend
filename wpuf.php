@@ -61,6 +61,9 @@ class WP_User_Frontend {
 
         add_action( 'init', array($this, 'load_textdomain') );
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
+
+        add_filter( 'register', array( $this, 'override_registration') );
+        add_filter( 'tml_action_url', array( $this, 'override_registration_tml'), 10, 2 );
     }
 
     /**
@@ -123,6 +126,7 @@ class WP_User_Frontend {
 
         new WPUF_Upload();
         new WPUF_Frontend_Form_Post(); // requires for form preview
+        new WPUF_Frontend_Form_Profile();
         new WPUF_Payment();
         new WPUF_Subscription();
 
@@ -131,7 +135,7 @@ class WP_User_Frontend {
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
         } else {
-            new WPUF_Frontend_Form_Profile();
+
             new WPUF_Frontend_Dashboard();
         }
     }
@@ -197,6 +201,24 @@ class WP_User_Frontend {
         if ( WP_DEBUG == true ) {
             $msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
             error_log( $msg, 3, dirname( __FILE__ ) . '/log.txt' );
+        }
+    }
+
+    function override_registration( $link ) {
+        if ( wpuf_get_option( 'register_link_override' ) != 'on' ) {
+            return $link;
+        }
+
+        return sprintf('<li><a href="%s">%s</a></li>', get_permalink( wpuf_get_option( 'reg_override_page' ) ), __('Register') );
+    }
+
+    function override_registration_tml( $url, $action ) {
+        if ( wpuf_get_option( 'register_link_override' ) != 'on' ) {
+            return $url;
+        }
+
+        if ($action == 'register') {
+            return get_permalink( wpuf_get_option( 'reg_override_page' ) );
         }
     }
 

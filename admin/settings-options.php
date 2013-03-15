@@ -289,9 +289,16 @@ function wpuf_settings_fields() {
             array(
                 'name' => 'register_link_override',
                 'label' => __( 'Registration link override', 'wpuf' ),
-                'desc' => __( 'Override registration link. <em>(check if you have any custom registration page)</em>', 'wpuf' ),
+                'desc' => __( 'Override registration link. <span class="description">(check if you have any custom registration page. Compatible with <strong>Theme My Login</strong>. Changes the registration url on Meta widget and theme my login plugin.)</span>', 'wpuf' ),
                 'type' => 'checkbox',
                 'default' => 'off'
+            ),
+            array(
+                'name' => 'reg_override_page',
+                'label' => __( 'Registration Page', 'wpuf' ),
+                'desc' => __( 'Select the page you want to use as registration page override <em>(should have shortcode)</em>', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_get_pages()
             ),
         ),
         'wpuf_support' => apply_filters( 'wpuf_options_support', array(
