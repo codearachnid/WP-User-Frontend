@@ -36,7 +36,7 @@ class WPUF_Admin_Form {
 
         // custom columns
         add_filter( 'manage_edit-wpuf_forms_columns', array( $this, 'admin_column' ) );
-        add_filter( 'manage_edit-wpuf_profile_columns', array( $this, 'admin_column' ) );
+        add_filter( 'manage_edit-wpuf_profile_columns', array( $this, 'admin_column_profile' ) );
         add_action( 'manage_wpuf_forms_posts_custom_column', array( $this, 'admin_column_value' ), 10, 2 );
         add_action( 'manage_wpuf_profile_posts_custom_column', array( $this, 'admin_column_value_profile' ), 10, 2 );
 
@@ -206,6 +206,26 @@ class WPUF_Admin_Form {
         $columns = array(
             'cb' => '<input type="checkbox" />',
             'title' => __( 'Form Name', 'wpuf' ),
+            'post_type' => __( 'Post Type', 'wpuf' ),
+            'post_status' => __( 'Post Status', 'wpuf' ),
+            'guest_post' => __( 'Guest Post', 'wpuf' ),
+            'shortcode' => __( 'Shortcode', 'wpuf' )
+        );
+
+        return $columns;
+    }
+
+    /**
+     * Columns form builder list table
+     *
+     * @param type $columns
+     * @return string
+     */
+    function admin_column_profile( $columns ) {
+        $columns = array(
+            'cb' => '<input type="checkbox" />',
+            'title' => __( 'Form Name', 'wpuf' ),
+            'role' => __( 'User Role', 'wpuf' ),
             'shortcode' => __( 'Shortcode', 'wpuf' )
         );
 
@@ -219,8 +239,29 @@ class WPUF_Admin_Form {
      * @param int $post_id
      */
     function admin_column_value( $column_name, $post_id ) {
-        if ($column_name == 'shortcode') {
-            printf( '[wpuf_form id="%d"]', $post_id );
+        switch ($column_name) {
+            case 'shortcode':
+                printf( '[wpuf_form id="%d"]', $post_id );
+                break;
+
+            case 'post_type':
+                $settings = get_post_meta( $post_id, $this->form_settings_key, true );
+                echo $settings['post_type'];
+                break;
+
+            case 'post_status':
+                $settings = get_post_meta( $post_id, $this->form_settings_key, true );
+                echo ucfirst($settings['post_status']);
+                break;
+
+            case 'guest_post':
+                $settings = get_post_meta( $post_id, $this->form_settings_key, true );
+                echo $settings['guest_post'] == 'false' ? __( 'No', 'wpuf' ) : __( 'Yes', 'wpuf' );
+                break;
+
+            default:
+                # code...
+                break;
         }
     }
 
@@ -231,9 +272,17 @@ class WPUF_Admin_Form {
      * @param int $post_id
      */
     function admin_column_value_profile( $column_name, $post_id ) {
-        if ($column_name == 'shortcode') {
-            printf( 'Registration: [wpuf_profile type="registration" id="%d"]<br>', $post_id );
-            printf( 'Edit Profile: [wpuf_profile type="profile" id="%d"]', $post_id );
+
+        switch ($column_name) {
+            case 'shortcode':
+                printf( 'Registration: [wpuf_profile type="registration" id="%d"]<br>', $post_id );
+                printf( 'Edit Profile: [wpuf_profile type="profile" id="%d"]', $post_id );
+                break;
+
+            case 'role':
+                $settings = get_post_meta( $post_id, $this->form_settings_key, true );
+                echo ucfirst( $settings['role'] );
+                break;
         }
     }
 
@@ -332,7 +381,6 @@ class WPUF_Admin_Form {
      * @return void
      */
     function add_meta_box_profile() {
-        // add_meta_box( 'wpuf-metabox-settings', __( 'Form Settings', 'wpuf' ), array($this, 'form_settings_profile'), 'wpuf_profile', 'normal', 'high' );
         add_meta_box( 'wpuf-metabox-editor', __( 'Form Editor', 'wpuf' ), array($this, 'metabox_profile_form'), 'wpuf_profile', 'normal', 'high' );
         add_meta_box( 'wpuf-metabox-fields', __( 'Form Elements', 'wpuf' ), array($this, 'form_elements_profile'), 'wpuf_profile', 'side', 'core' );
     }
