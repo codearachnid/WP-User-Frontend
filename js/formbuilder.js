@@ -10,6 +10,7 @@
 
             this.tooltip();
             this.tabber();
+            this.showHideHelp();
 
             // Form Settings
             $('#wpuf-metabox-settings').on('change', 'select[name="wpuf_settings[redirect_to]"]', this.settingsRedirect);
@@ -78,6 +79,16 @@
             $('#wpuf-form-editor').on('click', 'img.wpuf-remove-field', this.removeField);
         },
 
+        showHideHelp: function() {
+            var childs = $('ul#wpuf-form-editor').children('li');
+
+            if ( !childs.length) {
+                $('.wpuf-updated').show();
+            } else {
+                $('.wpuf-updated').hide();
+            }
+        },
+
         makeSortable: function() {
             $formEditor = $('ul#wpuf-form-editor');
 
@@ -129,6 +140,7 @@
                 Editor.tooltip();
 
                 $('.wpuf-loading').addClass('hide');
+                Editor.showHideHelp();
             });
         },
 
@@ -139,6 +151,8 @@
 
                 $(this).closest('li').fadeOut(function() {
                     $(this).remove();
+
+                    Editor.showHideHelp();
                 });
             }
         },
@@ -261,15 +275,8 @@
         tabber: function() {
             // Switches option sections
             $('.group').hide();
-            var activetab = '';
-            if (typeof(localStorage) != 'undefined' ) {
-                activetab = localStorage.getItem("activetab");
-            }
-            if (activetab != '' && $(activetab).length ) {
-                $(activetab).fadeIn();
-            } else {
-                $('.group:first').fadeIn();
-            }
+            $('.group:first').fadeIn();
+
             $('.group .collapsed').each(function(){
                 $(this).find('input:checked').parent().parent().parent().nextAll().each(
                 function(){
@@ -281,19 +288,12 @@
                 });
             });
 
-            if (activetab != '' && $(activetab + '-tab').length ) {
-                $(activetab + '-tab').addClass('nav-tab-active');
-            }
-            else {
-                $('.nav-tab-wrapper a:first').addClass('nav-tab-active');
-            }
+            $('.nav-tab-wrapper a:first').addClass('nav-tab-active');
+
             $('.nav-tab-wrapper a').click(function(evt) {
                 $('.nav-tab-wrapper a').removeClass('nav-tab-active');
                 $(this).addClass('nav-tab-active').blur();
                 var clicked_group = $(this).attr('href');
-                if (typeof(localStorage) != 'undefined' ) {
-                    localStorage.setItem("activetab", $(this).attr('href'));
-                }
                 $('.group').hide();
                 $(clicked_group).fadeIn();
                 evt.preventDefault();

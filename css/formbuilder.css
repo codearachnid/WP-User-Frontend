@@ -1,6 +1,7 @@
 .wpuf-hide{display:none;}
 #wpuf-metabox-editor{background:#fff;}#wpuf-metabox-editor .handlediv{display:none;}
 #wpuf-metabox-editor .hndle{display:none;}
+#wpuf-metabox-editor .wpuf-updated{background-color:#ffffe0;border:1px solid #e6db55;border-radius:5px;padding:0 10px;margin:5px 0 15px;font-weight:bold;}
 #wpuf-metabox-fields h2{margin:0;}
 #wpuf-metabox-fields .wpuf-form-buttons{margin-bottom:10px;}
 #wpuf-metabox-fields button{margin-bottom:5px;}
