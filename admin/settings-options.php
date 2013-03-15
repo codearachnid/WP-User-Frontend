@@ -340,7 +340,7 @@ function wpuf_settings_field_profile( $form ) {
     ?>
 
     <p style="padding-left: 10px; font-style: italic; font-size: 13px;">
-        <?php _e( 'Select profile forms for user roles. These forms will be used for edit profiles in backend to populate custom fields based on user role.', 'wpuf' ); ?>
+        <strong><?php _e( 'Select profile/registration forms for user roles. These forms will be used to populate extra edit profile fields in backend.', 'wpuf' ); ?></strong>
     </p>
     <table class="form-table">
         <?php

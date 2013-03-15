@@ -840,7 +840,7 @@ class WPUF_Admin_Form {
         ?>
         <table class="form-table">
             <tr class="wpuf-post-type">
-                <th><?php _e( 'User Role', 'wpuf' ); ?></th>
+                <th><?php _e( 'New User Role', 'wpuf' ); ?></th>
                 <td>
                     <select name="wpuf_settings[role]">
                         <?php
