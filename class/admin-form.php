@@ -341,8 +341,8 @@ class WPUF_Admin_Form {
         global $post, $pagenow;
 
         $post_type = $post->post_type;
-	$post_type_object = get_post_type_object($post_type);
-	$can_publish = current_user_can($post_type_object->cap->publish_posts);
+    	$post_type_object = get_post_type_object($post_type);
+    	$can_publish = current_user_can($post_type_object->cap->publish_posts);
         ?>
         <div class="submitbox" id="submitpost">
             <div id="major-publishing-actions">
@@ -1119,6 +1119,7 @@ class WPUF_Admin_Form {
             return $post->ID;
         }
 
+        // var_dump($_POST['wpuf_input']); die();
         // var_dump($_POST); die();
         update_post_meta( $post->ID, $this->form_data_key, $_POST['wpuf_input'] );
         update_post_meta( $post->ID, $this->form_settings_key, $_POST['wpuf_settings'] );
@@ -1140,6 +1141,10 @@ class WPUF_Admin_Form {
 
         <div style="margin-bottom: 10px">
             <button class="button wpuf-collapse"><?php _e( 'Toggle All', 'wpuf' ); ?></button>
+        </div>
+
+        <div class="wpuf-updated">
+            <p><?php _e( 'Click on a form element to add to the editor', 'wpuf' ); ?></p>
         </div>
 
         <ul id="wpuf-form-editor" class="wpuf-form-editor unstyled">
@@ -1174,13 +1179,17 @@ class WPUF_Admin_Form {
     function edit_form_area_profile() {
         global $post, $pagenow;
 
-        $form_inputs = get_post_meta( $post->ID, $this->meta_key, true );
+        $form_inputs = get_post_meta( $post->ID, $this->form_data_key, true );
         ?>
 
         <input type="hidden" name="wpuf_form_editor" id="wpuf_form_editor" value="<?php echo wp_create_nonce( plugin_basename( __FILE__ ) ); ?>" />
 
         <div style="margin-bottom: 10px">
             <button class="button wpuf-collapse"><?php _e( 'Toggle All', 'wpuf' ); ?></button>
+        </div>
+
+        <div class="wpuf-updated">
+            <p><?php _e( 'Click on a form element to add to the editor', 'wpuf' ); ?></p>
         </div>
 
         <ul id="wpuf-form-editor" class="wpuf-form-editor unstyled">
