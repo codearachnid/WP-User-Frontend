@@ -55,7 +55,7 @@
                         if( res.show_message == true) {
                             form.before( '<div class="wpuf-success">' + res.message + '</div>');
                             form.slideUp( 'fast', function() {
-                                remove();
+                                form.remove();
                             });
 
                             //focus
