@@ -4,6 +4,7 @@
             // clone and remove repeated field
             $('.wpuf-form').on('click', 'img.wpuf-clone-field', this.cloneField);
             $('.wpuf-form').on('click', 'img.wpuf-remove-field', this.removeField);
+            $('.wpuf-form').on('click', 'a.wpuf-delete-avatar', this.deleteAvatar);
 
             $('#wpuf-form-add').on('submit', this.formSubmit);
 
@@ -343,6 +344,14 @@
             });
 
             imageUploader.init();
+        },
+        
+        deleteAvatar: function(e) {
+            e.preventDefault();
+            
+            $.post(wpuf_frontend.ajaxurl, {action: 'wpuf_delete_avatar', _wpnonce: wpuf_frontend.nonce}, function() {
+                window.location.reload();
+            });
         }
     };
 
