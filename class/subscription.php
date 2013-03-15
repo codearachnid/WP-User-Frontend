@@ -29,7 +29,7 @@ class WPUF_Subscription {
      * @param int $sub_id subscription pack id
      * @return object|bool
      */
-    public function get_subscription( $sub_id ) {
+    public static function get_subscription( $sub_id ) {
         global $wpdb;
 
         $sql = "SELECT * FROM {$wpdb->prefix}wpuf_subscription WHERE id=$sub_id";
