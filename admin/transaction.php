@@ -1,73 +1,68 @@
 <?php
+global $wpdb;
 
-function wpuf_transaction() {
-    global $wpdb;
+$total_income = $wpdb->get_var( "SELECT SUM(cost) FROM {$wpdb->prefix}wpuf_transaction WHERE status = 'completed'" );
+$month_income = $wpdb->get_var( "SELECT SUM(cost) FROM {$wpdb->prefix}wpuf_transaction WHERE YEAR(`created`) = YEAR(NOW()) AND MONTH(`created`) = MONTH(NOW()) AND status = 'completed'" );
+$transactions = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpuf_transaction ORDER BY `created` DESC LIMIT 0, 60", OBJECT );
 
-    $date = date( 'd-m-Y H:i:s', time() );
-    $month = date( 'm', time() );
-    $year = date( 'Y', time() );
+?>
+<div class="wrap">
+    <?php screen_icon( 'options-general' ); ?>
+    <h2><?php _e( 'WP User Frontend: Payments Received', 'wpuf' ); ?></h2>
 
-    //var_dump( $date, $month, $year);
-    $total_income = $wpdb->get_var( "SELECT SUM(cost) FROM {$wpdb->prefix}wpuf_transaction" );
-    $month_income = $wpdb->get_var( "SELECT SUM(cost) FROM {$wpdb->prefix}wpuf_transaction WHERE YEAR(`created`) = YEAR(NOW()) AND MONTH(`created`) = MONTH(NOW())" );
-    $transactions = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpuf_transaction ORDER BY `created` DESC LIMIT 0, 60", OBJECT );
+    <ul>
+        <li>
+            <strong><?php _e( 'Total Income:', 'wpuf' ); ?></strong> <?php echo get_option( 'wpuf_sub_currency_sym' ) . $total_income; ?><br />
+        </li>
+        <li>
+            <strong><?php _e( 'This Month:', 'wpuf' ); ?></strong> <?php echo get_option( 'wpuf_sub_currency_sym' ) . $month_income; ?>
+        </li>
+    </ul>
 
-    // var_dump( $transactions );
-    ?>
-    <div class="wrap">
-        <div id="icon-options-general" class="icon32"><br></div>
-        <h2>WP User Frontend: Payments Received</h2>
+    <table class="widefat meta" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th scope="col"><?php _e( 'ID', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'User ID', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Status', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Cost', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Post ID', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Pack ID', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Payer', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Email', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Type', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Transaction ID', 'wpuf' ); ?></th>
+                <th scope="col"><?php _e( 'Created', 'wpuf' ); ?></th>
+            </tr>
+        </thead>
+        <?php
+        if ( $transactions ) {
+            $count = 0;
+            foreach ($transactions as $row) {
+                ?>
+                <tr valign="top" <?php echo ( ($count % 2) == 0) ? 'class="alternate"' : ''; ?>>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->id ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->user_id ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->status ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->cost ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->post_id ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->pack_id ) ); ?></td>
+                    <td><?php echo $row->payer_first_name . ' ' . $row->payer_last_name; ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->payer_email ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->payment_type ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->transaction_id ) ); ?></td>
+                    <td><?php echo stripslashes( htmlspecialchars( $row->created ) ); ?></td>
 
-        Total Income: <?php echo get_option( 'wpuf_sub_currency_sym' ) . $total_income; ?><br />
-        This Month: <?php echo get_option( 'wpuf_sub_currency_sym' ) . $month_income; ?>
-
-        <hr />
-
-        <table class="widefat meta" style="margin-bottom: 20px;">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">User ID</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Cost</th>
-                    <th scope="col">Post ID</th>
-                    <th scope="col">Pack ID</th>
-                    <th scope="col">Payer</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Transaction ID</th>
-                    <th scope="col">Created</th>
                 </tr>
-            </thead>
-            <?php
-            if ( $transactions ) {
-                $count = 0;
-                foreach ($transactions as $row) {
-                   // var_dump( $row );
-                    ?>
-                    <tr valign="top" <?php echo ( ($count % 2) == 0) ? 'class="alternate"' : ''; ?>>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->id ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->user_id ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->status ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->cost ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->post_id ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->pack_id ) ); ?></td>
-                        <td><?php echo $row->payer_first_name . ' ' . $row->payer_last_name; ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->payer_email ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->payment_type ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->transaction_id ) ); ?></td>
-                        <td><?php echo stripslashes( htmlspecialchars( $row->created ) ); ?></td>
+                <?php
+                $count++;
+            }
+            ?>
+        <?php } else { ?>
+            <tr>
+                <td colspan="11"><?php _e( 'Nothing Found', 'wpuf' ); ?></td>
+            </tr>
+        <?php } ?>
 
-                    </tr>
-                    <?php $count++;
-                } ?>
-            <?php } else { ?>
-                <tr>
-                    <td colspan="5">Nothing Found</td>
-                </tr>
-            <?php } ?>
-
-        </table>
-    </div>
-    <?php
-}
+    </table>
+</div>
