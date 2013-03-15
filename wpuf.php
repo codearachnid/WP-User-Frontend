@@ -127,7 +127,7 @@ class WP_User_Frontend {
         new WPUF_Subscription();
 
         if (is_admin()) {
-            new WPUF_Admin_Settings();
+            new WPUF_Settings();
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
         } else {
