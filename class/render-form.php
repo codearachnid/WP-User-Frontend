@@ -5,11 +5,11 @@
  *
  * @package WP User Frontend
  */
-class WPUF_Frontend_Form {
+class WPUF_Render_Form {
 
-    protected $meta_key = 'wpuf_form';
-    protected $separator = ', ';
-    protected $config_id = '_wpuf_form_id';
+    static $meta_key = 'wpuf_form';
+    static $separator = ', ';
+    static $config_id = '_wpuf_form_id';
 
     /**
      * Send json error message
@@ -108,13 +108,13 @@ class WPUF_Frontend_Form {
     }
 
     /**
-     * Get input meta fields formatted
+     * Get input meta fields separated as post vars, taxonomy and meta vars
      *
-     * @param int $form_id
+     * @param int $form_id form id
      * @return array
      */
-    function get_input_fields( $form_id ) {
-        $form_vars = get_post_meta( $form_id, $this->meta_key, true );
+    public static function get_input_fields( $form_id ) {
+        $form_vars = get_post_meta( $form_id, self::$meta_key, true );
 
         $ignore_lists = array('section_break', 'html');
         $post_vars = $meta_vars = $taxonomy_vars = array();
@@ -148,7 +148,7 @@ class WPUF_Frontend_Form {
         return array($post_vars, $taxonomy_vars, $meta_vars);
     }
 
-    function prepare_meta_fields( $meta_vars ) {
+    public static function prepare_meta_fields( $meta_vars ) {
         // loop through custom fields
         // skip files, put in a key => value paired array for later executation
         // process repeatable fields separately
@@ -191,8 +191,8 @@ class WPUF_Frontend_Form {
                                 $temp[] = $_POST[$value['name']][$j][$i];
                             }
 
-                            // store all fields in a row with $this->separator separated
-                            $ref_arr[] = implode( $this->separator, $temp );
+                            // store all fields in a row with self::$separator separated
+                            $ref_arr[] = implode( self::$separator, $temp );
                         }
 
                         // now, if we found anything in $ref_arr, store to $multi_repeated
@@ -201,7 +201,7 @@ class WPUF_Frontend_Form {
                         }
                     }
                 } else {
-                    $meta_key_value[$value['name']] = implode( $this->separator, $_POST[$value['name']] );
+                    $meta_key_value[$value['name']] = implode( self::$separator, $_POST[$value['name']] );
                 }
 
                 // process other fields
@@ -209,7 +209,7 @@ class WPUF_Frontend_Form {
 
                 // if it's an array, implode with this->separator
                 if ( is_array( $_POST[$value['name']] ) ) {
-                    $meta_key_value[$value['name']] = implode( $this->separator, $_POST[$value['name']] );
+                    $meta_key_value[$value['name']] = implode( self::$separator, $_POST[$value['name']] );
                 } else {
                     $meta_key_value[$value['name']] = trim( $_POST[$value['name']] );
                 }
@@ -219,6 +219,30 @@ class WPUF_Frontend_Form {
         return array($meta_key_value, $multi_repeated, $files);
     }
 
+    function guest_fields( $form_settings ) {
+        ?>
+        <li class="el-name">
+            <div class="wpuf-label">
+                <label><?php echo $form_settings['name_label']; ?> <span class="required">*</span></label>
+            </div>
+
+            <div class="wpuf-fields">
+                <input type="text" required="required" data-required="yes" data-type="text" name="guest_name" value="" size="40">
+            </div>
+        </li>
+
+        <li class="el-email">
+            <div class="wpuf-label">
+                <label><?php echo $form_settings['email_label']; ?> <span class="required">*</span></label>
+            </div>
+
+            <div class="wpuf-fields">
+                <input type="email" required="required" data-required="yes" data-type="email" name="guest_email" value="" size="40">
+            </div>
+        </li>
+        <?php
+    }
+
     /**
      * Handles the add post shortcode
      *
@@ -226,7 +250,7 @@ class WPUF_Frontend_Form {
      */
     function render_form( $form_id, $post_id = NULL, $preview = false ) {
 
-        $form_vars = get_post_meta( $form_id, $this->meta_key, true );
+        $form_vars = get_post_meta( $form_id, self::$meta_key, true );
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
         // var_dump($form_settings);
@@ -245,29 +269,9 @@ class WPUF_Frontend_Form {
 
                 <ul class="wpuf-form">
 
-                    <?php if ( !is_user_logged_in() && $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) { ?>
-
-                        <li class="el-name">
-                            <div class="wpuf-label">
-                                <label><?php echo $form_settings['name_label']; ?> <span class="required">*</span></label>
-                            </div>
-
-                            <div class="wpuf-fields">
-                                <input type="text" required="required" data-required="yes" data-type="text" name="guest_name" value="" size="40">
-                            </div>
-                        </li>
-
-                        <li class="el-email">
-                            <div class="wpuf-label">
-                                <label><?php echo $form_settings['email_label']; ?> <span class="required">*</span></label>
-                            </div>
-
-                            <div class="wpuf-fields">
-                                <input type="email" required="required" data-required="yes" data-type="email" name="guest_email" value="" size="40">
-                            </div>
-                        </li>
-
-                        <?php
+                    <?php
+                    if ( !is_user_logged_in() && $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
+                        $this->guest_fields( $form_settings );
                     }
 
                     $this->render_items( $form_vars, $post_id );
@@ -284,6 +288,22 @@ class WPUF_Frontend_Form {
         } //endif
     }
 
+    function render_item_before( $form_field ) {
+        $label_exclude = array('section_break', 'html', 'action_hook');
+        $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
+        $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
+
+        printf( '<li class="wpuf-el %s%s">', $el_name, $class_name );
+
+        if ( isset( $form_field['input_type'] ) && !in_array( $form_field['input_type'], $label_exclude ) ) {
+            $this->label( $form_field );
+        }
+    }
+
+    function render_item_after( $form_field ) {
+        echo '</li>';
+    }
+
     /**
      * Render form items
      *
@@ -295,10 +315,7 @@ class WPUF_Frontend_Form {
 
         foreach ($form_vars as $key => $form_field) {
 
-            $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
-            $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
-
-            printf( '<li class="wpuf-el %s%s">', $el_name, $class_name );
+            $this->render_item_before( $form_field );
 
             switch ($form_field['input_type']) {
                 case 'text':
@@ -384,13 +401,9 @@ class WPUF_Frontend_Form {
                 case 'toc':
                     $this->toc( $form_field, $post_id );
                     break;
-
-                default:
-                    # code...
-                    break;
             }
 
-            echo '</li>';
+            $this->render_item_after( $form_field );
         } //end foreach
     }
 
@@ -595,8 +608,6 @@ class WPUF_Frontend_Form {
         } else {
             $value = $attr['default'];
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -630,8 +641,6 @@ class WPUF_Frontend_Form {
         } else {
             $value = $attr['default'];
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -668,7 +677,7 @@ class WPUF_Frontend_Form {
      */
     function file_upload( $attr, $post_id, $type ) {
 
-        $this->label( $attr );
+
 
         $allowed_ext = '';
         $extensions = wpuf_allowed_extensions();
@@ -724,6 +733,7 @@ class WPUF_Frontend_Form {
 
         $has_featured_image = false;
         $has_images = false;
+        $has_avatar = false;
 
         if ( $post_id ) {
             if ( $this->is_meta( $attr ) ) {
@@ -741,13 +751,11 @@ class WPUF_Frontend_Form {
                     }
                 } else {
                     // it must be a user avatar
-                    $has_featured_image = true;
+                    $has_avatar = true;
                     $featured_image = get_avatar( $post_id );
                 }
             }
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -761,6 +769,14 @@ class WPUF_Frontend_Form {
                         <?php
                         if ( $has_featured_image ) {
                             echo $featured_image;
+                        }
+
+                        if ( $has_avatar ) {
+                            $avatar = get_user_meta( $post_id, 'user_avatar', true );
+                            if ( $avatar ) {
+                                echo $featured_image;
+                                printf( '<br><a href="#" data-confirm="%s" class="wpuf-button button wpuf-delete-avatar">%s</a>', __( 'Are you sure?', 'wpuf' ), __( 'Delete', 'wpuf' ) );
+                            }
                         }
 
                         if ( $has_images ) {
@@ -795,7 +811,7 @@ class WPUF_Frontend_Form {
     function select( $attr, $multiselect = false, $post_id, $type ) {
         if ( $post_id ) {
             $selected = $this->get_meta( $post_id, $attr['name'], $type );
-            $selected = $multiselect ? explode( $this->separator, $selected ) : $selected;
+            $selected = $multiselect ? explode( self::$separator, $selected ) : $selected;
         } else {
             $selected = isset( $attr['selected'] ) ? $attr['selected'] : '';
             $selected = $multiselect ? ( is_array( $selected ) ? $selected : array() ) : $selected;
@@ -804,8 +820,6 @@ class WPUF_Frontend_Form {
         $multi = $multiselect ? ' multiple="multiple"' : '';
         $data_type = $multiselect ? 'multiselect' : 'select';
         $css = $multiselect ? ' class="multiselect"' : '';
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -844,8 +858,6 @@ class WPUF_Frontend_Form {
         if ( $post_id ) {
             $selected = $this->get_meta( $post_id, $attr['name'], $type, true );
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -881,10 +893,8 @@ class WPUF_Frontend_Form {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : array();
 
         if ( $post_id ) {
-            $selected = explode( $this->separator, $this->get_meta( $post_id, $attr['name'], $type, true ) );
+            $selected = explode( self::$separator, $this->get_meta( $post_id, $attr['name'], $type, true ) );
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -927,8 +937,6 @@ class WPUF_Frontend_Form {
         } else {
             $value = $attr['default'];
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -956,8 +964,6 @@ class WPUF_Frontend_Form {
         } else {
             $value = $attr['default'];
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -977,8 +983,6 @@ class WPUF_Frontend_Form {
         if ( $post_id ) {
             $attr['required'] = 'no';
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -1041,8 +1045,6 @@ class WPUF_Frontend_Form {
     function repeat( $attr, $post_id, $type ) {
         $add = plugins_url( 'images/add.png', dirname( __FILE__ ) );
         $remove = plugins_url( 'images/remove.png', dirname( __FILE__ ) );
-
-        $this->label( $attr, $post_id );
         ?>
 
         <div class="wpuf-fields">
@@ -1074,7 +1076,7 @@ class WPUF_Frontend_Form {
 
                         if ( $items ) {
                             foreach ($items as $item_val) {
-                                $column_vals = explode( $this->separator, $item_val );
+                                $column_vals = explode( self::$separator, $item_val );
                                 ?>
 
                                 <tr>
@@ -1115,7 +1117,7 @@ class WPUF_Frontend_Form {
 
                 <table>
                     <?php
-                    $items = $post_id ? explode( $this->separator, $this->get_meta( $post_id, $attr['name'], $type, true ) ) : array();
+                    $items = $post_id ? explode( self::$separator, $this->get_meta( $post_id, $attr['name'], $type, true ) ) : array();
 
                     if ( $items ) {
                         foreach ($items as $item) {
@@ -1129,7 +1131,7 @@ class WPUF_Frontend_Form {
                                     <img style="cursor:pointer;" class="wpuf-remove-field" alt="remove this choice" title="remove this choice" src="<?php echo $remove; ?>">
                                 </td>
                             </tr>
-                        <?php } //endforeach   ?>
+                        <?php } //endforeach    ?>
                     <?php } else { ?>
 
                         <tr>
@@ -1167,7 +1169,7 @@ class WPUF_Frontend_Form {
             $terms = wp_get_post_terms( $post_id, $taxonomy, array('fields' => 'ids') );
         }
 
-        $this->label( $attr );
+
 
         // var_dump($attr);
         ?>
@@ -1230,7 +1232,6 @@ class WPUF_Frontend_Form {
      * @param array $attr
      */
     function html( $attr ) {
-        $this->label( $attr );
         ?>
         <div class="wpuf-fields">
             <?php echo do_shortcode( $attr['html'] ); ?>
@@ -1274,8 +1275,6 @@ class WPUF_Frontend_Form {
         if ( $post_id ) {
             return;
         }
-
-        $this->label( $attr );
         ?>
         <div class="wpuf-fields">
             <?php echo recaptcha_get_html( wpuf_get_option( 'recaptcha_public' ) ); ?>
@@ -1330,7 +1329,7 @@ class WPUF_Frontend_Form {
             return;
         }
 
-        $this->label( $attr );
+
 
         $captcha_instance = new ReallySimpleCaptcha();
         $word = $captcha_instance->generate_random_word();
@@ -1354,8 +1353,6 @@ class WPUF_Frontend_Form {
     function date( $attr, $post_id, $type ) {
 
         $value = $post_id ? $this->get_meta( $post_id, $attr['name'], $type, true ) : '';
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
@@ -1365,9 +1362,9 @@ class WPUF_Frontend_Form {
         <script type="text/javascript">
             jQuery(function($) {
         <?php if ( $attr['time'] == 'yes' ) { ?>
-            $("#wpuf-date-<?php echo $attr['name']; ?>").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+                                $("#wpuf-date-<?php echo $attr['name']; ?>").datetimepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
         <?php } else { ?>
-            $("#wpuf-date-<?php echo $attr['name']; ?>").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
+                                $("#wpuf-date-<?php echo $attr['name']; ?>").datepicker({ dateFormat: '<?php echo $attr["format"]; ?>' });
         <?php } ?>
             });
         </script>
@@ -1384,25 +1381,24 @@ class WPUF_Frontend_Form {
     function map( $attr, $post_id, $type ) {
 
         $value = $post_id ? $this->get_meta( $post_id, $attr['name'], $type, true ) : '';
+        $type = $attr['show_lat'] == 'yes' ? 'text' : 'hidden';
 
         if ( $post_id ) {
-            list( $def_lat, $def_long ) = explode(',', $value );
+            list( $def_lat, $def_long ) = explode( ',', $value );
         } else {
-            list( $def_lat, $def_long ) = explode(',', $attr['default_pos'] );
+            list( $def_lat, $def_long ) = explode( ',', $attr['default_pos'] );
         }
-
-        $this->label( $attr );
         ?>
 
         <div class="wpuf-fields">
-            <input id="wpuf-map-lat-<?php echo $attr['name']; ?>" type="hidden" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="30" />
+            <input id="wpuf-map-lat-<?php echo $attr['name']; ?>" type="<?php echo $type; ?>" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" value="<?php echo esc_attr( $value ) ?>" size="30" />
 
             <?php if ( $attr['address'] == 'yes' ) { ?>
                 <input id="wpuf-map-add-<?php echo $attr['name']; ?>" type="text" value="" name="find-address" placeholder="<?php _e( 'Type an address to find', 'wpuf' ); ?>" size="30" />
-                <button class="wpuf-button" id="wpuf-map-btn-<?php echo $attr['name']; ?>"><?php _e( 'Find Address', 'wpuf' ); ?></button>
+                <button class="wpuf-button button" id="wpuf-map-btn-<?php echo $attr['name']; ?>"><?php _e( 'Find Address', 'wpuf' ); ?></button>
             <?php } ?>
 
-            <div class="google-map" style="height: 250px; width: 450px;" id="wpuf-map-<?php echo $attr['name']; ?>"></div>
+            <div class="google-map" style="margin: 10px 0; height: 250px; width: 450px;" id="wpuf-map-<?php echo $attr['name']; ?>"></div>
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>

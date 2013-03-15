@@ -812,9 +812,11 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
         $zoom_name = sprintf('%s[%d][zoom]', self::$input_name, $field_id);
         $address_name = sprintf('%s[%d][address]', self::$input_name, $field_id);
         $default_pos_name = sprintf('%s[%d][default_pos]', self::$input_name, $field_id);
+        $show_lat_name = sprintf('%s[%d][show_lat]', self::$input_name, $field_id);
 
         $zoom_value = $values ? $values['zoom'] : '12';
         $address_value = $values ? $values['address'] : 'yes';
+        $show_lat_value = $values ? $values['show_lat'] : 'no';
         $default_pos_value = $values ? $values['default_pos'] : '';
 
         $zoom_help = esc_attr( __( 'Set the map zoom level', 'wpuf' ) );
@@ -846,6 +848,18 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
                             <?php self::hidden_field( "[$field_id][address]", 'no' ); ?>
                             <input type="checkbox" name="<?php echo $address_name ?>" value="yes"<?php checked( $address_value, 'yes' ); ?> />
                             <?php _e( 'Show address find button', 'wpuf' ); ?>
+                        </label>
+                    </div>
+                </div> <!-- .wpuf-form-rows -->
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Show Latitude/Longitude', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <label>
+                            <?php self::hidden_field( "[$field_id][show_lat]", 'no' ); ?>
+                            <input type="checkbox" name="<?php echo $show_lat_name ?>" value="yes"<?php checked( $show_lat_value, 'yes' ); ?> />
+                            <?php _e( 'Show latitude and longitude input box value', 'wpuf' ); ?>
                         </label>
                     </div>
                 </div> <!-- .wpuf-form-rows -->

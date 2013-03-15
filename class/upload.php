@@ -114,7 +114,11 @@ class WPUF_Upload {
         }
 
         $attachment = get_post( $attach_id );
-        
+
+        if (!$attachment) {
+            return;
+        }
+
         if (wp_attachment_is_image( $attach_id)) {
             $image = wp_get_attachment_image_src( $attach_id, 'thumbnail' );
             $image = $image[0];

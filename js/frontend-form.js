@@ -7,6 +7,7 @@
             $('.wpuf-form').on('click', 'a.wpuf-delete-avatar', this.deleteAvatar);
 
             $('#wpuf-form-add').on('submit', this.formSubmit);
+            $('form#post').on('submit', this.adminPostSubmit);
 
             // image insert
             // this.insertImage();
@@ -32,6 +33,18 @@
 
             if( items > 1 ) {
                 $parent.remove();
+            }
+        },
+        
+        adminPostSubmit: function(e) {
+            e.preventDefault();
+            
+            var form = $(this),
+                form_data = WP_User_Frontend.validateForm(form);
+                
+                console.log(form_data);
+            if (form_data) {
+                return true;
             }
         },
 
@@ -345,13 +358,15 @@
 
             imageUploader.init();
         },
-        
+
         deleteAvatar: function(e) {
             e.preventDefault();
-            
-            $.post(wpuf_frontend.ajaxurl, {action: 'wpuf_delete_avatar', _wpnonce: wpuf_frontend.nonce}, function() {
-                window.location.reload();
-            });
+
+            if ( confirm( $(this).data('confirm') ) ) {
+                $.post(wpuf_frontend.ajaxurl, {action: 'wpuf_delete_avatar', _wpnonce: wpuf_frontend.nonce}, function() {
+                    window.location.reload();
+                });
+            }
         }
     };
 

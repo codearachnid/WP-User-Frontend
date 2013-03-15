@@ -5,7 +5,7 @@
  *
  * @package WP User Frontend
  */
-class WPUF_Frontend_Form_Profile extends WPUF_Frontend_Form {
+class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
     function __construct() {
         add_shortcode( 'wpuf_profile', array($this, 'shortcode_handler') );
@@ -25,9 +25,9 @@ class WPUF_Frontend_Form_Profile extends WPUF_Frontend_Form {
         extract( shortcode_atts( array('id' => 0, 'type' => 'registration'), $atts ) );
         ob_start();
 
-        $form_vars = get_post_meta( $id, $this->meta_key, true );
+        $form_vars = get_post_meta( $id, self::$meta_key, true );
         $form_settings = get_post_meta( $id, 'wpuf_form_settings', true );
-        
+
         if ( !$form_vars ) {
             return;
         }
@@ -245,54 +245,15 @@ class WPUF_Frontend_Form_Profile extends WPUF_Frontend_Form {
         exit;
     }
 
-    function update_user_meta( $meta_vars, $user_id ) {
+    public static function update_user_meta( $meta_vars, $user_id ) {
         // prepare meta fields
-        list( $meta_key_value, $multi_repeated, $files ) = $this->prepare_meta_fields( $meta_vars );
+        list( $meta_key_value, $multi_repeated, $files ) = self::prepare_meta_fields( $meta_vars );
 
         // set featured image if there's any
         if ( isset( $_POST['wpuf_files']['avatar'] ) ) {
             $attachment_id = $_POST['wpuf_files']['avatar'][0];
 
-            $upload_dir = wp_upload_dir();
-            $uploaded_file = wp_get_attachment_url( $attachment_id );
-            $relative_url = str_replace( $upload_dir['baseurl'], '', $uploaded_file );
-
-            if ( function_exists( 'wp_get_image_editor' ) ) {
-                // try to crop the photo if it's big
-                $file_path = $upload_dir['basedir'] . $relative_url;
-
-                // as the image upload process generated a bunch of images
-                // try delete the intermediate sizes.
-                $ext = strrchr( $file_path, '.');
-                $file_path_w_ext = str_replace( $ext, '', $file_path );
-                $small_url = $file_path_w_ext . '-avatar' . $ext;
-                $relative_url = str_replace( $upload_dir['basedir'], '', $small_url);
-
-                $editor = wp_get_image_editor( $file_path );
-
-                if ( !is_wp_error( $editor ) ) {
-                    $editor->resize( 100, 100, true );
-                    $editor->save( $small_url );
-
-                    // if the file creation successfull, delete the original attachment
-                    if ( file_exists( $small_url ) ) {
-                        wp_delete_attachment( $attachment_id, true );
-                    }
-                }
-            }
-
-            // delete any previous avatar
-            $prev_avatar = update_user_meta($user_id, 'user_avatar', true );
-            if ( !empty( $prev_avatar ) ) {
-                $prev_avatar_path = $upload_dir['basedir'] . $prev_avatar;
-
-                if ( file_exists( $prev_avatar_path ) ) {
-                    unlink( $prev_avatar_path );
-                }
-            }
-
-            // now update new user avatar
-            update_user_meta($user_id, 'user_avatar', $relative_url);
+            wpuf_update_avatar( $user_id, $attachment_id );
         }
 
         // save all custom fields
@@ -310,6 +271,16 @@ class WPUF_Frontend_Form_Profile extends WPUF_Frontend_Form {
                 add_user_meta( $user_id, $repeat_key, $repeat_field );
             }
         } //foreach
+
+        // save any files attached
+        foreach ($files as $file_input) {
+            // delete any previous value
+            delete_user_meta( $user_id, $file_input['name'] );
+
+            foreach ($file_input['value'] as $attachment_id) {
+                add_user_meta( $user_id, $file_input['name'], $attachment_id );
+            }
+        }
     }
 
     function update_profile() {

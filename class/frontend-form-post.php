@@ -1,6 +1,6 @@
 <?php
 
-class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
+class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
     function __construct() {
 
@@ -24,7 +24,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
     function add_post_shortcode( $atts ) {
         extract( shortcode_atts( array('id' => 0), $atts ) );
         ob_start();
-        
+
         $form_settings = get_post_meta( $id, 'wpuf_form_settings', true );
         $info = apply_filters( 'wpuf_addpost_notice', '' );
         $user_can_post = apply_filters( 'wpuf_can_post', 'yes' );
@@ -60,7 +60,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
             $post_id = isset( $_GET['pid'] ) ? intval( $_GET['pid'] ) : 0;
         }
 
-        $form_id = get_post_meta( $post_id, $this->config_id, true );
+        $form_id = get_post_meta( $post_id, self::$config_id, true );
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
         if ( !$form_id ) {
@@ -72,7 +72,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
             echo $form_settings['update_message'];
             echo '</div>';
         }
-        
+
         $this->render_form( $form_id, $post_id );
 
         $content = ob_get_contents();
@@ -96,7 +96,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
-        // var_dump($post_vars, $taxonomy_vars, $meta_vars);
+
         // search if rs captcha is there
         if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
             $this->validate_rs_captcha();
@@ -184,9 +184,6 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
             $postarr['ID'] = $_POST['post_id'];
         }
 
-        // prepare the meta vars
-        list( $meta_key_value, $multi_repeated, $files ) = $this->prepare_meta_fields( $meta_vars );
-
 
         // ############ It's Time to Save the World ###############
         if ( $is_update ) {
@@ -199,42 +196,10 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
         $post_id = wp_insert_post( $postarr );
 
         if ( $post_id ) {
-            // set featured image if there's any
-            if ( isset( $_POST['wpuf_files']['featured_image'] ) ) {
-                $attachment_id = $_POST['wpuf_files']['featured_image'][0];
-
-                wpuf_associate_attachment( $attachment_id, $post_id );
-                set_post_thumbnail( $post_id, $attachment_id );
-            }
-
-            // save all custom fields
-            foreach ($meta_key_value as $meta_key => $meta_value) {
-                update_post_meta( $post_id, $meta_key, $meta_value );
-            }
-
-            // save any multicolumn repeatable fields
-            foreach ($multi_repeated as $repeat_key => $repeat_value) {
-                // first, delete any previous repeatable fields
-                delete_post_meta( $post_id, $repeat_key );
-
-                // now add them
-                foreach ($repeat_value as $repeat_field) {
-                    add_post_meta( $post_id, $repeat_key, $repeat_field );
-                }
-            }
-
-            // save any files attached
-            foreach ($files as $file_input) {
-                // delete any previous value
-                delete_post_meta( $post_id, $file_input['name'] );
-
-                foreach ($file_input['value'] as $attachment_id) {
-                    add_post_meta( $post_id, $file_input['name'], $attachment_id );
-                }
-            }
+            self::update_post_meta($meta_vars, $post_id);
 
             // set the post form_id for later usage
-            update_post_meta( $post_id, $this->config_id, $form_id );
+            update_post_meta( $post_id, self::$config_id, $form_id );
 
             // save any custom taxonomies
             foreach ($taxonomy_vars as $taxonomy) {
@@ -253,23 +218,21 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
                 }
             }
 
-
-            
             if ( $is_update ) {
-                
+
                 // plugin API to extend the functionality
                 do_action( 'wpuf_edit_post_after_update', $post_id, $form_id, $form_settings, $form_vars );
-                
+
                 //send mail notification
                 if ( $form_settings['notification']['edit'] == 'on' ) {
                     $mail_body = $this->prepare_mail_body( $form_settings['notification']['edit_body'], $post_author, $post_id );
                     wp_mail( $form_settings['notification']['edit_to'], $form_settings['notification']['edit_subject'], $mail_body );
                 }
             } else {
-                
+
                 // plugin API to extend the functionality
                 do_action( 'wpuf_add_post_after_insert', $post_id, $form_id, $form_settings, $form_vars );
-                
+
                 // send mail notification
                 if ( $form_settings['notification']['new'] == 'on' ) {
                     $mail_body = $this->prepare_mail_body( $form_settings['notification']['new_body'], $post_author, $post_id );
@@ -315,7 +278,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
                 'show_message' => $show_message,
                 'message' => $form_settings['message']
             );
-            
+
             if ( $is_update ) {
                 $response = apply_filters( 'wpuf_edit_post_redirect', $response, $post_id, $form_id, $form_settings );
             } else {
@@ -327,6 +290,47 @@ class WPUF_Frontend_Form_Post extends WPUF_Frontend_Form {
         }
 
         $this->send_error( __( 'Something went wrong', 'wpuf' ) );
+    }
+    
+    public static function update_post_meta( $meta_vars, $post_id ) {
+        
+        // prepare the meta vars
+        list( $meta_key_value, $multi_repeated, $files ) = self::prepare_meta_fields( $meta_vars );
+        
+        // set featured image if there's any
+        if ( isset( $_POST['wpuf_files']['featured_image'] ) ) {
+            $attachment_id = $_POST['wpuf_files']['featured_image'][0];
+
+            wpuf_associate_attachment( $attachment_id, $post_id );
+            set_post_thumbnail( $post_id, $attachment_id );
+        }
+
+        // save all custom fields
+        foreach ($meta_key_value as $meta_key => $meta_value) {
+            update_post_meta( $post_id, $meta_key, $meta_value );
+        }
+
+        // save any multicolumn repeatable fields
+        foreach ($multi_repeated as $repeat_key => $repeat_value) {
+            // first, delete any previous repeatable fields
+            delete_post_meta( $post_id, $repeat_key );
+
+            // now add them
+            foreach ($repeat_value as $repeat_field) {
+                add_post_meta( $post_id, $repeat_key, $repeat_field );
+            }
+        }
+
+        // save any files attached
+        foreach ($files as $file_input) {
+            // delete any previous value
+            delete_post_meta( $post_id, $file_input['name'] );
+
+            foreach ($file_input['value'] as $attachment_id) {
+                wpuf_associate_attachment( $attachment_id, $post_id );
+                add_post_meta( $post_id, $file_input['name'], $attachment_id );
+            }
+        }
     }
 
     function prepare_mail_body( $content, $user_id, $post_id ) {

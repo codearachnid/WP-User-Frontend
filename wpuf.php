@@ -134,6 +134,7 @@ class WP_User_Frontend {
             new WPUF_Settings();
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
+            new WPUF_Admin_Posting_Profile();
         } else {
 
             new WPUF_Frontend_Dashboard();
@@ -160,7 +161,8 @@ class WP_User_Frontend {
 
         wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'error_message' => __( 'Please fix the errors to proceed', 'wpuf' )
+            'error_message' => __( 'Please fix the errors to proceed', 'wpuf' ),
+            'nonce' => wp_create_nonce( 'wpuf_nonce' )
         ) );
     }
 
