@@ -273,9 +273,21 @@ class WPUF_Render_Form {
                     if ( !is_user_logged_in() && $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
                         $this->guest_fields( $form_settings );
                     }
+                    
+                    if ( !$post_id ) {
+                        do_action( 'wpuf_add_post_form_top', $id, $form_settings );
+                    } else {
+                        do_action( 'wpuf_edit_post_form_top', $id, $post_id, $form_settings );
+                    }
 
                     $this->render_items( $form_vars, $post_id );
                     $this->submit_button( $form_id, $form_settings, $post_id );
+                    
+                    if ( !$post_id ) {
+                        do_action( 'wpuf_add_post_form_bottom', $id, $form_settings );
+                    } else {
+                        do_action( 'wpuf_edit_post_form_bottom', $id, $post_id, $form_settings );
+                    }
                     ?>
 
                 </ul>

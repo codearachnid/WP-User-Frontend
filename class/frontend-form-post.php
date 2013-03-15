@@ -30,9 +30,6 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         $user_can_post = apply_filters( 'wpuf_can_post', 'yes' );
 
         if ( $user_can_post == 'yes' ) {
-
-            do_action( 'wpuf_add_post_form_top', $id, $form_settings );
-
             $this->render_form( $id );
         } else {
             echo '<div class="info">' . $info . '</div>';
