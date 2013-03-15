@@ -14,8 +14,6 @@ class WPUF_Settings {
         if ( !class_exists( 'WeDevs_Settings_API' ) ) {
             require_once dirname( dirname( __FILE__ ) ) . '/lib/class.settings-api.php';
         }
-        
-        require_once dirname( dirname( __FILE__ ) ) . '/admin/subscription.php';
 
         $this->settings_api = new WeDevs_Settings_API();
 
@@ -40,7 +38,7 @@ class WPUF_Settings {
      */
     function admin_menu() {
         add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'User Frontend', 'wpuf' ), 'delete_others_pages', 'wpuf-admin-opt', array($this, 'plugin_page'), null, 55 );
-        add_submenu_page( 'wpuf-admin-opt', __( 'Subscription', 'wpuf' ), __( 'Subscription', 'wpuf' ), 'activate_plugins', 'wpuf_subscription', 'wpuf_subscription_admin' );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Subscription', 'wpuf' ), __( 'Subscription', 'wpuf' ), 'activate_plugins', 'wpuf_subscription', array( $this, 'subscription_page') );
         add_submenu_page( 'wpuf-admin-opt', __( 'Transaction', 'wpuf' ), __( 'Transaction', 'wpuf' ), 'activate_plugins', 'wpuf_transaction', array($this, 'transaction_page') );
         add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'delete_others_pages', 'wpuf-settings', array($this, 'plugin_page') );
     }
@@ -80,9 +78,12 @@ class WPUF_Settings {
         </div>
         <?php
     }
-    
+
     function transaction_page() {
         require_once dirname( dirname( __FILE__ ) ) . '/admin/transaction.php';
+    }
+    function subscription_page() {
+        require_once dirname( dirname( __FILE__ ) ) . '/admin/subscription.php';
     }
 
 }
