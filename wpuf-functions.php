@@ -413,8 +413,7 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
         $args['selected_cats'] = array();
     }
 
-    $categories = (array) get_terms($tax, array('get' => 'all', 'exclude' => $exclude));
-
+    $categories = (array) get_terms($tax, array('get' => 'all', 'hide_empty' => false, 'exclude' => $exclude));
     echo '<ul class="wpuf-category-checklist">';
     echo call_user_func_array(array(&$walker, 'walk'), array($categories, 0, $args));
     echo '</ul>';
