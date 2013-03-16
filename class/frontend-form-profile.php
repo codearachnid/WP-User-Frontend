@@ -43,6 +43,14 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
             $this->profile_edit( $id, $form_vars, $form_settings );
         } elseif ( $type == 'registration' && !is_user_logged_in() ) {
+            
+            if ( get_option( 'users_can_register' ) != '1' ) {
+                echo '<div class="wpuf-info">';
+                _e( 'User registration is currently not allowed.' );
+                echo '</div>';
+                return;
+            }
+
             $this->profile_edit( $id, $form_vars, $form_settings );
         }
         // var_dump( $id, $type, $form_vars, $form_settings );
