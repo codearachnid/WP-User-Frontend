@@ -65,7 +65,7 @@ class WPUF_Admin_Form {
             return;
         }
 
-        $path = plugins_url( 'wp-user-frontend' );
+        $path = plugins_url( '', dirname( __FILE__ ) );
 
         // scripts
         wp_enqueue_script( 'jquery-smallipop', $path . '/js/jquery.smallipop-0.4.0.min.js', array('jquery') );
