@@ -275,18 +275,18 @@ class WPUF_Render_Form {
                     }
 
                     if ( !$post_id ) {
-                        do_action( 'wpuf_add_post_form_top', $id, $form_settings );
+                        do_action( 'wpuf_add_post_form_top', $from_id, $form_settings );
                     } else {
-                        do_action( 'wpuf_edit_post_form_top', $id, $post_id, $form_settings );
+                        do_action( 'wpuf_edit_post_form_top', $from_id, $post_id, $form_settings );
                     }
 
                     $this->render_items( $form_vars, $post_id );
                     $this->submit_button( $form_id, $form_settings, $post_id );
 
                     if ( !$post_id ) {
-                        do_action( 'wpuf_add_post_form_bottom', $id, $form_settings );
+                        do_action( 'wpuf_add_post_form_bottom', $from_id, $form_settings );
                     } else {
-                        do_action( 'wpuf_edit_post_form_bottom', $id, $post_id, $form_settings );
+                        do_action( 'wpuf_edit_post_form_bottom', $from_id, $post_id, $form_settings );
                     }
                     ?>
 
