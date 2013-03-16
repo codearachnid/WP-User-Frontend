@@ -273,7 +273,7 @@ class WPUF_Render_Form {
                     if ( !is_user_logged_in() && $form_settings['guest_post'] == 'true' && $form_settings['guest_details'] == 'true' ) {
                         $this->guest_fields( $form_settings );
                     }
-                    
+
                     if ( !$post_id ) {
                         do_action( 'wpuf_add_post_form_top', $id, $form_settings );
                     } else {
@@ -282,7 +282,7 @@ class WPUF_Render_Form {
 
                     $this->render_items( $form_vars, $post_id );
                     $this->submit_button( $form_id, $form_settings, $post_id );
-                    
+
                     if ( !$post_id ) {
                         do_action( 'wpuf_add_post_form_bottom', $id, $form_settings );
                     } else {
@@ -458,6 +458,9 @@ class WPUF_Render_Form {
                     <meta charset="UTF-8">
                     <title>Form Preview</title>
                     <link rel="stylesheet" href="<?php echo plugins_url( '/css/frontend-forms.css', dirname( __FILE__ ) ); ?>">
+                    <script type="text/javascript" src="<?php echo includes_url( 'js/jquery/jquery.js' ); ?>"></script>
+                    <script type="text/javascript" src="<?php echo includes_url( 'js/plupload/plupload.js', dirname( __FILE__ ) ); ?>"></script>
+                    <script type="text/javascript" src="<?php echo plugins_url( '/js/upload.js', dirname( __FILE__ ) ); ?>"></script>
 
                     <style type="text/css">
                         body {
@@ -1419,8 +1422,8 @@ class WPUF_Render_Form {
             (function($) {
                 $(function() {
                     var def_zoomval = <?php echo $attr['zoom']; ?>;
-                    var def_longval = <?php echo $def_long; ?>;
-                    var def_latval = <?php echo $def_lat; ?>;
+                    var def_longval = <?php echo $def_long ? $def_long : 0; ?>;
+                    var def_latval = <?php echo $def_lat ? $def_lat : 0; ?>;
                     var curpoint = new google.maps.LatLng(def_latval, def_longval),
                         geocoder   = new window.google.maps.Geocoder(),
                         $map_area = $('#wpuf-map-<?php echo $attr['name']; ?>'),
