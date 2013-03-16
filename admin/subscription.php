@@ -187,7 +187,7 @@ class WPUF_Admin_Subscription {
                 </tbody>
             </table>
 
-            <?php if ( !$pack ) { ?>
+            <?php if ( !$pack_id ) { ?>
                 <input name="wpuf_sub_opts_submit" type="submit" class="button-primary" value="<?php _e( 'Add Package', 'wpuf' ) ?>" style="margin-top: 10px;" />
             <?php } else { ?>
                 <input name="wpuf_sub_opts_submit" type="submit" class="button-primary" value="<?php _e( 'Update Package', 'wpuf' ) ?>" style="margin-top: 10px;" />
