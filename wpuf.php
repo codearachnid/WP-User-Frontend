@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: WP User Frontend
+Plugin Name: WP User Frontend Pro
 Plugin URI: http://wedevs.com/wp-user-frontend-pro/
 Description: Post, Edit, Delete posts and edit profile without coming to backend
 Author: Tareq Hasan
