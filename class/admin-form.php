@@ -251,12 +251,14 @@ class WPUF_Admin_Form {
 
             case 'post_status':
                 $settings = get_post_meta( $post_id, $this->form_settings_key, true );
-                echo ucfirst($settings['post_status']);
+                echo wpuf_admin_post_status($settings['post_status']);
                 break;
 
             case 'guest_post':
                 $settings = get_post_meta( $post_id, $this->form_settings_key, true );
-                echo $settings['guest_post'] == 'false' ? __( 'No', 'wpuf' ) : __( 'Yes', 'wpuf' );
+                $url = plugins_url('images/', dirname(__FILE__));
+                $image = '<img src="%s" alt="%s">';
+                echo $settings['guest_post'] == 'false' ? sprintf( $image, $url . 'cross.png', __( 'No', 'wpuf' ) ) : sprintf( $image, $url . 'tick.png', __( 'Yes', 'wpuf' ) ) ;
                 break;
 
             default:

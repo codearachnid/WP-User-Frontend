@@ -42,6 +42,35 @@ function wpuf_show_post_status( $status ) {
 }
 
 /**
+ * Format the post status for user dashboard
+ *
+ * @param string $status
+ * @since version 0.1
+ * @author Tareq Hasan
+ */
+function wpuf_admin_post_status( $status ) {
+
+    if ( $status == 'publish' ) {
+
+        $title = __( 'Published', 'wpuf' );
+        $fontcolor = '#009200';
+    } else if ( $status == 'draft' || $status == 'private' ) {
+
+        $title = __( 'Draft', 'wpuf' );
+        $fontcolor = '#bbbbbb';
+    } else if ( $status == 'pending' ) {
+
+        $title = __( 'Pending', 'wpuf' );
+        $fontcolor = '#C00202';
+    } else if ( $status == 'future' ) {
+        $title = __( 'Scheduled', 'wpuf' );
+        $fontcolor = '#bbbbbb';
+    }
+
+    echo '<span style="color:' . $fontcolor . ';">' . $title . '</span>';
+}
+
+/**
  * Format error message
  *
  * @param array $error_msg
