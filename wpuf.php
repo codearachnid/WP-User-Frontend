@@ -54,7 +54,7 @@ class WP_User_Frontend {
 
         $this->instantiate();
 
-        // register_activation_hook( __FILE__, array($this, 'install') );
+        register_activation_hook( __FILE__, array($this, 'install') );
         register_deactivation_hook( __FILE__, array($this, 'uninstall') );
 
         add_action( 'admin_init', array($this, 'block_admin_access') );
