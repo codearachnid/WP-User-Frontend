@@ -391,20 +391,6 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
     echo '</ul>';
 }
 
-// display msg if permalinks aren't setup correctly
-function wpuf_permalink_nag() {
-
-    if ( current_user_can( 'manage_options' ) )
-        $msg = sprintf( __( 'You need to set your <a href="%1$s">permalink custom structure</a> to at least contain <b>/&#37;postname&#37;/</b> before WP User Frontend will work properly.', 'wpuf' ), 'options-permalink.php' );
-
-    echo "<div class='error fade'><p>$msg</p></div>";
-}
-
-//if not found %postname%, shows a error msg at admin panel
-if ( !stristr( get_option( 'permalink_structure' ), '%postname%' ) ) {
-    add_action( 'admin_notices', 'wpuf_permalink_nag', 3 );
-}
-
 /**
  * Get all the image sizes
  *
