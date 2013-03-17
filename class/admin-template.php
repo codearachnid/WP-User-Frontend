@@ -817,7 +817,7 @@ function your_function_name( $form_id, $post_id, $form_settings ) {
         $zoom_value = $values ? $values['zoom'] : '12';
         $address_value = $values ? $values['address'] : 'yes';
         $show_lat_value = $values ? $values['show_lat'] : 'no';
-        $default_pos_value = $values ? $values['default_pos'] : '';
+        $default_pos_value = $values ? $values['default_pos'] : '40.7143528,-74.0059731';
 
         $zoom_help = esc_attr( __( 'Set the map zoom level', 'wpuf' ) );
         $pos_help = esc_attr( __( 'Enter default latitude and longitude to center the map', 'wpuf' ) );
