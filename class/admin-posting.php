@@ -110,9 +110,9 @@ class WPUF_Admin_Posting extends WPUF_Render_Form {
 
     function render_item_before( $form_field ) {
         echo '<tr>';
-        echo '<th>';
+        echo '<th><strong>';
         $this->label( $form_field );
-        echo '</th>';
+        echo '</strong></th>';
         echo '<td>';
     }
 
