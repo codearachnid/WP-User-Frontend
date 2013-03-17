@@ -300,7 +300,7 @@ class WPUF_Render_Form {
         } //endif
     }
 
-    function render_item_before( $form_field ) {
+    function render_item_before( $form_field, $post_id ) {
         $label_exclude = array('section_break', 'html', 'action_hook');
         $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
         $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
@@ -308,7 +308,7 @@ class WPUF_Render_Form {
         printf( '<li class="wpuf-el %s%s">', $el_name, $class_name );
 
         if ( isset( $form_field['input_type'] ) && !in_array( $form_field['input_type'], $label_exclude ) ) {
-            $this->label( $form_field );
+            $this->label( $form_field, $post_id );
         }
     }
 
@@ -324,10 +324,16 @@ class WPUF_Render_Form {
      * @param string $type type of the form. post or user
      */
     function render_items( $form_vars, $post_id, $type = 'post' ) {
-
+        $edit_ignore = array('recaptcha', 'rscaptcha');
+        
         foreach ($form_vars as $key => $form_field) {
+            
+            // don't show captcha in edit page
+            if ( $post_id && in_array( $form_field['input_type'], $edit_ignore ) ) {
+                continue;
+            }
 
-            $this->render_item_before( $form_field );
+            $this->render_item_before( $form_field, $post_id );
 
             switch ($form_field['input_type']) {
                 case 'text':
@@ -538,7 +544,10 @@ class WPUF_Render_Form {
      *
      * @param string $attr
      */
-    function label( $attr ) {
+    function label( $attr, $post_id = 0 ) {
+        if ( $post_id && $attr['input_type'] == 'password') {
+            $attr['required'] = 'no';
+        }
         ?>
         <div class="wpuf-label">
             <label for="wpuf-<?php echo isset( $attr['name'] ) ? $attr['name'] : 'cls'; ?>"><?php echo $attr['label'] . $this->required_mark( $attr ); ?></label>
