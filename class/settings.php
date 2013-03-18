@@ -81,6 +81,7 @@ class WPUF_Settings {
     function transaction_page() {
         require_once dirname( dirname( __FILE__ ) ) . '/admin/transaction.php';
     }
+
     function subscription_page() {
         require_once dirname( dirname( __FILE__ ) ) . '/admin/subscription.php';
     }
