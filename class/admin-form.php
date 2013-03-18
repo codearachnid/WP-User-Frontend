@@ -109,6 +109,8 @@ class WPUF_Admin_Form {
      * @return void
      */
     function register_post_type() {
+        $capability = wpuf_admin_role();
+
         register_post_type( 'wpuf_forms', array(
             'label' => __( 'Forms', 'wpuf' ),
             'public' => false,
@@ -116,15 +118,15 @@ class WPUF_Admin_Form {
             'show_in_menu' => 'wpuf-admin-opt',
             'capability_type' => 'post',
             'capabilities' => array(
-                'publish_posts' => 'manage_options',
-                'edit_posts' => 'manage_options',
-                'edit_others_posts' => 'manage_options',
-                'delete_posts' => 'manage_options',
-                'delete_others_posts' => 'manage_options',
-                'read_private_posts' => 'manage_options',
-                'edit_post' => 'manage_options',
-                'delete_post' => 'manage_options',
-                'read_post' => 'manage_options',
+                'publish_posts' => $capability,
+                'edit_posts' => $capability,
+                'edit_others_posts' => $capability,
+                'delete_posts' => $capability,
+                'delete_others_posts' => $capability,
+                'read_private_posts' => $capability,
+                'edit_post' => $capability,
+                'delete_post' => $capability,
+                'read_post' => $capability,
             ),
             'hierarchical' => false,
             'query_var' => false,
@@ -154,15 +156,15 @@ class WPUF_Admin_Form {
             'show_in_menu' => 'wpuf-admin-opt',
             'capability_type' => 'post',
             'capabilities' => array(
-                'publish_posts' => 'manage_options',
-                'edit_posts' => 'manage_options',
-                'edit_others_posts' => 'manage_options',
-                'delete_posts' => 'manage_options',
-                'delete_others_posts' => 'manage_options',
-                'read_private_posts' => 'manage_options',
-                'edit_post' => 'manage_options',
-                'delete_post' => 'manage_options',
-                'read_post' => 'manage_options',
+                'publish_posts' => $capability,
+                'edit_posts' => $capability,
+                'edit_others_posts' => $capability,
+                'delete_posts' => $capability,
+                'delete_others_posts' => $capability,
+                'read_private_posts' => $capability,
+                'edit_post' => $capability,
+                'delete_post' => $capability,
+                'read_post' => $capability,
             ),
             'hierarchical' => false,
             'query_var' => false,

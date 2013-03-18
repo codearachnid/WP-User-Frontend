@@ -597,3 +597,7 @@ function wpuf_update_avatar( $user_id, $attachment_id ) {
     // now update new user avatar
     update_user_meta($user_id, 'user_avatar', $relative_url);
 }
+
+function wpuf_admin_role() {
+    return apply_filters( 'wpuf_admin_role', 'manage_options' );
+}

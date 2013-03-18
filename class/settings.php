@@ -37,9 +37,11 @@ class WPUF_Settings {
      * @since 1.0
      */
     function admin_menu() {
-        add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'User Frontend', 'wpuf' ), 'manage_options', 'wpuf-admin-opt', array($this, 'plugin_page'), null, 55 );
+        $capability = wpuf_admin_role();
+
+        add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'User Frontend', 'wpuf' ), $capability, 'wpuf-admin-opt', array($this, 'plugin_page'), null, 55 );
         do_action( 'wpuf_admin_menu' );
-        add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), 'manage_options', 'wpuf-settings', array($this, 'plugin_page') );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), $capability, 'wpuf-settings', array($this, 'plugin_page') );
     }
 
     /**
