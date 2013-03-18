@@ -448,12 +448,6 @@ function wpuf_addpost_notice( $text ) {
         if ( $lock == 'yes' ) {
             return $user->wpuf_lock_cause;
         }
-
-        $force_pack = wpuf_get_option( 'force_pack' );
-
-        if ( $force_pack == 'yes' && WPUF_Subscription::has_user_error() ) {
-            return __( 'You must purchase a pack before posting', 'wpuf' );
-        }
     }
 
     return $text;
@@ -475,12 +469,6 @@ function wpuf_can_post( $perm ) {
         $lock = ( $user->wpuf_postlock == 'yes' ) ? 'yes' : 'no';
 
         if ( $lock == 'yes' ) {
-            return 'no';
-        }
-
-        $force_pack = wpuf_get_option( 'force_pack' );
-
-        if ( $force_pack == 'yes' && WPUF_Subscription::has_user_error() ) {
             return 'no';
         }
     }

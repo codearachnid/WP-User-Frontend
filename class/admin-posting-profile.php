@@ -119,45 +119,6 @@ class WPUF_Admin_Posting_Profile extends WPUF_Admin_Posting {
                     </td>
                 </tr>
             </table>
-
-            <?php
-            if ( wpuf_get_option( 'charge_posting' ) == 'yes' ) {
-                $validity = (isset( $profileuser->wpuf_sub_validity )) ? $profileuser->wpuf_sub_validity : date( 'Y-m-d G:i:s', time() );
-                $count = ( isset( $profileuser->wpuf_sub_pcount ) ) ? $profileuser->wpuf_sub_pcount : 0;
-
-                if ( isset( $profileuser->wpuf_sub_pack ) ) {
-                    $pack = WPUF_Subscription::get_subscription( $profileuser->wpuf_sub_pack );
-                    $pack = $pack->name;
-                } else {
-                    $pack = 'Free';
-                }
-                ?>
-
-                <h3><?php _e( 'WPUF Subscription', 'wpuf' ); ?></h3>
-
-                <table class="form-table">
-                    <tr>
-                        <th><label for="post-lock"><?php _e( 'Pack:', 'wpuf' ); ?> </label></th>
-                        <td>
-                            <input type="text" disabled="disabled" name="wpuf_sub_pack" id="wpuf_sub_pack" class="regular-text" value="<?php echo $pack; ?>" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="post-lock"><?php _e( 'Post Count:', 'wpuf' ); ?> </label></th>
-                        <td>
-                            <input type="text" name="wpuf_sub_pcount" id="wpuf_sub_pcount" class="regular-text" value="<?php echo $count; ?>" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><label for="post-lock"><?php _e( 'Validity:', 'wpuf' ); ?> </label></th>
-                        <td>
-                            <input type="text" name="wpuf_sub_validity" id="wpuf_sub_validity" class="regular-text" value="<?php echo $validity; ?>" />
-                        </td>
-                    </tr>
-                </table>
-
-            <?php } ?>
-
             <?php
         }
     }
@@ -171,8 +132,6 @@ class WPUF_Admin_Posting_Profile extends WPUF_Admin_Posting {
         if ( is_admin() && current_user_can( 'edit_users' ) ) {
             update_user_meta( $user_id, 'wpuf_postlock', $_POST['wpuf_postlock'] );
             update_user_meta( $user_id, 'wpuf_lock_cause', $_POST['wpuf_lock_cause'] );
-            update_user_meta( $user_id, 'wpuf_sub_validity', $_POST['wpuf_sub_validity'] );
-            update_user_meta( $user_id, 'wpuf_sub_pcount', $_POST['wpuf_sub_pcount'] );
         }
     }
 
