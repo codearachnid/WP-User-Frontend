@@ -45,11 +45,15 @@ spl_autoload_register( 'wpuf_autoload' );
  */
 class WP_User_Frontend {
 
+    private $plugin_slug = 'wp-user-frontend-pro';
+    
     function __construct() {
 
         $this->instantiate();
 
         add_action( 'admin_init', array($this, 'block_admin_access') );
+        
+        add_action( 'admin_notices', array($this, 'update_notification') );
 
         add_action( 'init', array($this, 'load_textdomain') );
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
@@ -161,6 +165,112 @@ class WP_User_Frontend {
 
         if ($action == 'register') {
             return get_permalink( wpuf_get_option( 'reg_override_page' ) );
+        }
+    }
+    
+    
+    /**
+     * Check if any updates found of this plugin
+     *
+     * @global string $wp_version
+     * @return bool
+     */
+    function update_check() {
+        global $wp_version, $wpdb;
+
+        require_once ABSPATH . '/wp-admin/includes/plugin.php';
+
+        $plugin_data = get_plugin_data( __FILE__ );
+
+        $plugin_name = $plugin_data['Name'];
+        $plugin_version = $plugin_data['Version'];
+
+        $version = get_transient( $this->plugin_slug . '_update_plugin' );
+        $duration = 60 * 60 * 12; //every 12 hours
+
+        if ( $version === false ) {
+
+            if ( is_multisite() ) {
+                $user_count = get_user_count();
+                $num_blogs = get_blog_count();
+                $wp_install = network_site_url();
+                $multisite_enabled = 1;
+            } else {
+                $user_count = count_users();
+                $multisite_enabled = 0;
+                $num_blogs = 1;
+                $wp_install = home_url( '/' );
+            }
+
+            $locale = apply_filters( 'core_version_check_locale', get_locale() );
+
+            if ( method_exists( $wpdb, 'db_version' ) )
+                $mysql_version = preg_replace( '/[^0-9.].*/', '', $wpdb->db_version() );
+            else
+                $mysql_version = 'N/A';
+
+            $params = array(
+                'timeout' => ( ( defined( 'DOING_CRON' ) && DOING_CRON ) ? 30 : 3 ),
+                'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url( '/' ),
+                'body' => array(
+                    'name' => $plugin_name,
+                    'slug' => $this->plugin_slug,
+                    'type' => 'plugin',
+                    'version' => $plugin_version,
+                    'wp_version' => $wp_version,
+                    'php_version' => phpversion(),
+                    'action' => 'theme_check',
+                    'locale' => $locale,
+                    'mysql' => $mysql_version,
+                    'blogs' => $num_blogs,
+                    'users' => $user_count['total_users'],
+                    'multisite_enabled' => $multisite_enabled,
+                    'site_url' => $wp_install
+                )
+            );
+
+            $url = 'http://wedevs.com/?action=wedevs_update_check';
+            $response = wp_remote_post( $url, $params );
+            $update = wp_remote_retrieve_body( $response );
+            
+            if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
+                return false;
+            }
+
+            $json = json_decode( trim( $update ) );
+            $version = array(
+                'name' => $json->name,
+                'latest' => $json->latest,
+                'msg' => $json->msg
+            );
+
+            set_transient( $this->plugin_slug . '_update_plugin', $version, $duration );
+        }
+
+        if ( version_compare( $plugin_version, $version['latest'], '<' ) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Shows the update notification if any update founds
+     */
+    function update_notification() {
+
+        $version = get_transient( $this->plugin_slug . '_update_plugin' );
+
+        if ( $this->update_check() ) {
+            $version = get_transient( $this->plugin_slug . '_update_plugin' );
+
+            if ( current_user_can( 'update_core' ) ) {
+                $msg = sprintf( __( '<strong>%s</strong> version %s is now available! %s.', 'wedevs' ), $version['name'], $version['latest'], $version['msg'] );
+            } else {
+                $msg = sprintf( __( '%s version %s is now available! Please notify the site administrator.', 'wedevs' ), $version['name'], $version['latest'], $version['msg'] );
+            }
+
+            echo "<div class='update-nag'>$msg</div>";
         }
     }
 
