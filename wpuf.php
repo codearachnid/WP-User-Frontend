@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP User Frontend Pro
 Plugin URI: http://wedevs.com/wp-user-frontend-pro/
-Description: Post, Edit, Delete posts and edit profile without coming to backend
+Description: Create, edit, delete, manages your post, pages or custom post types from frontend. Create registration forms, frontend profile and more...
 Author: Tareq Hasan
 Version: 2.0
 Author URI: http://tareq.weDevs.com
@@ -10,15 +10,10 @@ Author URI: http://tareq.weDevs.com
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/admin/settings-options.php';
-require_once dirname( __FILE__ ) . '/lib/gateway/paypal.php';
 
 // add reCaptcha library if not found
 if ( !function_exists( 'recaptcha_get_html' ) ) {
     require_once dirname( __FILE__ ) . '/lib/recaptchalib.php';
-}
-
-if ( !is_admin() ) {
-    require_once dirname( __FILE__ ) . '/wpuf-edit-user.php';
 }
 
 /**
@@ -54,9 +49,6 @@ class WP_User_Frontend {
 
         $this->instantiate();
 
-        register_activation_hook( __FILE__, array($this, 'install') );
-        register_deactivation_hook( __FILE__, array($this, 'uninstall') );
-
         add_action( 'admin_init', array($this, 'block_admin_access') );
 
         add_action( 'init', array($this, 'load_textdomain') );
@@ -66,56 +58,6 @@ class WP_User_Frontend {
         add_filter( 'tml_action_url', array( $this, 'override_registration_tml'), 10, 2 );
     }
 
-    /**
-     * Create tables on plugin activation
-     *
-     * @global object $wpdb
-     */
-    function install() {
-        global $wpdb;
-
-        flush_rewrite_rules( false );
-
-        $sql_subscription = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpuf_subscription (
-        `id` mediumint(9) NOT NULL AUTO_INCREMENT,
-        `name` varchar(255) NOT NULL,
-        `description` text NOT NULL,
-        `count` int(5) DEFAULT '0',
-        `duration` int(5) NOT NULL DEFAULT '0',
-        `cost` float NOT NULL DEFAULT '0',
-        `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
-
-        $sql_transaction = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpuf_transaction (
-        `id` mediumint(9) NOT NULL AUTO_INCREMENT,
-        `user_id` bigint(20) DEFAULT NULL,
-        `status` varchar(255) NOT NULL DEFAULT 'pending_payment',
-        `cost` varchar(255) DEFAULT '',
-        `post_id` bigint(20) DEFAULT NULL,
-        `pack_id` bigint(20) DEFAULT NULL,
-        `payer_first_name` longtext,
-        `payer_last_name` longtext,
-        `payer_email` longtext,
-        `payment_type` longtext,
-        `payer_address` longtext,
-        `transaction_id` longtext,
-        `created` datetime NOT NULL,
-        PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
-
-        $wpdb->query( $sql_subscription );
-        $wpdb->query( $sql_transaction );
-    }
-
-    /**
-     * Manage task on plugin deactivation
-     *
-     * @return void
-     */
-    function uninstall() {
-
-    }
 
     /**
      * Instantiate the classes
@@ -127,9 +69,7 @@ class WP_User_Frontend {
         new WPUF_Upload();
         new WPUF_Frontend_Form_Post(); // requires for form preview
         new WPUF_Frontend_Form_Profile();
-        new WPUF_Payment();
-        new WPUF_Subscription();
-
+        
         if (is_admin()) {
             new WPUF_Settings();
             new WPUF_Admin_Form();

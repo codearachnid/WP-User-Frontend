@@ -256,25 +256,6 @@ function wpuf_get_pages( $post_type = 'page' ) {
     return $array;
 }
 
-/**
- * Get all the payment gateways
- *
- * @return array
- */
-function wpuf_get_gateways( $context = 'admin' ) {
-   $gateways = WPUF_Payment::get_payment_gateways();
-    $return = array();
-
-   foreach ($gateways as $id => $gate) {
-       if ( $context == 'admin' ) {
-           $return[$id] = $gate['admin_label'];
-       } else {
-           $return[$id] = $gate['checkout_label'];
-       }
-   }
-
-    return $return;
-}
 
 /**
  * Edit post link for frontend
