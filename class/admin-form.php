@@ -275,7 +275,7 @@ class WPUF_Admin_Form {
 
             case 'post_status':
                 $settings = get_post_meta( $post_id, $this->form_settings_key, true );
-                echo wpuf_admin_post_status($settings['post_status']);
+                echo wpuf_admin_post_status( $settings['post_status'] );
                 break;
 
             case 'guest_post':
