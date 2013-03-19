@@ -127,7 +127,7 @@ class WPUF_Render_Form {
             }
 
             //separate the post and custom fields
-            if ( $value['is_meta'] == 'yes' ) {
+            if ( isset( $value['is_meta'] ) && $value['is_meta'] == 'yes' ) {
                 $meta_vars[] = $value;
                 continue;
             }

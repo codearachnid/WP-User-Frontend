@@ -153,7 +153,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
         // if there isn't any username field in the form, lets guess a username
         if (!$has_username_field) {
-            $username = $this->guess_username( $email );
+            $username = $this->guess_username( $user_email );
         }
 
         if ( !validate_username( $username ) ) {
@@ -183,7 +183,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
         $errors = new WP_Error();
         do_action( 'register_post', $username, $user_email, $errors );
 
-        $errors = apply_filters( 'registration_errors', $errors, $sanitized_user_login, $user_email );
+        $errors = apply_filters( 'registration_errors', $errors, $username, $user_email );
 
         if ( $errors->get_error_code() ) {
             $this->send_error( $errors->get_error_message() );
@@ -219,6 +219,8 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
                 //redirect URL
                 $show_message = false;
+                $redirect_to = '';
+                
                 if ( $form_settings['redirect_to'] == 'page' ) {
                     $redirect_to = get_permalink( $form_settings['page_id'] );
                 } elseif ( $form_settings['redirect_to'] == 'url' ) {
