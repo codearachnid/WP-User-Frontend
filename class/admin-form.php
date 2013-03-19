@@ -1155,7 +1155,7 @@ class WPUF_Admin_Form {
         <h2><?php _e( 'Profile Fields', 'wpuf' ); ?></h2>
         <div class="wpuf-form-buttons">
             <button class="button" data-name="user_login" data-type="text"><?php _e( 'Username', 'wpuf' ); ?></button>
-            <button class="button" data-name="first_name" data-type="textarea"><?php _e( 'Frist Name', 'wpuf' ); ?></button>
+            <button class="button" data-name="first_name" data-type="textarea"><?php _e( 'First Name', 'wpuf' ); ?></button>
             <button class="button" data-name="last_name" data-type="textarea"><?php _e( 'Last Name', 'wpuf' ); ?></button>
             <button class="button" data-name="nickname" data-type="text"><?php _e( 'Nickname', 'wpuf' ); ?></button>
             <button class="button" data-name="user_email" data-type="category"><?php _e( 'E-mail', 'wpuf' ); ?></button>
