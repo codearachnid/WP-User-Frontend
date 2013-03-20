@@ -162,7 +162,7 @@ class WPUF_Frontend_Dashboard {
 
                                 <?php
                                 if ( wpuf_get_option( 'enable_post_del' ) == 'yes' ) {
-                                    $del_url = add_query_arg( array('action' => 'del', 'pid' => get_permalink( $original_post )) );
+                                    $del_url = add_query_arg( array('action' => 'del', 'pid' => $post->ID) );
                                     ?>
                                     <a href="<?php echo wp_nonce_url( $del_url, 'wpuf_del' ) ?>" onclick="return confirm('Are you sure to delete?');"><span style="color: red;"><?php _e( 'Delete', 'wpuf' ); ?></span></a>
                                 <?php } ?>
