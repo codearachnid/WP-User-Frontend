@@ -239,6 +239,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
             //redirect URL
             $show_message = false;
+            $redirect_to = false;
 
             if ( $is_update ) {
                 if ( $form_settings['edit_redirect_to'] == 'page' ) {
