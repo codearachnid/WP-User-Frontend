@@ -101,7 +101,7 @@ class WPUF_Updates {
         if ( !$remote_info ) {
             return $transient;
         }
-        
+
         list( $plugin_name, $plugin_version) = $this->get_current_plugin_info();
 
         if ( version_compare( $plugin_version, $remote_info->latest, '<' ) ) {
@@ -109,6 +109,7 @@ class WPUF_Updates {
             $obj = new stdClass();
             $obj->slug = self::slug;
             $obj->new_version = $remote_info->latest;
+            $obj->url = self::base_url;
 
             if ( isset( $remote_info->latest_url ) ) {
                 $obj->package = $remote_info->latest_url;
@@ -116,6 +117,8 @@ class WPUF_Updates {
 
             $basefile = plugin_basename( dirname( dirname( __FILE__ ) ) . '/wpuf.php' );
             $transient->response[$basefile] = $obj;
+
+            var_dump( $transient );
         }
 
         return $transient;
@@ -123,9 +126,14 @@ class WPUF_Updates {
 
     function check_info( $false, $action, $args ) {
         if ( self::slug == $args->slug ) {
-            echo '<br>check info start<br>';
-            var_dump( $false, $action, $args );
-            echo '<br>check info end<br>';
+            $obj = new stdClass();
+            $obj->slug = self::slug;
+            $obj->new_version = '1.1';
+            $obj->sections = array(
+                'changelog' => 'Some new features'
+            );
+            
+            return $obj;
         }
 
         return false;
@@ -190,7 +198,8 @@ class WPUF_Updates {
             )
         );
 
-        $response = wp_remote_post( self::base_url . '?action=wedevs_update_check', $params );
+//        $response = wp_remote_post( self::base_url . '?action=wedevs_update_check', $params );
+        $response = wp_remote_post( 'http://localhost/test.php', $params );
         $update = wp_remote_retrieve_body( $response );
 
         if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
