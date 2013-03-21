@@ -2,10 +2,10 @@
 
 class WPUF_Updates {
 
-    const base_url = 'http://localhost/wedevs/';
-    const product_id = 'wp-user-frontendpro-single';
+    const base_url = 'http://wedevs.com/';
+    const product_id = 'wpuf-pro';
     const option = 'wpuf_license';
-    const slug = 'wp-user-frontend-pro';
+    const slug = 'wp-user-frontend-pro-test';
 
     function __construct() {
 
