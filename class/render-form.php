@@ -301,7 +301,7 @@ class WPUF_Render_Form {
     }
 
     function render_item_before( $form_field, $post_id ) {
-        $label_exclude = array('section_break', 'html', 'action_hook');
+        $label_exclude = array('section_break', 'html', 'action_hook', 'toc');
         $el_name = !empty( $form_field['name'] ) ? $form_field['name'] : '';
         $class_name = !empty( $form_field['css'] ) ? ' ' . $form_field['css'] : '';
 
