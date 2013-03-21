@@ -79,6 +79,7 @@ class WP_User_Frontend {
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
             new WPUF_Admin_Posting_Profile();
+            new WPUF_Updates();
         } else {
 
             new WPUF_Frontend_Dashboard();
