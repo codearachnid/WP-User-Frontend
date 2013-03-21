@@ -116,8 +116,6 @@ class WPUF_Updates {
 
             $basefile = plugin_basename( dirname( dirname( __FILE__ ) ) . '/wpuf.php' );
             $transient->response[$basefile] = $obj;
-
-            var_dump( $transient );
         }
 
         return $transient;
