@@ -2,10 +2,10 @@
 
 class WPUF_Updates {
 
-    const base_url = 'http://wedevs.com/';
-    const product_id = 'wpuf-pro';
+    const base_url = 'http://localhost/wedevs/';
+    const product_id = 'wpufpro';
     const option = 'wpuf_license';
-    const slug = 'wp-user-frontend-pro-test';
+    const slug = 'wp-user-frontend-pro';
 
     function __construct() {
 
@@ -118,7 +118,7 @@ class WPUF_Updates {
             $basefile = plugin_basename( dirname( dirname( __FILE__ ) ) . '/wpuf.php' );
             $transient->response[$basefile] = $obj;
 
-            var_dump( $transient );
+//            var_dump( $transient );
         }
 
         return $transient;
