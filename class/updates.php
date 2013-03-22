@@ -52,8 +52,6 @@ class WPUF_Updates {
         if ( $trans->activated ) {
             return;
         }
-        
-        var_dump( $trans );
         ?>
         <div class="error">
             <p><strong><?php _e( 'WP User Frontend Error:', 'wpuf' ); ?></strong> <?php echo $trans->error; ?></p>
@@ -119,8 +117,6 @@ class WPUF_Updates {
 
             $basefile = plugin_basename( dirname( dirname( __FILE__ ) ) . '/wpuf.php' );
             $transient->response[$basefile] = $obj;
-
-//            var_dump( $transient );
         }
 
         return $transient;
