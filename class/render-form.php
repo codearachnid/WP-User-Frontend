@@ -434,7 +434,7 @@ class WPUF_Render_Form {
 
             <?php wp_nonce_field( 'wpuf_form_add' ); ?>
             <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
-            <input type="hidden" name="page_id" value="<?php echo get_the_ID(); ?>">
+            <input type="hidden" name="page_id" value="<?php echo get_post() ? get_the_ID() : '0'; ?>">
             <input type="hidden" name="action" value="wpuf_submit_post">
 
             <?php if ( $post_id ) { ?>
