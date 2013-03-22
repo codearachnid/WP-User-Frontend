@@ -690,3 +690,97 @@ function wpuf_show_custom_fields( $content ) {
 }
 
 add_filter( 'the_content', 'wpuf_show_custom_fields' );
+
+/**
+ * Map display shortcode
+ * 
+ * @param string $meta_key
+ * @param int $post_id
+ * @param array $args
+ */
+function wpuf_shortcode_map( $meta_key, $post_id = NULL, $args = array() ) {
+    if ( !$post_id ) {
+        $post_id = get_post()->ID;
+    }
+
+    $default = array('width' => 450, 'height' => 250, 'zoom' => 12);
+    $args = wp_parse_args( $args, $default );
+
+    $location = get_post_meta( $post_id, $meta_key, true );
+    list( $def_lat, $def_long ) = explode( ',', $location );
+    $def_lat = $def_lat ? $def_lat : 0;
+    $def_long = $def_long ? $def_long : 0;
+    ?>
+
+    <div class="google-map" style="margin: 10px 0; height: <?php echo $args['height']; ?>px; width: <?php echo $args['width']; ?>px;" id="wpuf-map-<?php echo $meta_key; ?>"></div>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+    <script type="text/javascript">
+        jQuery(function($){
+            var curpoint = new google.maps.LatLng(<?php echo $def_lat; ?>, <?php echo $def_long; ?>);
+                                
+            var gmap = new google.maps.Map( $('#wpuf-map-<?php echo $meta_key; ?>')[0], {
+                center: curpoint,
+                zoom: <?php echo $args['zoom']; ?>,
+                mapTypeId: window.google.maps.MapTypeId.ROADMAP
+            });
+
+            var marker = new window.google.maps.Marker({
+                position: curpoint,
+                map: gmap,
+                draggable: true
+            });
+        });
+    </script>
+    <?php
+}
+
+function wpuf_meta_shortcode( $atts ) {
+    global $post;
+    
+    extract( shortcode_atts( array(
+        'name' => '',
+        'type' => 'normal',
+        'size' => 'thumbnail',
+        'height' => 250,
+        'width' => 450,
+        'zoom' => 12
+    ), $atts ) );
+
+    if ( empty( $name ) ) {
+        return;
+    }
+
+    if ( $type == 'image' || $type == 'file' ) {
+        $images = get_post_meta( $post->ID, $name );
+
+        if ( $images ) {
+            $html = '';
+            foreach ($images as $attachment_id) {
+
+                if ( $type == 'image' ) {
+                    $thumb = wp_get_attachment_image( $attachment_id, $size );
+                } else {
+                    $thumb = get_post_field( 'post_title', $attachment_id );
+                }
+
+                $full_size = wp_get_attachment_url( $attachment_id );
+                $html .= sprintf( '<a href="%s">%s</a> ', $full_size, $thumb );
+            }
+
+            return $html;
+        }
+        
+    } elseif ( $type == 'map' ) {
+        ob_start();
+        wpuf_shortcode_map( $name, $post->ID, array('width' => $width, 'height' => $height, 'zoom' => $zoom ) );
+        return ob_get_clean();
+        
+    } elseif ( $type == 'repeat' ) {
+        return implode( '; ', get_post_meta( $post->ID, $name ) );
+    } else {
+        return implode( ', ', get_post_meta( $post->ID, $name ) );
+    }
+}
+
+add_shortcode( 'wpuf-meta', 'wpuf_meta_shortcode' );
