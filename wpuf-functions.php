@@ -601,3 +601,23 @@ function wpuf_update_avatar( $user_id, $attachment_id ) {
 function wpuf_admin_role() {
     return apply_filters( 'wpuf_admin_role', 'manage_options' );
 }
+
+/**
+ * Get all the payment gateways
+ *
+ * @return array
+ */
+function wpuf_get_gateways( $context = 'admin' ) {
+    $gateways = WPUF_Payment::get_payment_gateways();
+    $return = array();
+
+    foreach ($gateways as $id => $gate) {
+        if ( $context == 'admin' ) {
+            $return[$id] = $gate['admin_label'];
+        } else {
+            $return[$id] = $gate['checkout_label'];
+        }
+    }
+
+    return $return;
+}
