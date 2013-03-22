@@ -87,6 +87,22 @@ redirected to the edit page with that post id. Then you'll see the edit post for
 
 == Changelog ==
 
+= version 2.1.1 =
+
+* [bugfix] License check bug fix
+
+= version 2.1 =
+
+* Subscription feature put back
+* Auto update feature
+
+= version 2.0 =
+
+* Multiple form added
+* Registration builder
+* Profile builder
+* New Codebase
+
 = version 1.1 =
 
 * warning for multisite fix
