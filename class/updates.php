@@ -2,7 +2,7 @@
 
 class WPUF_Updates {
 
-    const base_url = 'http://localhost/wedevs/';
+    const base_url = 'http://wedevs.com/';
     const product_id = 'wpuf-pro';
     const option = 'wpuf_license';
     const slug = 'wp-user-frontend-pro';
@@ -17,14 +17,29 @@ class WPUF_Updates {
         add_filter( 'plugins_api', array(&$this, 'check_info'), 10, 3 );
     }
 
+    /**
+     * Add admin menu to User Frontend option
+     * 
+     * @return void
+     */
     function admin_menu() {
         add_submenu_page( 'wpuf-admin-opt', __( 'Updates', 'wpuf' ), __( 'Updates', 'wpuf' ), 'activate_plugins', 'wpuf_updates', array($this, 'plugin_update') );
     }
 
+    /**
+     * Get license key
+     * 
+     * @return array
+     */
     function get_license_key() {
         return get_option( self::option, array() );
     }
 
+    /**
+     * Prompts the user to add license key if it's not already filled out
+     * 
+     * @return void
+     */
     function license_enter_notice() {
         if ( $key = $this->get_license_key() ) {
             return;
@@ -36,6 +51,11 @@ class WPUF_Updates {
         <?php
     }
 
+    /**
+     * Check activation every 12 hours to the server
+     * 
+     * @return void
+     */
     function license_check_notice() {
         if ( !$key = $this->get_license_key() ) {
             return;
@@ -45,7 +65,7 @@ class WPUF_Updates {
         if ( false === $trans ) {
             $trans = $this->activation();
 
-            $duration = 60 * 30; // half hour
+            $duration = 60 * 60 * 12; // 12 hour
             set_transient( self::option, $trans, $duration );
         }
 
@@ -59,22 +79,11 @@ class WPUF_Updates {
         <?php
     }
 
-    // Fire away!
-    function execute_request( $args ) {
-        $target_url = $this->create_url( $args );
-        $data = wp_remote_get( $target_url );
-
-        return json_decode( $data['body'] );
-    }
-
-    // Create an url based on
-    function create_url( $args ) {
-
-        $base_url = add_query_arg( 'wc-api', 'software-api', self::base_url );
-
-        return $base_url . '&' . http_build_query( $args );
-    }
-
+    /**
+     * Activation request to the plugin server
+     * 
+     * @return object
+     */
     function activation() {
         if ( !$option = $this->get_license_key() ) {
             return;
@@ -87,10 +96,20 @@ class WPUF_Updates {
             'product_id' => self::product_id,
             'instance' => home_url()
         );
+        
+        $base_url = add_query_arg( 'wc-api', 'software-api', self::base_url );
+        $target_url = $base_url . '&' . http_build_query( $args );
+        $data = wp_remote_get( $target_url );
 
-        return $this->execute_request( $args );
+        return json_decode( $data['body'] );
     }
 
+    /**
+     * Integrates into plugin update api check
+     * 
+     * @param object $transient
+     * @return object
+     */
     function check_update( $transient ) {
         if ( empty( $transient->checked ) ) {
             return $transient;
@@ -122,13 +141,29 @@ class WPUF_Updates {
         return $transient;
     }
 
+    /**
+     * Plugin changelog information popup
+     * 
+     * @param type $false
+     * @param type $action
+     * @param type $args
+     * @return \stdClass|boolean
+     */
     function check_info( $false, $action, $args ) {
         if ( self::slug == $args->slug ) {
+            
+            $remote_info = $this->get_info();
+            
             $obj = new stdClass();
             $obj->slug = self::slug;
-            $obj->new_version = '1.1';
+            $obj->new_version = $remote_info->latest;
+            
+            if ( isset($remote_info->latest_url)) {
+                $obj->download_link = $remote_info->latest_url;
+            }
+
             $obj->sections = array(
-                'changelog' => 'Some new features'
+                'description' => $remote_info->msg
             );
             
             return $obj;
@@ -137,6 +172,11 @@ class WPUF_Updates {
         return false;
     }
 
+    /**
+     * Collects current plugin information
+     * 
+     * @return array
+     */
     function get_current_plugin_info() {
         require_once ABSPATH . '/wp-admin/includes/plugin.php';
 
@@ -147,6 +187,13 @@ class WPUF_Updates {
         return array($plugin_name, $plugin_version);
     }
 
+    /**
+     * Get plugin update information from server
+     * 
+     * @global string $wp_version
+     * @global object $wpdb
+     * @return boolean
+     */
     function get_info() {
         global $wp_version, $wpdb;
 
@@ -206,6 +253,11 @@ class WPUF_Updates {
         return json_decode( $update );
     }
 
+    /**
+     * Plugin license enter admin UI
+     * 
+     * @return void
+     */
     function plugin_update() {
         $errors = array();
         if ( isset( $_POST['submit'] ) ) {
