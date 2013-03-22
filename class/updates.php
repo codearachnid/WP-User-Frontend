@@ -3,7 +3,7 @@
 class WPUF_Updates {
 
     const base_url = 'http://localhost/wedevs/';
-    const product_id = 'wpufpro';
+    const product_id = 'wpuf-pro';
     const option = 'wpuf_license';
     const slug = 'wp-user-frontend-pro';
 
@@ -52,6 +52,8 @@ class WPUF_Updates {
         if ( $trans->activated ) {
             return;
         }
+        
+        var_dump( $trans );
         ?>
         <div class="error">
             <p><strong><?php _e( 'WP User Frontend Error:', 'wpuf' ); ?></strong> <?php echo $trans->error; ?></p>
