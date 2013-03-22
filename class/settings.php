@@ -40,6 +40,8 @@ class WPUF_Settings {
         $capability = wpuf_admin_role();
 
         add_menu_page( __( 'WP User Frontend', 'wpuf' ), __( 'User Frontend', 'wpuf' ), $capability, 'wpuf-admin-opt', array($this, 'plugin_page'), null, 55 );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Subscription', 'wpuf' ), __( 'Subscription', 'wpuf' ), $capability, 'wpuf_subscription', array($this, 'subscription_page') );
+        add_submenu_page( 'wpuf-admin-opt', __( 'Transaction', 'wpuf' ), __( 'Transaction', 'wpuf' ), $capability, 'wpuf_transaction', array($this, 'transaction_page') );
         do_action( 'wpuf_admin_menu' );
         add_submenu_page( 'wpuf-admin-opt', __( 'Settings', 'wpuf' ), __( 'Settings', 'wpuf' ), $capability, 'wpuf-settings', array($this, 'plugin_page') );
     }
@@ -78,6 +80,14 @@ class WPUF_Settings {
 
         </div>
         <?php
+    }
+
+    function transaction_page() {
+        require_once dirname( dirname( __FILE__ ) ) . '/admin/transaction.php';
+    }
+
+    function subscription_page() {
+        require_once dirname( dirname( __FILE__ ) ) . '/admin/subscription.php';
     }
 
 }
