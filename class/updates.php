@@ -2,7 +2,7 @@
 
 class WPUF_Updates {
 
-    const base_url = 'http://wedevs.com/';
+    const base_url = 'http://localhost/wedevs/';
     const product_id = 'wpuf-pro';
     const option = 'wpuf_license';
     const slug = 'wp-user-frontend-pro';
@@ -69,7 +69,7 @@ class WPUF_Updates {
             set_transient( self::option, $trans, $duration );
         }
 
-        if ( $trans->activated ) {
+        if ( !$trans || $trans->activated ) {
             return;
         }
         ?>
@@ -99,9 +99,14 @@ class WPUF_Updates {
         
         $base_url = add_query_arg( 'wc-api', 'software-api', self::base_url );
         $target_url = $base_url . '&' . http_build_query( $args );
-        $data = wp_remote_get( $target_url );
+        $response = wp_remote_get( $target_url );
+        $update = wp_remote_retrieve_body( $response );
+        
+        if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
+            return false;
+        }
 
-        return json_decode( $data['body'] );
+        return json_decode( $update );
     }
 
     /**
