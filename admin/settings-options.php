@@ -77,28 +77,6 @@ function wpuf_settings_fields() {
                 'default' => 'on'
             ),
             array(
-                'name' => 'enable_post_edit',
-                'label' => __( 'Users can edit post?', 'wpuf' ),
-                'desc' => __( 'Users will be able to edit their own posts', 'wpuf' ),
-                'type' => 'select',
-                'default' => 'yes',
-                'options' => array(
-                    'yes' => __( 'Yes', 'wpuf' ),
-                    'no' => __( 'No', 'wpuf' )
-                )
-            ),
-            array(
-                'name' => 'enable_post_del',
-                'label' => __( 'User can delete post?', 'wpuf' ),
-                'desc' => __( 'Users will be able to delete their own posts', 'wpuf' ),
-                'type' => 'select',
-                'default' => 'yes',
-                'options' => array(
-                    'yes' => __( 'Yes', 'wpuf' ),
-                    'no' => __( 'No', 'wpuf' )
-                )
-            ),
-            array(
                 'name' => 'edit_page_id',
                 'label' => __( 'Edit Page', 'wpuf' ),
                 'desc' => __( 'Select the page where [wpuf_edit] is located', 'wpuf' ),
@@ -154,6 +132,28 @@ function wpuf_settings_fields() {
             ),
         ) ),
         'wpuf_dashboard' => apply_filters( 'wpuf_options_dashboard', array(
+            array(
+                'name' => 'enable_post_edit',
+                'label' => __( 'Users can edit post?', 'wpuf' ),
+                'desc' => __( 'Users will be able to edit their own posts', 'wpuf' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => __( 'Yes', 'wpuf' ),
+                    'no' => __( 'No', 'wpuf' )
+                )
+            ),
+            array(
+                'name' => 'enable_post_del',
+                'label' => __( 'User can delete post?', 'wpuf' ),
+                'desc' => __( 'Users will be able to delete their own posts', 'wpuf' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => __( 'Yes', 'wpuf' ),
+                    'no' => __( 'No', 'wpuf' )
+                )
+            ),
             array(
                 'name' => 'per_page',
                 'label' => __( 'Posts per page', 'wpuf' ),
