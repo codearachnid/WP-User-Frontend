@@ -1,15 +1,17 @@
 <?php
+
 /*
-Plugin Name: WP User Frontend Pro
-Plugin URI: http://wedevs.com/wp-user-frontend-pro/
-Description: Create, edit, delete, manages your post, pages or custom post types from frontend. Create registration forms, frontend profile and more...
-Author: Tareq Hasan
-Version: 2.0
-Author URI: http://tareq.weDevs.com
-*/
+  Plugin Name: WP User Frontend Pro
+  Plugin URI: http://wedevs.com/wp-user-frontend-pro/
+  Description: Create, edit, delete, manages your post, pages or custom post types from frontend. Create registration forms, frontend profile and more...
+  Author: Tareq Hasan
+  Version: 2.0
+  Author URI: http://tareq.weDevs.com
+ */
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/admin/settings-options.php';
+require_once dirname( __FILE__ ) . '/lib/gateway/paypal.php';
 
 // add reCaptcha library if not found
 if ( !function_exists( 'recaptcha_get_html' ) ) {
@@ -28,7 +30,7 @@ function wpuf_autoload( $class ) {
     $class = str_replace( 'WPUF_', '', $class );
     $class = explode( '_', $class );
 
-    $class_name = implode( '-', $class);
+    $class_name = implode( '-', $class );
     $filename = dirname( __FILE__ ) . '/class/' . strtolower( $class_name ) . '.php';
 
     if ( file_exists( $filename ) ) {
@@ -46,22 +48,24 @@ spl_autoload_register( 'wpuf_autoload' );
 class WP_User_Frontend {
 
     private $plugin_slug = 'wp-user-frontend-pro';
-    
+
     function __construct() {
 
         $this->instantiate();
 
+        register_activation_hook( __FILE__, array($this, 'install') );
+        register_deactivation_hook( __FILE__, array($this, 'uninstall') );
+
         add_action( 'admin_init', array($this, 'block_admin_access') );
-        
+
         add_action( 'admin_notices', array($this, 'update_notification') );
 
         add_action( 'init', array($this, 'load_textdomain') );
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
 
-        add_filter( 'register', array( $this, 'override_registration') );
-        add_filter( 'tml_action_url', array( $this, 'override_registration_tml'), 10, 2 );
+        add_filter( 'register', array($this, 'override_registration') );
+        add_filter( 'tml_action_url', array($this, 'override_registration_tml'), 10, 2 );
     }
-
 
     /**
      * Instantiate the classes
@@ -73,17 +77,69 @@ class WP_User_Frontend {
         new WPUF_Upload();
         new WPUF_Frontend_Form_Post(); // requires for form preview
         new WPUF_Frontend_Form_Profile();
-        
-        if (is_admin()) {
+
+        if ( is_admin() ) {
             new WPUF_Settings();
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
             new WPUF_Admin_Posting_Profile();
             new WPUF_Updates();
         } else {
-
             new WPUF_Frontend_Dashboard();
+            new WPUF_Payment();
+            new WPUF_Subscription();
         }
+    }
+
+    /**
+     * Create tables on plugin activation
+     *
+     * @global object $wpdb
+     */
+    function install() {
+        global $wpdb;
+
+        flush_rewrite_rules( false );
+
+        $sql_subscription = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpuf_subscription (
+            `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+            `name` varchar(255) NOT NULL,
+            `description` text NOT NULL,
+            `count` int(5) DEFAULT '0',
+            `duration` int(5) NOT NULL DEFAULT '0',
+            `cost` float NOT NULL DEFAULT '0',
+            `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+
+        $sql_transaction = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}wpuf_transaction (
+            `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+            `user_id` bigint(20) DEFAULT NULL,
+            `status` varchar(255) NOT NULL DEFAULT 'pending_payment',
+            `cost` varchar(255) DEFAULT '',
+            `post_id` varchar(20) DEFAULT NULL,
+            `pack_id` bigint(20) DEFAULT NULL,
+            `payer_first_name` longtext,
+            `payer_last_name` longtext,
+            `payer_email` longtext,
+            `payment_type` longtext,
+            `payer_address` longtext,
+            `transaction_id` longtext,
+            `created` datetime NOT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+
+        $wpdb->query( $sql_subscription );
+        $wpdb->query( $sql_transaction );
+    }
+
+    /**
+     * Manage task on plugin deactivation
+     *
+     * @return void
+     */
+    function uninstall() {
+        
     }
 
     /**
@@ -156,7 +212,7 @@ class WP_User_Frontend {
             return $link;
         }
 
-        return sprintf('<li><a href="%s">%s</a></li>', get_permalink( wpuf_get_option( 'reg_override_page' ) ), __('Register') );
+        return sprintf( '<li><a href="%s">%s</a></li>', get_permalink( wpuf_get_option( 'reg_override_page' ) ), __( 'Register' ) );
     }
 
     function override_registration_tml( $url, $action ) {
@@ -164,12 +220,11 @@ class WP_User_Frontend {
             return $url;
         }
 
-        if ($action == 'register') {
+        if ( $action == 'register' ) {
             return get_permalink( wpuf_get_option( 'reg_override_page' ) );
         }
     }
-    
-    
+
     /**
      * Check if any updates found of this plugin
      *
@@ -233,7 +288,7 @@ class WP_User_Frontend {
             $url = 'http://wedevs.com/?action=wedevs_update_check';
             $response = wp_remote_post( $url, $params );
             $update = wp_remote_retrieve_body( $response );
-            
+
             if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
                 return false;
             }
