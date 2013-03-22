@@ -117,6 +117,13 @@ function wpuf_settings_fields() {
                 )
             ),
             array(
+                'name' => 'cf_show_front',
+                'label' => __( 'Custom Fields in post', 'wpuf' ),
+                'desc' => __( 'Show custom fields on post content area', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'off'
+            ),
+            array(
                 'name' => 'recaptcha_public',
                 'label' => __( 'reCAPTCHA Public Key', 'wpuf' ),
             ),

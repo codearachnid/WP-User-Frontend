@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Start output buffering
  *
@@ -146,7 +147,6 @@ function wpuf_upload_attachment( $post_id ) {
     }
 }
 
-
 /**
  * Get the attachments of a post
  *
@@ -246,7 +246,7 @@ function wpuf_get_pages( $post_type = 'page' ) {
     global $wpdb;
 
     $array = array();
-    $pages = get_pages( array( 'post_type' => $post_type ) );
+    $pages = get_pages( array('post_type' => $post_type) );
     if ( $pages ) {
         foreach ($pages as $page) {
             $array[$page->ID] = $page->post_title;
@@ -255,7 +255,6 @@ function wpuf_get_pages( $post_type = 'page' ) {
 
     return $array;
 }
-
 
 /**
  * Edit post link for frontend
@@ -320,7 +319,7 @@ class WPUF_Walker_Category_Multi extends Walker {
 
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
         $output .= "\t<option class=\"level-$depth\" value=\"" . $category->term_id . "\"";
-        if ( in_array($category->term_id, $args['selected'] ) )
+        if ( in_array( $category->term_id, $args['selected'] ) )
             $output .= ' selected="selected"';
         $output .= '>';
         $output .= $pad . $cat_name;
@@ -388,15 +387,15 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
 
     if ( $post_id ) {
         $args['selected_cats'] = wp_get_object_terms( $post_id, $tax, array('fields' => 'ids') );
-    } elseif ($selected_cats ) {
+    } elseif ( $selected_cats ) {
         $args['selected_cats'] = $selected_cats;
     } else {
         $args['selected_cats'] = array();
     }
 
-    $categories = (array) get_terms($tax, array('get' => 'all', 'hide_empty' => false, 'exclude' => $exclude));
+    $categories = (array) get_terms( $tax, array('get' => 'all', 'hide_empty' => false, 'exclude' => $exclude) );
     echo '<ul class="wpuf-category-checklist">';
-    echo call_user_func_array(array(&$walker, 'walk'), array($categories, 0, $args));
+    echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, $args) );
     echo '</ul>';
 }
 
@@ -417,17 +416,16 @@ function wpuf_get_image_sizes() {
     return $image_sizes;
 }
 
-
 function wpuf_allowed_extensions() {
     $extesions = array(
-        'images' => array( 'ext' => 'jpg,jpeg,gif,png,bmp', 'label' => __( 'Images', 'wpuf' ) ),
-        'audio' => array( 'ext' => 'mp3,wav,ogg,wma,mka,m4a,ra,mid,midi', 'label' => __( 'Audio', 'wpuf' ) ),
-        'video' => array( 'ext' => 'avi,divx,flv,mov,ogv,mkv,mp4,m4v,divx,mpg,mpeg,mpe', 'label' => __( 'Videos', 'wpuf' ) ),
-        'pdf' => array( 'ext' => 'pdf', 'label' => __( 'PDF', 'wpuf' ) ),
-        'office' => array( 'ext' => 'doc,ppt,pps,xls,mdb,docx,xlsx,pptx,odt,odp,ods,odg,odc,odb,odf,rtf,txt', 'label' => __( 'Office Documents', 'wpuf' ) ),
-        'zip' => array( 'ext' => 'zip,gz,gzip,rar,7z', 'label' => __( 'Zip Archives' ) ),
-        'exe' => array( 'ext' => 'exe', 'label' => __( 'Executable Files', 'wpuf' ) ),
-        'csv' => array( 'ext' => 'csv', 'label' => __( 'CSV', 'wpuf') )
+        'images' => array('ext' => 'jpg,jpeg,gif,png,bmp', 'label' => __( 'Images', 'wpuf' )),
+        'audio' => array('ext' => 'mp3,wav,ogg,wma,mka,m4a,ra,mid,midi', 'label' => __( 'Audio', 'wpuf' )),
+        'video' => array('ext' => 'avi,divx,flv,mov,ogv,mkv,mp4,m4v,divx,mpg,mpeg,mpe', 'label' => __( 'Videos', 'wpuf' )),
+        'pdf' => array('ext' => 'pdf', 'label' => __( 'PDF', 'wpuf' )),
+        'office' => array('ext' => 'doc,ppt,pps,xls,mdb,docx,xlsx,pptx,odt,odp,ods,odg,odc,odb,odf,rtf,txt', 'label' => __( 'Office Documents', 'wpuf' )),
+        'zip' => array('ext' => 'zip,gz,gzip,rar,7z', 'label' => __( 'Zip Archives' )),
+        'exe' => array('ext' => 'exe', 'label' => __( 'Executable Files', 'wpuf' )),
+        'csv' => array('ext' => 'csv', 'label' => __( 'CSV', 'wpuf' ))
     );
 
     return apply_filters( 'wpuf_allowed_extensions', $extesions );
@@ -455,7 +453,6 @@ function wpuf_addpost_notice( $text ) {
 
 add_filter( 'wpuf_addpost_notice', 'wpuf_addpost_notice' );
 
-
 /**
  * Adds the filter to the add post form if the user can post or not
  *
@@ -477,7 +474,6 @@ function wpuf_can_post( $perm ) {
 }
 
 add_filter( 'wpuf_can_post', 'wpuf_can_post' );
-
 
 /**
  * Associate attachemnt to a post
@@ -547,11 +543,10 @@ function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
     $upload_dir = wp_upload_dir();
     $image_src = $upload_dir['baseurl'] . $user_avatar;
 
-    return sprintf('<img src="%1$s" alt="%2$s" height="%3$s" width="%3$s" class="avatar">', esc_url( $image_src ), $alt, $size);
+    return sprintf( '<img src="%1$s" alt="%2$s" height="%3$s" width="%3$s" class="avatar">', esc_url( $image_src ), $alt, $size );
 }
 
 add_filter( 'get_avatar', 'wpuf_get_avatar', 99, 5 );
-
 
 function wpuf_update_avatar( $user_id, $attachment_id ) {
 
@@ -565,10 +560,10 @@ function wpuf_update_avatar( $user_id, $attachment_id ) {
 
         // as the image upload process generated a bunch of images
         // try delete the intermediate sizes.
-        $ext = strrchr( $file_path, '.');
+        $ext = strrchr( $file_path, '.' );
         $file_path_w_ext = str_replace( $ext, '', $file_path );
         $small_url = $file_path_w_ext . '-avatar' . $ext;
-        $relative_url = str_replace( $upload_dir['basedir'], '', $small_url);
+        $relative_url = str_replace( $upload_dir['basedir'], '', $small_url );
 
         $editor = wp_get_image_editor( $file_path );
 
@@ -584,7 +579,7 @@ function wpuf_update_avatar( $user_id, $attachment_id ) {
     }
 
     // delete any previous avatar
-    $prev_avatar = get_user_meta($user_id, 'user_avatar', true );
+    $prev_avatar = get_user_meta( $user_id, 'user_avatar', true );
 
     if ( !empty( $prev_avatar ) ) {
         $prev_avatar_path = $upload_dir['basedir'] . $prev_avatar;
@@ -595,7 +590,7 @@ function wpuf_update_avatar( $user_id, $attachment_id ) {
     }
 
     // now update new user avatar
-    update_user_meta($user_id, 'user_avatar', $relative_url);
+    update_user_meta( $user_id, 'user_avatar', $relative_url );
 }
 
 function wpuf_admin_role() {
@@ -621,3 +616,77 @@ function wpuf_get_gateways( $context = 'admin' ) {
 
     return $return;
 }
+
+/**
+ * Show custom fields in post content area
+ * 
+ * @global object $post
+ * @param string $content
+ * @return string
+ */
+function wpuf_show_custom_fields( $content ) {
+    global $post;
+
+    $show_custom = wpuf_get_option( 'cf_show_front' );
+
+    if ( $show_custom != 'on' ) {
+        return $content;
+    }
+
+    $form_id = get_post_meta( $post->ID, '_wpuf_form_id', true );
+
+    if ( !$form_id ) {
+        return $content;
+    }
+
+    $html = '<ul class="wpuf_customs">';
+
+    $form_vars = get_post_meta( $form_id, 'wpuf_form', true );
+    $meta = array();
+
+    if ( $form_vars ) {
+        foreach ($form_vars as $attr) {
+            if ( isset( $attr['is_meta'] ) && $attr['is_meta'] == 'yes' ) {
+                $meta[] = $attr;
+            }
+        }
+
+        if ( !$meta ) {
+            return $content;
+        }
+
+        foreach ($meta as $attr) {
+            $field_value = get_post_meta( $post->ID, $attr['name'] );
+
+            if ( $attr['input_type'] == 'image_upload' || $attr['input_type'] == 'file_upload' ) {
+                $image_html = '<li><label>' . $attr['label'] . ':</lable> ';
+
+                if ( $field_value ) {
+                    foreach ($field_value as $attachment_id) {
+
+                        if ( $attr['input_type'] == 'image_upload' ) {
+                            $thumb = wp_get_attachment_image( $attachment_id, 'thumbnail' );
+                        } else {
+                            $thumb = get_post_field( 'post_title', $attachment_id );
+                        }
+
+                        $full_size = wp_get_attachment_url( $attachment_id );
+                        $image_html .= sprintf( '<a href="%s">%s</a> ', $full_size, $thumb );
+                    }
+                }
+
+                $html .= $image_html . '</li>';
+            } else {
+
+                $value = get_post_meta( $post->ID, $attr['name'] );
+                $html .= sprintf( '<li><label>%s</label>: %s</li>', $attr['label'], implode( ', ', $value ) );
+            }
+        }
+    }
+
+    $html .= '</ul>';
+
+    return $content . $html;
+}
+
+add_filter( 'the_content', 'wpuf_show_custom_fields' );
