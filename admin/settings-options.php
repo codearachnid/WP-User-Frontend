@@ -54,6 +54,10 @@ function wpuf_settings_sections() {
             'title' => __( 'Profile', 'wpuf' )
         ),
         array(
+            'id' => 'wpuf_payment',
+            'title' => __( 'Payments', 'wpuf' )
+        ),
+        array(
             'id' => 'wpuf_support',
             'title' => __( 'Support', 'wpuf' )
         ),
@@ -200,6 +204,103 @@ function wpuf_settings_fields() {
                 'options' => wpuf_get_pages()
             ),
         ),
+        'wpuf_payment' => apply_filters( 'wpuf_options_payment', array(
+            array(
+                'name' => 'charge_posting',
+                'label' => __( 'Charge for posting', 'wpuf' ),
+                'desc' => __( 'Charge user for submitting a post', 'wpuf' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'yes' => __( 'Yes', 'wpuf' ),
+                    'no' => __( 'No', 'wpuf' )
+                )
+            ),
+            array(
+                'name' => 'force_pack',
+                'label' => __( 'Force pack purchase', 'wpuf' ),
+                'desc' => __( 'When active, users must have to buy a pack for posting', 'wpuf' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'no' => __( 'Disable', 'wpuf' ),
+                    'yes' => __( 'Enable', 'wpuf' )
+                )
+            ),
+            array(
+                'name' => 'currency',
+                'label' => __( 'Currency', 'wpuf' ),
+                'type' => 'select',
+                'default' => 'USD',
+                'options' => array(
+                    'AUD' => 'Australian Dollar',
+                    'CAD' => 'Canadian Dollar',
+                    'EUR' => 'Euro',
+                    'GBP' => 'British Pound',
+                    'JPY' => 'Japanese Yen',
+                    'USD' => 'U.S. Dollar',
+                    'NZD' => 'New Zealand Dollar',
+                    'CHF' => 'Swiss Franc',
+                    'HKD' => 'Hong Kong Dollar',
+                    'SGD' => 'Singapore Dollar',
+                    'SEK' => 'Swedish Krona',
+                    'DKK' => 'Danish Krone',
+                    'PLN' => 'Polish Zloty',
+                    'NOK' => 'Norwegian Krone',
+                    'HUF' => 'Hungarian Forint',
+                    'CZK' => 'Czech Koruna',
+                    'ILS' => 'Israeli New Shekel',
+                    'MXN' => 'Mexican Peso',
+                    'BRL' => 'Brazilian Real',
+                    'MYR' => 'Malaysian Ringgit',
+                    'PHP' => 'Philippine Peso',
+                    'TWD' => 'New Taiwan Dollar',
+                    'THB' => 'Thai Baht',
+                    'TRY' => 'Turkish Lira'
+                )
+            ),
+            array(
+                'name' => 'currency_symbol',
+                'label' => __( 'Currency Symbol', 'wpuf' ),
+                'type' => 'text',
+                'default' => '$'
+            ),
+            array(
+                'name' => 'cost_per_post',
+                'label' => __( 'Cost', 'wpuf' ),
+                'desc' => __( 'Cost per post', 'wpuf' ),
+                'type' => 'text',
+                'default' => '2'
+            ),
+            array(
+                'name' => 'sandbox_mode',
+                'label' => __( 'Enable demo/sandbox mode', 'wpuf' ),
+                'desc' => __( 'When sandbox mode is active, all payment gateway will be used in demo mode', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'on'
+            ),
+            array(
+                'name' => 'payment_page',
+                'label' => __( 'Payment Page', 'wpuf' ),
+                'desc' => __( 'This page will be used to process payment options', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_get_pages()
+            ),
+            array(
+                'name' => 'payment_success',
+                'label' => __( 'Payment Success Page', 'wpuf' ),
+                'desc' => __( 'After payment users will be redirected here', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_get_pages()
+            ),
+            array(
+                'name' => 'active_gateways',
+                'label' => __( 'Payment Gateways', 'wpuf' ),
+                'desc' => __( 'Active payment gateways', 'wpuf' ),
+                'type' => 'multicheck',
+                'options' => wpuf_get_gateways()
+            )
+        ) ),
         'wpuf_support' => apply_filters( 'wpuf_options_support', array(
             array(
                 'name' => 'support',
@@ -237,7 +338,7 @@ function wpuf_settings_fields() {
 
 function wpuf_settings_field_profile( $form ) {
     $user_roles = wpuf_get_user_roles();
-    $forms = get_posts(  array(
+    $forms = get_posts( array(
         'numberposts' => -1,
         'post_type' => 'wpuf_profile'
     ) );
@@ -250,7 +351,7 @@ function wpuf_settings_field_profile( $form ) {
     </p>
     <table class="form-table">
         <?php
-        foreach ($user_roles as $role => $name ) {
+        foreach ($user_roles as $role => $name) {
             $current = isset( $val['roles'][$role] ) ? $val['roles'][$role] : '';
             ?>
             <tr valign="top">
@@ -258,7 +359,7 @@ function wpuf_settings_field_profile( $form ) {
                 <td>
                     <select name="wpuf_profile[roles][<?php echo $role; ?>]">
                         <option value=""><?php _e( ' - select - ', 'wpuf' ); ?></option>
-                        <?php foreach ( $forms as $form ) { ?>
+                        <?php foreach ($forms as $form) { ?>
                             <option value="<?php echo $form->ID; ?>"<?php selected( $current, $form->ID ); ?>><?php echo $form->post_title; ?></option>
                         <?php } ?>
                     </select>
