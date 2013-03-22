@@ -61,20 +61,29 @@ class WPUF_Updates {
             return;
         }
 
-        $trans = get_transient( self::option );
-        if ( false === $trans ) {
-            $trans = $this->activation();
+        $error = __( 'Pleae activate your copy' );
 
-            $duration = 60 * 60 * 12; // 12 hour
-            set_transient( self::option, $trans, $duration );
-        }
+        $license_status = get_option( 'wpuf_license_status' );
 
-        if ( !$trans || $trans->activated ) {
-            return;
+        if ( $license_status && $license_status->activated ) {
+
+            $status = get_transient( self::option );
+            if ( false === $status ) {
+                $status = $this->activation();
+
+                $duration = 60 * 60 * 12; // 12 hour
+                set_transient( self::option, $status, $duration );
+            }
+
+            if ( $status && $status->success ) {
+                return;
+            }
+
+            $error = $status->error;
         }
         ?>
         <div class="error">
-            <p><strong><?php _e( 'WP User Frontend Error:', 'wpuf' ); ?></strong> <?php echo $trans->error; ?></p>
+            <p><strong><?php _e( 'WP User Frontend Error:', 'wpuf' ); ?></strong> <?php echo $error; ?></p>
         </div>
         <?php
     }
@@ -84,24 +93,24 @@ class WPUF_Updates {
      * 
      * @return object
      */
-    function activation() {
+    function activation( $request = 'check' ) {
         if ( !$option = $this->get_license_key() ) {
             return;
         }
 
         $args = array(
-            'request' => 'activation',
+            'request' => $request,
             'email' => $option['email'],
             'licence_key' => $option['key'],
             'product_id' => self::product_id,
             'instance' => home_url()
         );
-        
+
         $base_url = add_query_arg( 'wc-api', 'software-api', self::base_url );
         $target_url = $base_url . '&' . http_build_query( $args );
         $response = wp_remote_get( $target_url );
         $update = wp_remote_retrieve_body( $response );
-        
+
         if ( is_wp_error( $response ) || $response['response']['code'] != 200 ) {
             return false;
         }
@@ -156,21 +165,21 @@ class WPUF_Updates {
      */
     function check_info( $false, $action, $args ) {
         if ( self::slug == $args->slug ) {
-            
+
             $remote_info = $this->get_info();
-            
+
             $obj = new stdClass();
             $obj->slug = self::slug;
             $obj->new_version = $remote_info->latest;
-            
-            if ( isset($remote_info->latest_url)) {
+
+            if ( isset( $remote_info->latest_url ) ) {
                 $obj->download_link = $remote_info->latest_url;
             }
 
             $obj->sections = array(
                 'description' => $remote_info->msg
             );
-            
+
             return $obj;
         }
 
@@ -278,6 +287,17 @@ class WPUF_Updates {
                 update_option( self::option, array('email' => $_POST['email'], 'key' => $_POST['license_key']) );
                 delete_transient( self::option );
 
+                $license_status = get_option( 'wpuf_license_status' );
+
+                if ( !isset( $license_status->activated ) || $license_status->activated != true ) {
+                    $response = $this->activation( 'activation' );
+
+                    if ( $response && isset( $response->activated ) && $response->activated ) {
+                        update_option( 'wpuf_license_status', $response );
+                    }
+                }
+
+
                 echo '<div class="updated"><p>' . __( 'Settings Saved', 'wpuf' ) . '</p></div>';
             }
         }
@@ -288,7 +308,7 @@ class WPUF_Updates {
         ?>
         <div class="wrap">
             <?php screen_icon( 'plugins' ); ?>
-            <h2><?php _e( 'Update Manager', 'wpuf' ); ?></h2>
+            <h2><?php _e( 'Plugin Activation', 'wpuf' ); ?></h2>
 
             <p class="description">
                 Enter the E-mail address that was used for purchasing the plugin and the license key.
@@ -303,28 +323,38 @@ class WPUF_Updates {
                     <?php
                 }
             }
-            ?>
 
-            <form method="post" action="">
-                <table class="form-table">
-                    <tr>
-                        <th><?php _e( 'E-mail Address', 'wpuf' ); ?></th>
-                        <td>
-                            <input type="email" name="email" class="regular-text" value="<?php echo esc_attr( $email ); ?>" required>
-                            <span class="description"><?php _e( 'Enter your purchase Email address', 'wpuf' ); ?></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><?php _e( 'License Key', 'wpuf' ); ?></th>
-                        <td>
-                            <input type="text" name="license_key" class="regular-text" value="<?php echo esc_attr( $key ); ?>">
-                            <span class="description"><?php _e( 'Enter your license key', 'wpuf' ); ?></span>
-                        </td>
-                    </tr>
-                </table>
+            $license_status = get_option( 'wpuf_license_status' );
+            if ( !isset( $license_status->activated ) || $license_status->activated != true ) {
+                ?>
 
-                <?php submit_button( 'Save Changes' ); ?>
-            </form>
+                <form method="post" action="">
+                    <table class="form-table">
+                        <tr>
+                            <th><?php _e( 'E-mail Address', 'wpuf' ); ?></th>
+                            <td>
+                                <input type="email" name="email" class="regular-text" value="<?php echo esc_attr( $email ); ?>" required>
+                                <span class="description"><?php _e( 'Enter your purchase Email address', 'wpuf' ); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?php _e( 'License Key', 'wpuf' ); ?></th>
+                            <td>
+                                <input type="text" name="license_key" class="regular-text" value="<?php echo esc_attr( $key ); ?>">
+                                <span class="description"><?php _e( 'Enter your license key', 'wpuf' ); ?></span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <?php submit_button( 'Save & Activate' ); ?>
+                </form>
+            <?php } else { ?>
+
+                <div class="updated">
+                    <p><?php _e( 'Plugin is activated', 'wpuf' ); ?></p>
+                </div>
+
+            <?php } ?>
         </div>
         <?php
     }
