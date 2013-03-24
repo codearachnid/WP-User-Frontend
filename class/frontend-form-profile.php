@@ -312,6 +312,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
             'last_name' => $this->search( $user_vars, 'name', 'last_name' ) ? $_POST['last_name'] : '',
             'nickname' => $this->search( $user_vars, 'name', 'nickname' ) ? $_POST['nickname'] : '',
             'user_url' => $this->search( $user_vars, 'name', 'user_url' ) ? $_POST['user_url'] : '',
+            'user_email' => $this->search( $user_vars, 'name', 'user_email' ) ? $_POST['user_email'] : '',
             'description' => $this->search( $user_vars, 'name', 'description' ) ? $_POST['description'] : '',
         );
 
