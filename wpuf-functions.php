@@ -72,51 +72,6 @@ function wpuf_admin_post_status( $status ) {
 }
 
 /**
- * Format error message
- *
- * @param array $error_msg
- * @return string
- */
-function wpuf_error_msg( $error_msg ) {
-    $msg_string = '';
-    foreach ($error_msg as $value) {
-        if ( !empty( $value ) ) {
-            $msg_string = $msg_string . '<div class="error">' . $msg_string = $value . '</div>';
-        }
-    }
-    return $msg_string;
-}
-
-/**
- * Notify the admin for new post
- *
- * @param object $userdata
- * @param int $post_id
- */
-function wpuf_notify_post_mail( $user, $post_id ) {
-    $blogname = get_bloginfo( 'name' );
-    $to = get_bloginfo( 'admin_email' );
-    $permalink = get_permalink( $post_id );
-
-    $headers = sprintf( "From: %s <%s>\r\n", $blogname, $to );
-    $subject = sprintf( __( '[%s] New Post Submission' ), $blogname );
-
-    $msg = sprintf( __( 'A new post has been submitted on %s' ), $blogname ) . "\r\n\r\n";
-    $msg .= sprintf( __( 'Author : %s' ), $user->display_name ) . "\r\n";
-    $msg .= sprintf( __( 'Author Email : %s' ), $user->user_email ) . "\r\n";
-    $msg .= sprintf( __( 'Title : %s' ), get_the_title( $post_id ) ) . "\r\n";
-    $msg .= sprintf( __( 'Permalink : %s' ), $permalink ) . "\r\n";
-    $msg .= sprintf( __( 'Edit Link : %s' ), admin_url( 'post.php?action=edit&post=' . $post_id ) ) . "\r\n";
-
-    //plugin api
-    $to = apply_filters( 'wpuf_notify_to', $to );
-    $subject = apply_filters( 'wpuf_notify_subject', $subject );
-    $msg = apply_filters( 'wpuf_notify_message', $msg );
-
-    wp_mail( $to, $subject, $msg, $headers );
-}
-
-/**
  * Upload the files to the post as attachemnt
  *
  * @param <type> $post_id
@@ -619,7 +574,7 @@ function wpuf_get_gateways( $context = 'admin' ) {
 
 /**
  * Show custom fields in post content area
- * 
+ *
  * @global object $post
  * @param string $content
  * @return string
@@ -693,7 +648,7 @@ add_filter( 'the_content', 'wpuf_show_custom_fields' );
 
 /**
  * Map display shortcode
- * 
+ *
  * @param string $meta_key
  * @param int $post_id
  * @param array $args
@@ -718,7 +673,7 @@ function wpuf_shortcode_map( $meta_key, $post_id = NULL, $args = array() ) {
     <script type="text/javascript">
         jQuery(function($){
             var curpoint = new google.maps.LatLng(<?php echo $def_lat; ?>, <?php echo $def_long; ?>);
-                                
+
             var gmap = new google.maps.Map( $('#wpuf-map-<?php echo $meta_key; ?>')[0], {
                 center: curpoint,
                 zoom: <?php echo $args['zoom']; ?>,
@@ -737,7 +692,7 @@ function wpuf_shortcode_map( $meta_key, $post_id = NULL, $args = array() ) {
 
 function wpuf_meta_shortcode( $atts ) {
     global $post;
-    
+
     extract( shortcode_atts( array(
         'name' => '',
         'type' => 'normal',
@@ -770,12 +725,12 @@ function wpuf_meta_shortcode( $atts ) {
 
             return $html;
         }
-        
+
     } elseif ( $type == 'map' ) {
         ob_start();
         wpuf_shortcode_map( $name, $post->ID, array('width' => $width, 'height' => $height, 'zoom' => $zoom ) );
         return ob_get_clean();
-        
+
     } elseif ( $type == 'repeat' ) {
         return implode( '; ', get_post_meta( $post->ID, $name ) );
     } else {
