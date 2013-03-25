@@ -264,7 +264,7 @@ class WPUF_Render_Form {
             ?>
 
             <?php if ( !$preview ) { ?>
-                <form id="wpuf-form-add" action="" method="post">
+                <form class="wpuf-form-add" action="" method="post">
                 <?php } ?>
 
                 <ul class="wpuf-form">

@@ -6,7 +6,7 @@
             $('.wpuf-form').on('click', 'img.wpuf-remove-field', this.removeField);
             $('.wpuf-form').on('click', 'a.wpuf-delete-avatar', this.deleteAvatar);
 
-            $('#wpuf-form-add').on('submit', this.formSubmit);
+            $('.wpuf-form-add').on('submit', this.formSubmit);
             $('form#post').on('submit', this.adminPostSubmit);
 
             // image insert
