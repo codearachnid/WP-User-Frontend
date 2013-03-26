@@ -317,23 +317,11 @@ function wpuf_settings_fields() {
                         <ol>
                             <li>
                                 <strong>Check the FAQ and the documentation</strong>
-                                <p>First of all, check the <strong><a href="http://wordpress.org/extend/plugins/wp-user-frontend/faq/">FAQ</a></strong> before contacting! Most of the questions you might need answers to have already been asked and the answers are in the FAQ. Checking the FAQ is the easiest and quickest way to solve your problem.</p>
+                                <p>First of all, check the <strong><a target="_blank" href="http://docs.wedevs.com/wp-user-frontend-pro/">Documentation</a></strong> before contacting! Most of the questions you might need answers to have already been asked and the answers are in the FAQ. Checking the FAQ is the easiest and quickest way to solve your problem.</p>
                             </li>
                             <li>
                                 <strong>Use the Support Forum</strong>
-                                <p>If you were unable to find the answer to your question on the FAQ page, you should check the <strong><a href="http://wordpress.org/tags/wp-user-frontend?forum_id=10">support forum on WordPress.org</a></strong>. If you can’t locate any topics that pertain to your particular issue, post a new topic for it.</p>
-                                <p>But, remember that this is a free support forum and no one is obligated to help you. Every person who offers information to help you is a volunteer, so be polite. And, I would suggest that you read the <a href="http://wordpress.org/support/topic/68664">“Forum Rules”</a> before posting anything on this page.</p>
-                            </li>
-                            <li>
-                                <strong>Got an idea?</strong>
-                                <p>I would love to hear about your ideas and suggestions about the plugin. Please post them on the <strong><a href="http://wordpress.org/tags/wp-user-frontend?forum_id=10">support forum on WordPress.org</a></strong> and I will look into it</p>
-                            </li>
-                            <li>
-                                <strong>Gettings no response?</strong>
-                                <p>I try to answer all the question in the forum. I created the plugin without any charge and I am usually very busy with my other works. As this is a free plugin, I am not bound answer all of your questions.</p>
-                            </li>
-                            <li>
-                                I spent countless hours to build this plugin, <strong><a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=tareq%40wedevs%2ecom&lc=US&item_name=WP%20User%20Frontend&item_number=Tareq%27s%20Planet&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">support</a></strong> me if you like this plugin and <a href="http://wordpress.org/extend/plugins/wp-user-frontend/">rate</a> the plugin.
+                                <p>If you were unable to find the answer to your question on the documentation page, you should check the <strong><a href="http://wedevs.com/support/forum/plugin-support/wp-user-frontend/wp-user-frontend-pro/">support forum on wedevs.com</a></strong>. If you can’t locate any topics that pertain to your particular issue, post a new topic for it.</p>
                             </li>
                         </ol>'
             )
