@@ -120,7 +120,7 @@ class WPUF_Frontend_Dashboard {
                                     if ( has_post_thumbnail() ) {
                                         the_post_thumbnail( $featured_img_size );
                                     } else {
-                                        printf( '<img src="%1$s" class="attachment-thumbnail wp-post-image" alt="%2$s" title="%2$s" />', apply_filters( 'wpuf_no_image', plugins_url( '/images/no-image.png', __FILE__ ) ), __( 'No Image', 'wpuf' ) );
+                                        printf( '<img src="%1$s" class="attachment-thumbnail wp-post-image" alt="%2$s" title="%2$s" />', apply_filters( 'wpuf_no_image', plugins_url( '/images/no-image.png', dirname( __FILE__ ) ) ), __( 'No Image', 'wpuf' ) );
                                     }
                                     ?>
                                 </td>
