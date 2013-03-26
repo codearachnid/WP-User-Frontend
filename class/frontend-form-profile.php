@@ -43,7 +43,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
             $this->profile_edit( $id, $form_vars, $form_settings );
         } elseif ( $type == 'registration' && !is_user_logged_in() ) {
-            
+
             if ( get_option( 'users_can_register' ) != '1' ) {
                 echo '<div class="wpuf-info">';
                 _e( 'User registration is currently not allowed.' );
@@ -220,7 +220,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
                 //redirect URL
                 $show_message = false;
                 $redirect_to = '';
-                
+
                 if ( $form_settings['redirect_to'] == 'page' ) {
                     $redirect_to = get_permalink( $form_settings['page_id'] );
                 } elseif ( $form_settings['redirect_to'] == 'url' ) {
@@ -306,15 +306,31 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
 
         $user_id = get_current_user_id();
-        $userdata = array(
-            'ID' => $user_id,
-            'first_name' => $this->search( $user_vars, 'name', 'first_name' ) ? $_POST['first_name'] : '',
-            'last_name' => $this->search( $user_vars, 'name', 'last_name' ) ? $_POST['last_name'] : '',
-            'nickname' => $this->search( $user_vars, 'name', 'nickname' ) ? $_POST['nickname'] : '',
-            'user_url' => $this->search( $user_vars, 'name', 'user_url' ) ? $_POST['user_url'] : '',
-            'user_email' => $this->search( $user_vars, 'name', 'user_email' ) ? $_POST['user_email'] : '',
-            'description' => $this->search( $user_vars, 'name', 'description' ) ? $_POST['description'] : '',
-        );
+        $userdata = array('ID' => $user_id);
+
+        if ( $this->search( $user_vars, 'name', 'first_name' ) ) {
+            $userdata['first_name'] = $_POST['first_name'];
+        }
+
+        if ( $this->search( $user_vars, 'name', 'last_name' ) ) {
+            $userdata['last_name'] = $_POST['last_name'];
+        }
+
+        if ( $this->search( $user_vars, 'name', 'nickname' ) ) {
+            $userdata['nickname'] = $_POST['nickname'];
+        }
+
+        if ( $this->search( $user_vars, 'name', 'user_url' ) ) {
+            $userdata['user_url'] = $_POST['user_url'];
+        }
+
+        if ( $this->search( $user_vars, 'name', 'user_email' ) ) {
+            $userdata['user_email'] = $_POST['user_email'];
+        }
+
+        if ( $this->search( $user_vars, 'name', 'description' ) ) {
+            $userdata['description'] = $_POST['description'];
+        }
 
         // check if password filled out
         // verify password
