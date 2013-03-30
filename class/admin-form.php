@@ -1006,7 +1006,7 @@ class WPUF_Admin_Form {
         ?>
 
         <h2 class="nav-tab-wrapper">
-            <a href="#wpuf-metabox" class="nav-tab" id="wpuf-editor-tab"><?php _e( 'From Editor', 'wpuf' ); ?></a>
+            <a href="#wpuf-metabox" class="nav-tab" id="wpuf-editor-tab"><?php _e( 'Form Editor', 'wpuf' ); ?></a>
             <a href="#wpuf-metabox-settings" class="nav-tab" id="wpuf-post-settings-tab"><?php _e( 'Post Settings', 'wpuf' ); ?></a>
             <a href="#wpuf-metabox-settings-update" class="nav-tab" id="wpuf-edit-settings-tab"><?php _e( 'Edit Settings', 'wpuf' ); ?></a>
             <a href="#wpuf-metabox-notification" class="nav-tab" id="wpuf-notification-tab"><?php _e( 'Notification', 'wpuf' ); ?></a>
@@ -1040,7 +1040,7 @@ class WPUF_Admin_Form {
         ?>
 
         <h2 class="nav-tab-wrapper">
-            <a href="#wpuf-metabox" class="nav-tab" id="wpuf_general-tab"><?php _e( 'From Editor', 'wpuf' ); ?></a>
+            <a href="#wpuf-metabox" class="nav-tab" id="wpuf_general-tab"><?php _e( 'Form Editor', 'wpuf' ); ?></a>
             <a href="#wpuf-metabox-settings" class="nav-tab" id="wpuf_dashboard-tab"><?php _e( 'Settings', 'wpuf' ); ?></a>
 
             <?php do_action( 'wpuf_profile_form_tab' ); ?>
