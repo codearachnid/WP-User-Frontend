@@ -69,7 +69,7 @@ class WPUF_Frontend_Dashboard {
         );
 
         $original_post = $post;
-        $dashboard_query = new WP_Query( $args );
+        $dashboard_query = new WP_Query( apply_filters( 'wpuf_dashboard_query', $args ) );
         $post_type_obj = get_post_type_object( $post_type );
         ?>
 
@@ -155,7 +155,7 @@ class WPUF_Frontend_Dashboard {
                                 <?php
                                 if ( wpuf_get_option( 'enable_post_edit' ) == 'yes' ) {
                                     $edit_page = (int) wpuf_get_option( 'edit_page_id' );
-                                    $url = add_query_arg(array( 'pid' => $post->ID ), get_permalink( $edit_page ) );
+                                    $url = add_query_arg( array('pid' => $post->ID), get_permalink( $edit_page ) );
                                     ?>
                                     <a href="<?php echo wp_nonce_url( $url, 'wpuf_edit' ); ?>"><?php _e( 'Edit', 'wpuf' ); ?></a>
                                 <?php } ?>
@@ -231,7 +231,7 @@ class WPUF_Frontend_Dashboard {
      */
     function delete_post() {
         global $userdata;
-        
+
         $nonce = $_REQUEST['_wpnonce'];
         if ( !wp_verify_nonce( $nonce, 'wpuf_del' ) ) {
             die( "Security check" );
