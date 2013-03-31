@@ -39,7 +39,8 @@ function wpuf_show_post_status( $status ) {
         $fontcolor = '#bbbbbb';
     }
 
-    echo '<span style="color:' . $fontcolor . ';">' . $title . '</span>';
+    $show_status = '<span style="color:' . $fontcolor . ';">' . $title . '</span>';
+    echo apply_filters( 'wpuf_show_post_status', $show_status, $status );
 }
 
 /**
