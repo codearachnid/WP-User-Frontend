@@ -94,14 +94,18 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
 
-        // search if rs captcha is there
-        if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
-            $this->validate_rs_captcha();
-        }
+        // don't check captcha on post edit
+        if ( !isset( $_POST['post_id'] ) ) {
 
-        // check recaptcha
-        if ( $this->search( $post_vars, 'input_type', 'recaptcha' ) ) {
-            $this->validate_re_captcha();
+            // search if rs captcha is there
+            if ( $this->search( $post_vars, 'input_type', 'really_simple_captcha' ) ) {
+                $this->validate_rs_captcha();
+            }
+
+            // check recaptcha
+            if ( $this->search( $post_vars, 'input_type', 'recaptcha' ) ) {
+                $this->validate_re_captcha();
+            }
         }
 
         $is_update = false;

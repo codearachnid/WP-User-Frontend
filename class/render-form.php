@@ -324,7 +324,7 @@ class WPUF_Render_Form {
      * @param string $type type of the form. post or user
      */
     function render_items( $form_vars, $post_id, $type = 'post' ) {
-        $edit_ignore = array('recaptcha', 'rscaptcha');
+        $edit_ignore = array('recaptcha', 'really_simple_captcha');
         
         foreach ($form_vars as $key => $form_field) {
             
