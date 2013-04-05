@@ -15,10 +15,10 @@ class WPUF_Subscription {
 
         add_filter( 'wpuf_addpost_notice', array($this, 'force_pack_notice'), 20 );
         add_filter( 'wpuf_can_post', array($this, 'force_pack_permission'), 20 );
-        
+
         add_action( 'personal_options_update', array($this, 'profile_subscription_update') );
         add_action( 'edit_user_profile_update', array($this, 'profile_subscription_update') );
- 
+
         add_action( 'show_user_profile', array($this, 'profile_subscription_details'), 30 );
         add_action( 'edit_user_profile', array($this, 'profile_subscription_details'), 30 );
 
@@ -72,7 +72,7 @@ class WPUF_Subscription {
         global $userdata;
 
         // bail out if charging is not enabled
-        if ( wpuf_get_option( 'charge_posting' ) != 'yes' ) {
+        if ( wpuf_get_option( 'charge_posting', 'wpuf_payment' ) != 'yes' ) {
             return false;
         }
 
@@ -111,7 +111,7 @@ class WPUF_Subscription {
      */
     function set_pending( $postdata ) {
 
-        if ( wpuf_get_option( 'charge_posting' ) == 'yes' ) {
+        if ( wpuf_get_option( 'charge_posting', 'wpuf_payment' ) == 'yes' ) {
             $postdata['post_status'] = 'pending';
         }
 
@@ -169,7 +169,7 @@ class WPUF_Subscription {
                     'action' => 'wpuf_pay',
                     'type' => 'post',
                     'post_id' => $post_id
-                        ), get_permalink( wpuf_get_option( 'payment_page' ) ) );
+                ), get_permalink( wpuf_get_option( 'payment_page', 'wpuf_payment' ) ) );
 
                 return $response;
             }
@@ -267,7 +267,7 @@ class WPUF_Subscription {
 
         $userdata = get_userdata( $userdata->ID ); //wp 3.3 fix
 
-        if ( wpuf_get_option( 'charge_posting' ) == 'yes' && is_user_logged_in() ) {
+        if ( wpuf_get_option( 'charge_posting', 'wpuf_payment' ) == 'yes' && is_user_logged_in() ) {
             $duration = ( $userdata->wpuf_sub_validity ) ? $userdata->wpuf_sub_validity : 0;
             $count = ( $userdata->wpuf_sub_pcount ) ? $userdata->wpuf_sub_pcount : 0;
 
@@ -328,9 +328,9 @@ class WPUF_Subscription {
                 <li>
                     <h3><?php echo $pack->name; ?> - <?php echo $pack->description; ?></h3>
                     <p><?php echo $count; ?> posts for <?php echo $duration; ?> days.
-                        <span class="cost"><?php echo wpuf_get_option( 'currency_symbol' ) . $pack->cost; ?></span>
+                        <span class="cost"><?php echo wpuf_get_option( 'currency_symbol', 'wpuf_payment' ) . $pack->cost; ?></span>
                     </p>
-                    <p><a href="<?php echo get_permalink( wpuf_get_option( 'payment_page' ) ); ?>?action=wpuf_pay&type=pack&pack_id=<?php echo $pack->id; ?>"><?php _e( 'Buy Now', 'wpuf' ); ?></a></p>
+                    <p><a href="<?php echo get_permalink( wpuf_get_option( 'payment_page', 'wpuf_payment' ) ); ?>?action=wpuf_pay&type=pack&pack_id=<?php echo $pack->id; ?>"><?php _e( 'Buy Now', 'wpuf' ); ?></a></p>
                 </li>
                 <?php
             }
@@ -347,14 +347,14 @@ class WPUF_Subscription {
         if ( self::has_user_error() ) {
             ?>
             <div class="wpuf-info">
-                <?php printf( __( 'This will cost you <strong>%s</strong> to add a new post. You may buy some bulk package too. ', 'wpuf' ), wpuf_get_option( 'currency_symbol' ) . wpuf_get_option( 'cost_per_post' ) ); ?>
+                <?php printf( __( 'This will cost you <strong>%s</strong> to add a new post. You may buy some bulk package too. ', 'wpuf' ), wpuf_get_option( 'currency_symbol', 'wpuf_payment' ) . wpuf_get_option( 'cost_per_post', 'wpuf_payment' ) ); ?>
             </div>
             <?php
         }
     }
 
     function force_pack_notice( $text ) {
-        $force_pack = wpuf_get_option( 'force_pack' );
+        $force_pack = wpuf_get_option( 'force_pack', 'wpuf_payment' );
 
         if ( $force_pack == 'yes' && WPUF_Subscription::has_user_error() ) {
             return __( 'You must purchase a pack before posting', 'wpuf' );
@@ -364,7 +364,7 @@ class WPUF_Subscription {
     }
 
     function force_pack_permission( $perm ) {
-        $force_pack = wpuf_get_option( 'force_pack' );
+        $force_pack = wpuf_get_option( 'force_pack', 'wpuf_payment' );
 
         if ( $force_pack == 'yes' && WPUF_Subscription::has_user_error() ) {
             return 'no';
@@ -382,7 +382,7 @@ class WPUF_Subscription {
 
         if ( is_admin() && current_user_can( 'edit_users' ) ) {
 
-            if ( wpuf_get_option( 'charge_posting' ) == 'yes' ) {
+            if ( wpuf_get_option( 'charge_posting', 'wpuf_payment' ) == 'yes' ) {
                 $validity = (isset( $profileuser->wpuf_sub_validity )) ? $profileuser->wpuf_sub_validity : date( 'Y-m-d G:i:s', time() );
                 $count = ( isset( $profileuser->wpuf_sub_pcount ) ) ? $profileuser->wpuf_sub_pcount : 0;
 

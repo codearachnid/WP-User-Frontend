@@ -6,32 +6,32 @@
  * @param string $option option field name
  * @return mixed
  */
-function wpuf_get_option( $option ) {
+// function wpuf_get_option( $option ) {
 
-    $fields = wpuf_settings_fields();
-    $prepared_fields = array();
+//     $fields = wpuf_settings_fields();
+//     $prepared_fields = array();
 
-    //prepare the array with the field as key
-    //and set the section name on each field
-    foreach ($fields as $section => $field) {
-        foreach ($field as $fld) {
-            $prepared_fields[$fld['name']] = $fld;
-            $prepared_fields[$fld['name']]['section'] = $section;
-        }
-    }
+//     //prepare the array with the field as key
+//     //and set the section name on each field
+//     foreach ($fields as $section => $field) {
+//         foreach ($field as $fld) {
+//             $prepared_fields[$fld['name']] = $fld;
+//             $prepared_fields[$fld['name']]['section'] = $section;
+//         }
+//     }
 
-    //get the value of the section where the option exists
-    $opt = get_option( $prepared_fields[$option]['section'] );
-    $opt = is_array( $opt ) ? $opt : array();
+//     //get the value of the section where the option exists
+//     $opt = get_option( $prepared_fields[$option]['section'] );
+//     $opt = is_array( $opt ) ? $opt : array();
 
-    //return the value if found, otherwise default
-    if ( array_key_exists( $option, $opt ) ) {
-        return $opt[$option];
-    } else {
-        $val = isset( $prepared_fields[$option]['default'] ) ? $prepared_fields[$option]['default'] : '';
-        return $val;
-    }
-}
+//     //return the value if found, otherwise default
+//     if ( array_key_exists( $option, $opt ) ) {
+//         return $opt[$option];
+//     } else {
+//         $val = isset( $prepared_fields[$option]['default'] ) ? $prepared_fields[$option]['default'] : '';
+//         return $val;
+//     }
+// }
 
 /**
  * Settings Sections

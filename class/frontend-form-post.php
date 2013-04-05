@@ -110,7 +110,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         $is_update = false;
         $post_author = null;
-        $default_post_author = wpuf_get_option( 'default_post_owner' );
+        $default_post_author = wpuf_get_option( 'default_post_owner', 'wpuf_general', 1 );
 
         // Guest Stuffs: check for guest post
         if ( !is_user_logged_in() ) {
@@ -293,12 +293,12 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         $this->send_error( __( 'Something went wrong', 'wpuf' ) );
     }
-    
+
     public static function update_post_meta( $meta_vars, $post_id ) {
-        
+
         // prepare the meta vars
         list( $meta_key_value, $multi_repeated, $files ) = self::prepare_meta_fields( $meta_vars );
-        
+
         // set featured image if there's any
         if ( isset( $_POST['wpuf_files']['featured_image'] ) ) {
             $attachment_id = $_POST['wpuf_files']['featured_image'][0];

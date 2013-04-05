@@ -77,7 +77,7 @@ class WPUF_Render_Form {
     function validate_re_captcha() {
         $recap_challenge = isset( $_POST['recaptcha_challenge_field'] ) ? $_POST['recaptcha_challenge_field'] : '';
         $recap_response = isset( $_POST['recaptcha_response_field'] ) ? $_POST['recaptcha_response_field'] : '';
-        $private_key = wpuf_get_option( 'recaptcha_private' );
+        $private_key = wpuf_get_option( 'recaptcha_private', 'wpuf_general' );
 
         $resp = recaptcha_check_answer( $private_key, $_SERVER["REMOTE_ADDR"], $recap_challenge, $recap_response );
 
@@ -325,9 +325,9 @@ class WPUF_Render_Form {
      */
     function render_items( $form_vars, $post_id, $type = 'post' ) {
         $edit_ignore = array('recaptcha', 'really_simple_captcha');
-        
+
         foreach ($form_vars as $key => $form_field) {
-            
+
             // don't show captcha in edit page
             if ( $post_id && in_array( $form_field['input_type'], $edit_ignore ) ) {
                 continue;
@@ -1297,7 +1297,7 @@ class WPUF_Render_Form {
         }
         ?>
         <div class="wpuf-fields">
-            <?php echo recaptcha_get_html( wpuf_get_option( 'recaptcha_public' ) ); ?>
+            <?php echo recaptcha_get_html( wpuf_get_option( 'recaptcha_public', 'wpuf_general' ) ); ?>
         </div>
         <?php
     }

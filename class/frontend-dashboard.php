@@ -64,7 +64,7 @@ class WPUF_Frontend_Dashboard {
             'author' => get_current_user_id(),
             'post_status' => array('draft', 'future', 'pending', 'publish'),
             'post_type' => $post_type,
-            'posts_per_page' => wpuf_get_option( 'per_page', 10 ),
+            'posts_per_page' => wpuf_get_option( 'per_page', 'wpuf_dashboard', 10 ),
             'paged' => $pagenum
         );
 
@@ -77,7 +77,7 @@ class WPUF_Frontend_Dashboard {
             <span class="colour"><?php printf( __( "%s's Dashboard", 'wpuf' ), $userdata->user_login ); ?></span>
         </h2>
 
-        <?php if ( wpuf_get_option( 'show_post_count' ) == 'on' ) { ?>
+        <?php if ( wpuf_get_option( 'show_post_count', 'wpuf_dashboard', 'on' ) == 'on' ) { ?>
             <div class="post_count"><?php printf( __( 'You have created <span>%d</span> %s', 'wpuf' ), $dashboard_query->found_posts, $post_type_obj->label ); ?></div>
         <?php } ?>
 
@@ -86,9 +86,9 @@ class WPUF_Frontend_Dashboard {
         <?php if ( $dashboard_query->have_posts() ) { ?>
 
             <?php
-            $featured_img = wpuf_get_option( 'show_ft_image' );
-            $featured_img_size = wpuf_get_option( 'ft_img_size' );
-            $charging_enabled = wpuf_get_option( 'charge_posting' );
+            $featured_img = wpuf_get_option( 'show_ft_image', 'wpuf_dashboard' );
+            $featured_img_size = wpuf_get_option( 'ft_img_size', 'wpuf_dashboard' );
+            $charging_enabled = wpuf_get_option( 'charge_posting', 'wpuf_payment' );
             ?>
             <table class="wpuf-table <?php echo $post_type; ?>" cellpadding="0" cellspacing="0">
                 <thead>
@@ -153,15 +153,15 @@ class WPUF_Frontend_Dashboard {
 
                             <td>
                                 <?php
-                                if ( wpuf_get_option( 'enable_post_edit' ) == 'yes' ) {
-                                    $edit_page = (int) wpuf_get_option( 'edit_page_id' );
+                                if ( wpuf_get_option( 'enable_post_edit', 'wpuf_payment' ) == 'yes' ) {
+                                    $edit_page = (int) wpuf_get_option( 'edit_page_id', 'wpuf_general' );
                                     $url = add_query_arg( array('pid' => $post->ID), get_permalink( $edit_page ) );
                                     ?>
                                     <a href="<?php echo wp_nonce_url( $url, 'wpuf_edit' ); ?>"><?php _e( 'Edit', 'wpuf' ); ?></a>
                                 <?php } ?>
 
                                 <?php
-                                if ( wpuf_get_option( 'enable_post_del' ) == 'yes' ) {
+                                if ( wpuf_get_option( 'enable_post_del', 'wpuf_dashboard', 'yes' ) == 'yes' ) {
                                     $del_url = add_query_arg( array('action' => 'del', 'pid' => $post->ID) );
                                     ?>
                                     <a href="<?php echo wp_nonce_url( $del_url, 'wpuf_del' ) ?>" onclick="return confirm('Are you sure to delete?');"><span style="color: red;"><?php _e( 'Delete', 'wpuf' ); ?></span></a>
@@ -181,7 +181,7 @@ class WPUF_Frontend_Dashboard {
                     'next_text' => __( '&raquo;', 'wpuf' ),
                     'total' => $dashboard_query->max_num_pages,
                     'current' => $pagenum
-                        ) );
+                ) );
 
                 if ( $pagination ) {
                     echo $pagination;
@@ -208,7 +208,7 @@ class WPUF_Frontend_Dashboard {
     function user_info() {
         global $userdata;
 
-        if ( wpuf_get_option( 'show_user_bio' ) == 'on' ) {
+        if ( wpuf_get_option( 'show_user_bio', 'wpuf_dashboard', 'on' ) == 'on' ) {
             ?>
             <div class="wpuf-author">
                 <h3><?php _e( 'Author Info', 'wpuf' ); ?></h3>

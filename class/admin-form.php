@@ -84,7 +84,7 @@ class WPUF_Admin_Form {
             return;
         }
 
-        $fixed_sidebar = wpuf_get_option( 'fixed_form_element');
+        $fixed_sidebar = wpuf_get_option( 'fixed_form_element', 'wpuf_general' );
         ?>
         <style type="text/css">
             .wrap .add-new-h2, .wrap .add-new-h2:active {

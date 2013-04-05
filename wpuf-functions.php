@@ -225,11 +225,11 @@ function wpuf_edit_post_link( $url, $post_id ) {
         return $url;
     }
 
-    $override = wpuf_get_option( 'override_editlink', 'yes' );
+    $override = wpuf_get_option( 'override_editlink', 'wpuf_general', 'yes' );
     if ( $override == 'yes' ) {
         $url = '';
-        if ( wpuf_get_option( 'enable_post_edit' ) == 'yes' ) {
-            $edit_page = (int) wpuf_get_option( 'edit_page_id' );
+        if ( wpuf_get_option( 'enable_post_edit', 'wpuf_dashboard', 'yes' ) == 'yes' ) {
+            $edit_page = (int) wpuf_get_option( 'edit_page_id', 'wpuf_general' );
             $url = get_permalink( $edit_page );
 
             $url = wp_nonce_url( $url . '?pid=' . $post_id, 'wpuf_edit' );
@@ -583,7 +583,7 @@ function wpuf_get_gateways( $context = 'admin' ) {
 function wpuf_show_custom_fields( $content ) {
     global $post;
 
-    $show_custom = wpuf_get_option( 'cf_show_front' );
+    $show_custom = wpuf_get_option( 'cf_show_front', 'wpuf_general' );
 
     if ( $show_custom != 'on' ) {
         return $content;
@@ -740,3 +740,23 @@ function wpuf_meta_shortcode( $atts ) {
 }
 
 add_shortcode( 'wpuf-meta', 'wpuf_meta_shortcode' );
+
+
+/**
+ * Get the value of a settings field
+ *
+ * @param string $option settings field name
+ * @param string $section the section name this field belongs to
+ * @param string $default default text if it's not found
+ * @return mixed
+ */
+function wpuf_get_option( $option, $section, $default = '' ) {
+
+    $options = get_option( $section );
+
+    if ( isset( $options[$option] ) ) {
+        return $options[$option];
+    }
+
+    return $default;
+}

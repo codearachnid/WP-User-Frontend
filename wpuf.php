@@ -10,8 +10,11 @@
  */
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
-require_once dirname( __FILE__ ) . '/admin/settings-options.php';
 require_once dirname( __FILE__ ) . '/lib/gateway/paypal.php';
+
+if ( is_admin() ) {
+    require_once dirname( __FILE__ ) . '/admin/settings-options.php';
+}
 
 // add reCaptcha library if not found
 if ( !function_exists( 'recaptcha_get_html' ) ) {
@@ -135,7 +138,7 @@ class WP_User_Frontend {
      * @return void
      */
     function uninstall() {
-        
+
     }
 
     /**
@@ -171,7 +174,7 @@ class WP_User_Frontend {
     function block_admin_access() {
         global $pagenow;
 
-        $access_level = wpuf_get_option( 'admin_access' );
+        $access_level = wpuf_get_option( 'admin_access', 'wpuf_general', 'read' );
         $valid_pages = array('admin-ajax.php', 'async-upload.php', 'media-upload.php');
 
         if ( !current_user_can( $access_level ) && !in_array( $pagenow, $valid_pages ) ) {
@@ -204,20 +207,20 @@ class WP_User_Frontend {
     }
 
     function override_registration( $link ) {
-        if ( wpuf_get_option( 'register_link_override' ) != 'on' ) {
+        if ( wpuf_get_option( 'register_link_override', 'wpuf_profile' ) != 'on' ) {
             return $link;
         }
 
-        return sprintf( '<li><a href="%s">%s</a></li>', get_permalink( wpuf_get_option( 'reg_override_page' ) ), __( 'Register' ) );
+        return sprintf( '<li><a href="%s">%s</a></li>', get_permalink( wpuf_get_option( 'reg_override_page', 'wpuf_profile' ) ), __( 'Register' ) );
     }
 
     function override_registration_tml( $url, $action ) {
-        if ( wpuf_get_option( 'register_link_override' ) != 'on' ) {
+        if ( wpuf_get_option( 'register_link_override', 'wpuf_profile' ) != 'on' ) {
             return $url;
         }
 
         if ( $action == 'register' ) {
-            return get_permalink( wpuf_get_option( 'reg_override_page' ) );
+            return get_permalink( wpuf_get_option( 'reg_override_page', 'wpuf_profile' ) );
         }
     }
 
