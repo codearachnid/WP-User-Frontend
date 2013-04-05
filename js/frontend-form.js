@@ -63,7 +63,6 @@
 
                 $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
                     // var res = $.parseJSON(res);
-                    console.log(res);
 
                     if ( res.success) {
                         if( res.show_message == true) {
