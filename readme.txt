@@ -8,6 +8,15 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.2 =
+
+* [bugfix] post edit area captcha fix
+* [bugifx] Featured default image path fix
+* [new] Show post status filter added
+* [new] Dashboard query filter added
+* [improve] *From* typo fix in editor
+* [improve] It won't slow down your site now.
+
 = version 2.1.1 =
 
 * [bugfix] License check bug fix
