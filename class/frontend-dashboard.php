@@ -153,7 +153,7 @@ class WPUF_Frontend_Dashboard {
 
                             <td>
                                 <?php
-                                if ( wpuf_get_option( 'enable_post_edit', 'wpuf_payment' ) == 'yes' ) {
+                                if ( wpuf_get_option( 'enable_post_edit', 'wpuf_dashboard' ) == 'yes' ) {
                                     $edit_page = (int) wpuf_get_option( 'edit_page_id', 'wpuf_general' );
                                     $url = add_query_arg( array('pid' => $post->ID), get_permalink( $edit_page ) );
                                     ?>
