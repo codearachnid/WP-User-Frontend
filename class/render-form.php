@@ -280,7 +280,7 @@ class WPUF_Render_Form {
                         do_action( 'wpuf_edit_post_form_top', $form_id, $post_id, $form_settings );
                     }
 
-                    $this->render_items( $form_vars, $post_id );
+                    $this->render_items( $form_vars, $post_id, 'post', $form_id, $form_settings );
                     $this->submit_button( $form_id, $form_settings, $post_id );
 
                     if ( !$post_id ) {
@@ -323,7 +323,7 @@ class WPUF_Render_Form {
      * @param int|null $post_id
      * @param string $type type of the form. post or user
      */
-    function render_items( $form_vars, $post_id, $type = 'post' ) {
+    function render_items( $form_vars, $post_id, $type = 'post', $form_id, $form_settings ) {
         $edit_ignore = array('recaptcha', 'really_simple_captcha');
 
         foreach ($form_vars as $key => $form_field) {

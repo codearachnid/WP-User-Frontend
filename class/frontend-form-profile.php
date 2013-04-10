@@ -65,7 +65,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
     function profile_edit( $form_id, $form_vars, $form_settings ) {
         echo '<form class="wpuf-form-add" action="" method="post">';
         echo '<ul class="wpuf-form">';
-        $this->render_items( $form_vars, get_current_user_id(), 'user' );
+        $this->render_items( $form_vars, get_current_user_id(), 'user', $form_id, $form_settings );
         $this->submit_button( $form_id, $form_settings );
         echo '</ul>';
         echo '</form>';
