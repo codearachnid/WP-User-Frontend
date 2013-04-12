@@ -599,7 +599,7 @@ function wpuf_show_custom_fields( $content ) {
 
     $form_vars = get_post_meta( $form_id, 'wpuf_form', true );
     $meta = array();
-
+    
     if ( $form_vars ) {
         foreach ($form_vars as $attr) {
             if ( isset( $attr['is_meta'] ) && $attr['is_meta'] == 'yes' ) {
@@ -635,7 +635,7 @@ function wpuf_show_custom_fields( $content ) {
             } else {
 
                 $value = get_post_meta( $post->ID, $attr['name'] );
-                $html .= sprintf( '<li><label>%s</label>: %s</li>', $attr['label'], implode( ', ', $value ) );
+                $html .= sprintf( '<li><label>%s</label>: %s</li>', $attr['label'], make_clickable( implode( ', ', $value ) ) );
             }
         }
     }
