@@ -50,6 +50,8 @@ spl_autoload_register( 'wpuf_autoload' );
  */
 class WP_User_Frontend {
 
+    private static $_instance;
+    
     function __construct() {
 
         $this->instantiate();
@@ -64,6 +66,14 @@ class WP_User_Frontend {
 
         add_filter( 'register', array($this, 'override_registration') );
         add_filter( 'tml_action_url', array($this, 'override_registration_tml'), 10, 2 );
+    }
+    
+    public static function init() {
+        if ( !self::$_instance ) {
+            self::$_instance = new WP_User_Frontend();
+        }
+
+        return self::$_instance;
     }
 
     /**
@@ -80,7 +90,7 @@ class WP_User_Frontend {
         new WPUF_Subscription();
 
         if ( is_admin() ) {
-            new WPUF_Settings();
+            WPUF_Settings::init();
             new WPUF_Admin_Form();
             new WPUF_Admin_Posting();
             new WPUF_Admin_Posting_Profile();
@@ -226,4 +236,4 @@ class WP_User_Frontend {
 
 }
 
-$wpuf = new WP_User_Frontend();
+WP_User_Frontend::init();

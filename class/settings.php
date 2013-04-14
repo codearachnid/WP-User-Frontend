@@ -8,6 +8,7 @@
 class WPUF_Settings {
 
     private $settings_api;
+    private static $_instance;
 
     function __construct() {
 
@@ -20,9 +21,17 @@ class WPUF_Settings {
         add_action( 'admin_init', array($this, 'admin_init') );
         add_action( 'admin_menu', array($this, 'admin_menu') );
     }
+    
+    public static function init() {
+        if ( !self::$_instance ) {
+            self::$_instance = new WPUF_Settings();
+        }
+
+        return self::$_instance;
+    }
 
     function admin_init() {
-
+        
         //set the settings
         $this->settings_api->set_sections( $this->get_settings_sections() );
         $this->settings_api->set_fields( $this->get_settings_fields() );
