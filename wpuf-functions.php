@@ -175,18 +175,15 @@ function wpuf_get_post_types() {
  * @return array
  */
 function wpuf_list_users() {
-    if ( function_exists( 'get_users' ) ) {
-        $users = get_users();
-    } else {
-        ////wp 3.1 fallback
-        $users = get_users_of_blog();
-    }
+    global $wpdb;
+    
+    $users = $wpdb->get_results( "SELECT ID, user_login from $wpdb->users" );
 
     $list = array();
 
     if ( $users ) {
         foreach ($users as $user) {
-            $list[$user->ID] = $user->display_name;
+            $list[$user->ID] = $user->user_login;
         }
     }
 
