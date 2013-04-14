@@ -67,6 +67,7 @@ class WPUF_Admin_Posting extends WPUF_Render_Form {
         global $post;
 
         $form_id = get_post_meta( $post->ID, '_wpuf_form_id', true );
+        $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
 
         // hide the metabox itself if no form ID is set
@@ -89,7 +90,7 @@ class WPUF_Admin_Posting extends WPUF_Render_Form {
         <table class="form-table wpuf-cf-table">
             <tbody>
                 <?php
-                $this->render_items( $custom_fields, $post->ID, 'post' );
+                $this->render_items( $custom_fields, $post->ID, 'post', $form_id, $form_settings );
                 ?>
             </tbody>
         </table>
