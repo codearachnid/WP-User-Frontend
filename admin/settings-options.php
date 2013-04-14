@@ -67,6 +67,9 @@ function wpuf_settings_sections() {
 }
 
 function wpuf_settings_fields() {
+    $pages = wpuf_get_pages();
+    $users = wpuf_list_users();
+    
     $settings_fields = array(
         'wpuf_general' => apply_filters( 'wpuf_options_others', array(
             array(
@@ -81,14 +84,14 @@ function wpuf_settings_fields() {
                 'label' => __( 'Edit Page', 'wpuf' ),
                 'desc' => __( 'Select the page where [wpuf_edit] is located', 'wpuf' ),
                 'type' => 'select',
-                'options' => wpuf_get_pages()
+                'options' => $pages
             ),
             array(
                 'name' => 'default_post_owner',
                 'label' => __( 'Default Post Owner', 'wpuf' ),
                 'desc' => __( 'If guest post is enabled and user details are OFF, the posts are assigned to this user', 'wpuf' ),
                 'type' => 'select',
-                'options' => wpuf_list_users(),
+                'options' => $users,
                 'default' => '1'
             ),
             array(
@@ -208,7 +211,7 @@ function wpuf_settings_fields() {
                 'label' => __( 'Registration Page', 'wpuf' ),
                 'desc' => __( 'Select the page you want to use as registration page override <em>(should have shortcode)</em>', 'wpuf' ),
                 'type' => 'select',
-                'options' => wpuf_get_pages()
+                'options' => $pages
             ),
         ),
         'wpuf_payment' => apply_filters( 'wpuf_options_payment', array(
@@ -291,14 +294,14 @@ function wpuf_settings_fields() {
                 'label' => __( 'Payment Page', 'wpuf' ),
                 'desc' => __( 'This page will be used to process payment options', 'wpuf' ),
                 'type' => 'select',
-                'options' => wpuf_get_pages()
+                'options' => $pages
             ),
             array(
                 'name' => 'payment_success',
                 'label' => __( 'Payment Success Page', 'wpuf' ),
                 'desc' => __( 'After payment users will be redirected here', 'wpuf' ),
                 'type' => 'select',
-                'options' => wpuf_get_pages()
+                'options' => $pages
             ),
             array(
                 'name' => 'active_gateways',
