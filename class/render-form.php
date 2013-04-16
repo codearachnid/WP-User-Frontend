@@ -439,6 +439,7 @@ class WPUF_Render_Form {
 
             <?php if ( $post_id ) { ?>
                 <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
+                <input type="hidden" name="post_date" value="<?php echo esc_attr( get_post_field( 'post_date', $post_id ) ); ?>">
                 <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
             <?php } else { ?>
                 <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
