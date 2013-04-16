@@ -78,6 +78,11 @@ class WPUF_Updates {
             if ( $status && $status->success ) {
                 return;
             }
+            
+            // may be the request didn't completed
+            if ( !isset( $status->error )) {
+                return;
+            }
 
             $error = $status->error;
         }
