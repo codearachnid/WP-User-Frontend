@@ -436,10 +436,14 @@ class WPUF_Render_Form {
             <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
             <input type="hidden" name="page_id" value="<?php echo get_post() ? get_the_ID() : '0'; ?>">
             <input type="hidden" name="action" value="wpuf_submit_post">
-
-            <?php if ( $post_id ) { ?>
+            
+            <?php 
+            if ( $post_id ) {
+                $cur_post = get_post( $post_id );
+                ?>
                 <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
-                <input type="hidden" name="post_date" value="<?php echo esc_attr( get_post_field( 'post_date', $post_id ) ); ?>">
+                <input type="hidden" name="post_date" value="<?php echo esc_attr( $cur_post->post_date ); ?>">
+                <input type="hidden" name="comment_status" value="<?php echo esc_attr( $cur_post->comment_status ); ?>">
                 <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
             <?php } else { ?>
                 <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />

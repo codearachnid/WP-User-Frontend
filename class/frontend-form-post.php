@@ -183,6 +183,8 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         if ( isset( $_POST['post_id'] ) ) {
             $is_update = true;
             $postarr['ID'] = $_POST['post_id'];
+            $postarr['post_date'] = $_POST['post_date'];
+            $postarr['comment_status'] = $_POST['comment_status'];
         }
 
 
