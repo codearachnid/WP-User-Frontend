@@ -8,6 +8,15 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.3 =
+
+* [bugfix] comment issue fixed
+* [bugfix] date issue fixed
+* [bugfix] post author changed
+* [new] taxonomy ORDER option
+* [new] taxonomy ORDER BY option.
+* [new] post format support
+
 = version 2.1.2 =
 
 * [bugfix] post edit area captcha fix
