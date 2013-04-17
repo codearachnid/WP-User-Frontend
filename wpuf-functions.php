@@ -329,7 +329,7 @@ class WPUF_Walker_Category_Checklist extends Walker {
  * @param int $post_id
  * @param array $selected_cats
  */
-function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = 'category', $exclude = false ) {
+function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = 'category', $exclude = false, $attr = array() ) {
     require_once ABSPATH . '/wp-admin/includes/template.php';
 
     $walker = new WPUF_Walker_Category_Checklist();
@@ -346,7 +346,14 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
         $args['selected_cats'] = array();
     }
 
-    $categories = (array) get_terms( $tax, array('get' => 'all', 'hide_empty' => false, 'exclude' => $exclude) );
+    $categories = (array) get_terms( $tax, array(
+        'get' => 'all', 
+        'hide_empty' => false, 
+        'exclude' => $exclude,
+        'orderby' => isset( $attr['orderby'] ) ? $attr['orderby'] : 'name',
+        'order' => isset( $attr['order'] ) ? $attr['order'] : 'ASC',
+    ) );
+    
     echo '<ul class="wpuf-category-checklist">';
     echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, $args) );
     echo '</ul>';

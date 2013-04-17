@@ -122,9 +122,13 @@ class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
 
     public static function taxonomy( $field_id, $label, $taxonomy = '', $values = array() ) {
         $type_name = sprintf( '%s[%d][type]', self::$input_name, $field_id );
+        $order_name = sprintf( '%s[%d][order]', self::$input_name, $field_id );
+        $orderby_name = sprintf( '%s[%d][orderby]', self::$input_name, $field_id );
         $exclude_name = sprintf( '%s[%d][exclude]', self::$input_name, $field_id );
 
         $type_value = $values ? esc_attr( $values['type'] ) : 'select';
+        $order_value = $values ? esc_attr( $values['order'] ) : 'ASC';
+        $orderby_value = $values ? esc_attr( $values['orderby'] ) : 'name';
         $exclude_value = $values ? esc_attr( $values['exclude'] ) : '';
         ?>
         <li class="taxonomy <?php echo $taxonomy; ?>">
@@ -141,6 +145,25 @@ class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
                         <option value="select"<?php selected( $type_value, 'select' ); ?>><?php _e( 'Dropdown', 'wpuf' ); ?></option>
                         <option value="multiselect"<?php selected( $type_value, 'multiselect' ); ?>><?php _e( 'Multi Select', 'wpuf' ); ?></option>
                         <option value="checkbox"<?php selected( $type_value, 'checkbox' ); ?>><?php _e( 'Checkbox', 'wpuf' ); ?></option>
+                    </select>
+                </div> <!-- .wpuf-form-rows -->
+                
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Order By', 'wpuf' ); ?></label>
+                    <select name="<?php echo $orderby_name ?>">
+                        <option value="name"<?php selected( $orderby_value, 'name' ); ?>><?php _e( 'Name', 'wpuf' ); ?></option>
+                        <option value="id"<?php selected( $orderby_value, 'id' ); ?>><?php _e( 'Term ID', 'wpuf' ); ?></option>
+                        <option value="slug"<?php selected( $orderby_value, 'slug' ); ?>><?php _e( 'Slug', 'wpuf' ); ?></option>
+                        <option value="count"<?php selected( $orderby_value, 'count' ); ?>><?php _e( 'Count', 'wpuf' ); ?></option>
+                        <option value="term_group"<?php selected( $orderby_value, 'term_group' ); ?>><?php _e( 'Term Group', 'wpuf' ); ?></option>
+                    </select>
+                </div> <!-- .wpuf-form-rows -->
+                
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Order', 'wpuf' ); ?></label>
+                    <select name="<?php echo $order_name ?>">
+                        <option value="ASC"<?php selected( $order_value, 'ASC' ); ?>><?php _e( 'ASC', 'wpuf' ); ?></option>
+                        <option value="DESC"<?php selected( $order_value, 'DESC' ); ?>><?php _e( 'DESC', 'wpuf' ); ?></option>
                     </select>
                 </div> <!-- .wpuf-form-rows -->
 

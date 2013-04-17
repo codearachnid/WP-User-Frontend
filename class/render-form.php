@@ -1208,7 +1208,21 @@ class WPUF_Render_Form {
                     $selected = $terms ? $terms[0] : '';
                     $required = sprintf( 'data-required="%s" data-type="select"', $attr['required'] );
 
-                    $select = wp_dropdown_categories( 'show_option_none=' . __( '-- Select --', 'wpuf' ) . "&hierarchical=1&hide_empty=0&orderby=name&name=$taxonomy&id=$taxonomy&taxonomy=$taxonomy&show_count=0&echo=0&title_li=&use_desc_for_title=1&class=$taxonomy&exclude=" . $exclude . '&selected=' . $selected );
+                    $select = wp_dropdown_categories( array(
+                        'show_option_none' => __( '-- Select --', 'wpuf' ),
+                        'hierarchical' => 1,
+                        'hide_empty' => 0,
+                        'orderby' => isset( $attr['orderby'] ) ? $attr['orderby'] : 'name',
+                        'order' => isset( $attr['order'] ) ? $attr['order'] : 'ASC',
+                        'name' => $taxonomy . '[]',
+                        'id' => $taxonomy,
+                        'taxonomy' => $taxonomy,
+                        'echo' => 0,
+                        'title_li' => '',
+                        'class' => $taxonomy,
+                        'exclude' => $exclude,
+                        'selected' => $selected,
+                    ) );
                     echo str_replace( '<select', '<select ' . $required, $select );
                     break;
 
@@ -1221,7 +1235,8 @@ class WPUF_Render_Form {
                         'show_option_none' => __( '-- Select --', 'wpuf' ),
                         'hierarchical' => 1,
                         'hide_empty' => 0,
-                        'orderby' => 'name',
+                        'orderby' => isset( $attr['orderby'] ) ? $attr['orderby'] : 'name',
+                        'order' => isset( $attr['order'] ) ? $attr['order'] : 'ASC',
                         'name' => $taxonomy . '[]',
                         'id' => $taxonomy,
                         'taxonomy' => $taxonomy,
@@ -1231,14 +1246,14 @@ class WPUF_Render_Form {
                         'exclude' => $exclude,
                         'selected' => $selected,
                         'walker' => $walker
-                            ) );
+                    ) );
 
                     echo str_replace( '<select', '<select multiple="multiple" ' . $required, $select );
                     break;
 
                 case 'checkbox':
                     printf( '<span data-required="%s" data-type="tax-checkbox" />', $attr['required'] );
-                    wpuf_category_checklist( $post_id, false, $taxonomy, $exclude );
+                    wpuf_category_checklist( $post_id, false, $taxonomy, $exclude, $attr );
                     break;
 
                 default:
