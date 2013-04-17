@@ -207,7 +207,7 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
                 'role' => $form_settings['role']
             );
 
-            $user_id = wp_update_user( $userdata );
+            $user_id = wp_update_user( apply_filters( 'wpuf_register_user_args', $userdata ) );
 
             if ( $user_id ) {
 
@@ -216,6 +216,8 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
 
                 // send user notification
                 wp_new_user_notification( $user_id, $password );
+                
+                do_action( 'wpuf_after_register', $user_id, $userdata, $form_id, $form_settings );
 
                 //redirect URL
                 $show_message = false;
