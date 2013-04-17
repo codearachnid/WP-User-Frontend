@@ -444,6 +444,7 @@ class WPUF_Render_Form {
                 <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
                 <input type="hidden" name="post_date" value="<?php echo esc_attr( $cur_post->post_date ); ?>">
                 <input type="hidden" name="comment_status" value="<?php echo esc_attr( $cur_post->comment_status ); ?>">
+                <input type="hidden" name="post_author" value="<?php echo esc_attr( $cur_post->post_author ); ?>">
                 <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
             <?php } else { ?>
                 <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
