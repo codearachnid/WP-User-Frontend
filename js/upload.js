@@ -32,7 +32,7 @@
             multi_selection: false,
             urlstream_upload: true,
             file_data_name: 'wpuf_file',
-            max_file_size: max_file_size + 'mb',
+            max_file_size: max_file_size + 'kb',
             url: wpuf_frontend_upload.plupload.url + '&type=' + type,
             flash_swf_url: wpuf_frontend_upload.flash_swf_url,
             filters: [{

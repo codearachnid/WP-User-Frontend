@@ -435,10 +435,10 @@ class WPUF_Admin_Template {
         $max_size_name = sprintf('%s[%d][max_size]', self::$input_name, $field_id);
         $max_files_name = sprintf('%s[%d][count]', self::$input_name, $field_id);
 
-        $max_size_value = $values ? $values['max_size'] : '2';
+        $max_size_value = $values ? $values['max_size'] : '1024';
         $max_files_value = $values ? $values['count'] : '1';
 
-        $help = esc_attr( __( 'Enter maximum upload size limit in MB', 'wpuf' ) );
+        $help = esc_attr( __( 'Enter maximum upload size limit in KB', 'wpuf' ) );
         $count = esc_attr( __( 'Number of images can be uploaded', 'wpuf' ) );
         ?>
         <li class="custom-field image_upload">
@@ -468,7 +468,7 @@ class WPUF_Admin_Template {
         $max_files_name = sprintf('%s[%d][count]', self::$input_name, $field_id);
         $extensions_name = sprintf('%s[%d][extension][]', self::$input_name, $field_id);
 
-        $max_size_value = $values ? $values['max_size'] : '2';
+        $max_size_value = $values ? $values['max_size'] : '1024';
         $max_files_value = $values ? $values['count'] : '1';
         $extensions_value = $values ? $values['extension'] : array('images', 'audio', 'video', 'pdf', 'office', 'zip', 'exe', 'csv');
 
@@ -476,7 +476,7 @@ class WPUF_Admin_Template {
 
         // var_dump($extesions);
 
-        $help = esc_attr( __( 'Enter maximum upload size limit in MB', 'wpuf' ) );
+        $help = esc_attr( __( 'Enter maximum upload size limit in KB', 'wpuf' ) );
         $count = esc_attr( __( 'Number of images can be uploaded', 'wpuf' ) );
         ?>
         <li class="custom-field custom_image">
