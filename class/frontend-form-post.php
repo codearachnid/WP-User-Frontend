@@ -185,6 +185,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             $postarr['ID'] = $_POST['post_id'];
             $postarr['post_date'] = $_POST['post_date'];
             $postarr['comment_status'] = $_POST['comment_status'];
+            $postarr['post_author'] = $_POST['post_author'];
         }
 
 
@@ -203,6 +204,13 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
             // set the post form_id for later usage
             update_post_meta( $post_id, self::$config_id, $form_id );
+            
+            // save post formats if have any
+            if ( isset( $form_settings['post_format'] ) && $form_settings['post_format'] != '0' ) {
+                if ( post_type_supports( $form_settings['post_type'], 'post-formats' ) ) {
+                    set_post_format( $post_id, $form_settings['post_format'] );
+                }
+            }
 
             // save any custom taxonomies
             foreach ($taxonomy_vars as $taxonomy) {

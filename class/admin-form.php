@@ -519,6 +519,7 @@ class WPUF_Admin_Form {
 
         $post_type_selected = isset( $form_settings['post_type'] ) ? $form_settings['post_type'] : 'post';
         $post_status_selected = isset( $form_settings['post_status'] ) ? $form_settings['post_status'] : 'publish';
+        $post_format_selected = isset( $form_settings['post_format'] ) ? $form_settings['post_format'] : 0;
 
         $guest_post = isset( $form_settings['guest_post'] ) ? $form_settings['guest_post'] : 'false';
         $guest_details = isset( $form_settings['guest_details'] ) ? $form_settings['guest_details'] : 'true';
@@ -564,6 +565,24 @@ class WPUF_Admin_Form {
 
                         foreach ($statuses as $status => $label) {
                             printf('<option value="%s"%s>%s</option>', $status, selected( $post_status_selected, $status, false ), $label );
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            
+            <tr class="wpuf-post-fromat">
+                <th><?php _e( 'Post Format', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[post_format]">
+                        <option value="0"><?php _e( '- None -', 'wpuf' ); ?></option>
+                        <?php
+                        $post_formats = get_theme_support( 'post-formats' );
+
+                        if ( isset($post_formats[0]) && is_array( $post_formats[0] ) ) {
+                            foreach ($post_formats[0] as $format) {
+                                printf('<option value="%s"%s>%s</option>', $format, selected( $post_format_selected, $format, false ), $format );
+                            }
                         }
                         ?>
                     </select>
