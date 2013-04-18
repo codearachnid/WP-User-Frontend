@@ -86,8 +86,8 @@ class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
 
     public static function featured_image( $field_id, $label, $values = array() ) {
         $max_file_name = sprintf( '%s[%d][max_size]', self::$input_name, $field_id );
-        $max_file_value = $values ? $values['max_size'] : '2';
-        $help = esc_attr( __( 'Enter maximum upload size limit in MB', 'wpuf' ) );
+        $max_file_value = $values ? $values['max_size'] : '1024';
+        $help = esc_attr( __( 'Enter maximum upload size limit in KB', 'wpuf' ) );
         ?>
         <li class="featured_image">
             <?php self::legend( $label, $values ); ?>
