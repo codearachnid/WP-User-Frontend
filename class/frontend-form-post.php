@@ -198,6 +198,17 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             $is_update = false;
         }
 
+        // validation filter
+        if ( $is_update ) {
+            $error = apply_filters( 'wpuf_add_post_validate', '' );
+        } else {
+            $error = apply_filters( 'wpuf_add_post_validate', '' );
+        }
+
+        if ( !empty( $error ) ) {
+            $this->send_error( $error );
+        }
+
         // ############ It's Time to Save the World ###############
         if ( $is_update ) {
             $postarr['post_status'] = $form_settings['edit_post_status'];
