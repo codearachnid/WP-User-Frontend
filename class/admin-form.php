@@ -532,8 +532,11 @@ class WPUF_Admin_Form {
         $update_message = isset( $form_settings['update_message'] ) ? $form_settings['update_message'] : __( 'Post updated successfully', 'wpuf' );
         $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
         $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
+
         $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Submit', 'wpuf' );
-        $update_text = isset( $form_settings['update_text'] ) ? $form_settings['update_text'] : __( 'Update', 'wpuf' );
+        $draft_text = isset( $form_settings['draft_text'] ) ? $form_settings['draft_text'] : __( 'Save Draft', 'wpuf' );
+        $preview_text = isset( $form_settings['preview_text'] ) ? $form_settings['preview_text'] : __( 'Preview', 'wpuf' );
+        $draft_post = isset( $form_settings['draft_post'] ) ? $form_settings['draft_post'] : 'false';
         ?>
         <table class="form-table">
             <tr class="wpuf-post-type">
@@ -570,7 +573,7 @@ class WPUF_Admin_Form {
                     </select>
                 </td>
             </tr>
-            
+
             <tr class="wpuf-post-fromat">
                 <th><?php _e( 'Post Format', 'wpuf' ); ?></th>
                 <td>
@@ -698,6 +701,18 @@ class WPUF_Admin_Form {
                 <th><?php _e( 'Submit Post Button text', 'wpuf' ); ?></th>
                 <td>
                     <input type="text" name="wpuf_settings[submit_text]" value="<?php echo esc_attr( $submit_text ); ?>">
+                </td>
+            </tr>
+
+            <tr>
+                <th><?php _e( 'Post Draft', 'wpuf' ); ?></th>
+                <td>
+                    <label>
+                        <input type="hidden" name="wpuf_settings[draft_post]" value="false">
+                        <input type="checkbox" name="wpuf_settings[draft_post]" value="true"<?php checked( $draft_post, 'true' ); ?> />
+                        <?php _e( 'Enable Saving as draft', 'wpuf' ) ?>
+                    </label>
+                    <div class="description"><?php _e( 'It will show a button to save as draft', 'wpuf' ); ?></div>
                 </td>
             </tr>
         </table>

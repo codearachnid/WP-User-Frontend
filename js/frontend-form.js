@@ -60,7 +60,7 @@
 
             self.after(' <span class="wpuf-loading"></span>');
             $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
-                console.log(res, post_id);
+                // console.log(res, post_id);
                 if ( typeof post_id === 'undefined') {
                     var html = '<input type="hidden" name="post_id" value="' + res.post_id +'">';
                         html += '<input type="hidden" name="post_date" value="' + res.date +'">';

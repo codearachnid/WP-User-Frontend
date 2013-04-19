@@ -451,7 +451,9 @@ class WPUF_Render_Form {
                 <input type="hidden" name="wpuf_form_status" value="new">
             <?php } ?>
 
-            <a href="#" class="btn" id="wpuf-post-draft"><?php _e( 'Save Draft', 'wpuf' ); ?></a>
+            <?php if ( isset( $form_settings['draft_post'] ) && $form_settings['draft_post'] == 'true' ) { ?>
+                <a href="#" class="btn" id="wpuf-post-draft"><?php _e( 'Save Draft', 'wpuf' ); ?></a>
+            <?php } ?>
         </li>
         <?php
     }
