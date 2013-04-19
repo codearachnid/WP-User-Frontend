@@ -5,6 +5,7 @@
             $('.wpuf-form').on('click', 'img.wpuf-clone-field', this.cloneField);
             $('.wpuf-form').on('click', 'img.wpuf-remove-field', this.removeField);
             $('.wpuf-form').on('click', 'a.wpuf-delete-avatar', this.deleteAvatar);
+            $('.wpuf-form').on('click', 'a#wpuf-post-draft', this.draftPost);
 
             $('.wpuf-form-add').on('submit', this.formSubmit);
             $('form#post').on('submit', this.adminPostSubmit);
@@ -35,17 +36,42 @@
                 $parent.remove();
             }
         },
-        
+
         adminPostSubmit: function(e) {
             e.preventDefault();
-            
+
             var form = $(this),
                 form_data = WP_User_Frontend.validateForm(form);
-                
+
                 console.log(form_data);
             if (form_data) {
                 return true;
             }
+        },
+
+        draftPost: function (e) {
+            e.preventDefault();
+
+            var self = $(this),
+                form = $(this).closest('form'),
+                form_data = form.serialize() + '&action=wpuf_draft_post',
+                post_id = form.find('input[type="hidden"][name="post_id"]').val();
+
+
+            self.after(' <span class="wpuf-loading"></span>');
+            $.post(wpuf_frontend.ajaxurl, form_data, function(res) {
+                console.log(res, post_id);
+                if ( typeof post_id === 'undefined') {
+                    var html = '<input type="hidden" name="post_id" value="' + res.post_id +'">';
+                        html += '<input type="hidden" name="post_date" value="' + res.date +'">';
+                        html += '<input type="hidden" name="post_author" value="' + res.post_author +'">';
+                        html += '<input type="hidden" name="comment_status" value="' + res.comment_status +'">';
+
+                    form.append( html );
+                }
+
+                self.next('span.wpuf-loading').remove();
+            })
         },
 
         formSubmit: function(e) {

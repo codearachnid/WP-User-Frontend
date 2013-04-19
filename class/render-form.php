@@ -436,8 +436,8 @@ class WPUF_Render_Form {
             <input type="hidden" name="form_id" value="<?php echo $form_id; ?>">
             <input type="hidden" name="page_id" value="<?php echo get_post() ? get_the_ID() : '0'; ?>">
             <input type="hidden" name="action" value="wpuf_submit_post">
-            
-            <?php 
+
+            <?php
             if ( $post_id ) {
                 $cur_post = get_post( $post_id );
                 ?>
@@ -449,6 +449,8 @@ class WPUF_Render_Form {
             <?php } else { ?>
                 <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
             <?php } ?>
+
+            <a href="#" class="btn" id="wpuf-post-draft">Save Draft</a>
         </li>
         <?php
     }

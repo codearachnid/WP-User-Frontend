@@ -11,6 +11,9 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         add_action( 'wp_ajax_wpuf_submit_post', array($this, 'submit_post') );
         add_action( 'wp_ajax_nopriv_wpuf_submit_post', array($this, 'submit_post') );
 
+        // draft
+        add_action( 'wp_ajax_wpuf_draft_post', array($this, 'draft_post') );
+
         // form preview
         add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
     }
@@ -204,7 +207,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
             // set the post form_id for later usage
             update_post_meta( $post_id, self::$config_id, $form_id );
-            
+
             // save post formats if have any
             if ( isset( $form_settings['post_format'] ) && $form_settings['post_format'] != '0' ) {
                 if ( post_type_supports( $form_settings['post_type'], 'post-formats' ) ) {
@@ -302,6 +305,92 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         }
 
         $this->send_error( __( 'Something went wrong', 'wpuf' ) );
+    }
+
+    function draft_post() {
+        check_ajax_referer( 'wpuf_form_add' );
+
+        @header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
+
+        $form_id = isset( $_POST['form_id'] ) ? intval( $_POST['form_id'] ) : 0;
+        $form_vars = $this->get_input_fields( $form_id );
+        $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+
+        list( $post_vars, $taxonomy_vars, $meta_vars ) = $form_vars;
+
+        // echo json_encode( $_POST );
+        // print_r( $post_vars );
+        // print_r( $taxonomy_vars );
+        // print_r( $meta_vars );
+
+        $postarr = array(
+            'post_type' => $form_settings['post_type'],
+            'post_status' => 'draft',
+            'post_author' => get_current_user_id(),
+            'post_title' => isset( $_POST['post_title'] ) ? trim( $_POST['post_title'] ) : '',
+            'post_content' => isset( $_POST['post_content'] ) ? trim( $_POST['post_content'] ) : '',
+            'post_excerpt' => isset( $_POST['post_excerpt'] ) ? trim( $_POST['post_excerpt'] ) : '',
+        );
+
+        if ( isset( $_POST['category'] ) ) {
+            $category = $_POST['category'];
+            $postarr['post_category'] = is_array( $category ) ? $category : array($category);
+        }
+
+        if ( isset( $_POST['tags'] ) ) {
+            $postarr['tags_input'] = explode( ',', $_POST['tags'] );
+        }
+
+        // if post_id is passed, we update the post
+        if ( isset( $_POST['post_id'] ) ) {
+            $is_update = true;
+            $postarr['ID'] = $_POST['post_id'];
+            $postarr['comment_status'] = 'open';
+        }
+
+        $post_id = wp_insert_post( $postarr );
+
+        if ( $post_id ) {
+            self::update_post_meta($meta_vars, $post_id);
+
+            // set the post form_id for later usage
+            update_post_meta( $post_id, self::$config_id, $form_id );
+
+            // save post formats if have any
+            if ( isset( $form_settings['post_format'] ) && $form_settings['post_format'] != '0' ) {
+                if ( post_type_supports( $form_settings['post_type'], 'post-formats' ) ) {
+                    set_post_format( $post_id, $form_settings['post_format'] );
+                }
+            }
+
+            // save any custom taxonomies
+            foreach ($taxonomy_vars as $taxonomy) {
+                if ( isset( $_POST[$taxonomy['name']] ) ) {
+
+                    if ( is_object_in_taxonomy( $form_settings['post_type'], $taxonomy['name'] ) ) {
+                        $tax = $_POST[$taxonomy['name']];
+
+                        // if it's not an array, make it one
+                        if ( !is_array( $tax ) ) {
+                            $tax = array($tax);
+                        }
+
+                        wp_set_post_terms( $post_id, $_POST[$taxonomy['name']], $taxonomy['name'] );
+                    }
+                }
+            }
+        }
+
+        echo json_encode( array(
+            'post_id' => $post_id,
+            'action' => $_POST['action'],
+            'date' => current_time( 'mysql' ),
+            'post_author' => get_current_user_id(),
+            'comment_status' => get_option('default_comment_status'),
+            'url' => add_query_arg( 'preview', 'true', get_permalink( $post_id)  )
+        ) );
+
+        exit;
     }
 
     public static function update_post_meta( $meta_vars, $post_id ) {
