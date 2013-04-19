@@ -100,6 +100,9 @@ class WPUF_Frontend_Dashboard {
                         ?>
                         <th><?php _e( 'Title', 'wpuf' ); ?></th>
                         <th><?php _e( 'Status', 'wpuf' ); ?></th>
+
+                        <?php do_action( 'wpuf_dashboard_head_col', $args ) ?>
+
                         <?php
                         if ( 'yes' == $charging_enabled ) {
                             echo '<th>' . __( 'Payment', 'wpuf' ) . '</th>';
@@ -139,6 +142,8 @@ class WPUF_Frontend_Dashboard {
                             <td>
                                 <?php wpuf_show_post_status( $post->post_status ) ?>
                             </td>
+
+                            <?php do_action( 'wpuf_dashboard_row_col', $args, $post ) ?>
 
                             <?php
                             if ( $charging_enabled == 'yes' ) {
