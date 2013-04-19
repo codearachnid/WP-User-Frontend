@@ -37,6 +37,10 @@ function wpuf_show_post_status( $status ) {
     } else if ( $status == 'future' ) {
         $title = __( 'Scheduled', 'wpuf' );
         $fontcolor = '#bbbbbb';
+
+    } else if ( $status == 'private' ) {
+        $title = __( 'Private', 'wpuf' );
+        $fontcolor = '#bbbbbb';
     }
 
     $show_status = '<span style="color:' . $fontcolor . ';">' . $title . '</span>';
@@ -176,7 +180,7 @@ function wpuf_get_post_types() {
  */
 function wpuf_list_users() {
     global $wpdb;
-    
+
     $users = $wpdb->get_results( "SELECT ID, user_login from $wpdb->users" );
 
     $list = array();
@@ -347,13 +351,13 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
     }
 
     $categories = (array) get_terms( $tax, array(
-        'get' => 'all', 
-        'hide_empty' => false, 
+        'get' => 'all',
+        'hide_empty' => false,
         'exclude' => $exclude,
         'orderby' => isset( $attr['orderby'] ) ? $attr['orderby'] : 'name',
         'order' => isset( $attr['order'] ) ? $attr['order'] : 'ASC',
     ) );
-    
+
     echo '<ul class="wpuf-category-checklist">';
     echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, $args) );
     echo '</ul>';
@@ -603,7 +607,7 @@ function wpuf_show_custom_fields( $content ) {
 
     $form_vars = get_post_meta( $form_id, 'wpuf_form', true );
     $meta = array();
-    
+
     if ( $form_vars ) {
         foreach ($form_vars as $attr) {
             if ( isset( $attr['is_meta'] ) && $attr['is_meta'] == 'yes' ) {

@@ -62,7 +62,7 @@ class WPUF_Frontend_Dashboard {
 
         $args = array(
             'author' => get_current_user_id(),
-            'post_status' => array('draft', 'future', 'pending', 'publish'),
+            'post_status' => array('draft', 'future', 'pending', 'publish', 'private' ),
             'post_type' => $post_type,
             'posts_per_page' => wpuf_get_option( 'per_page', 'wpuf_dashboard', 10 ),
             'paged' => $pagenum
