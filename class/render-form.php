@@ -448,9 +448,10 @@ class WPUF_Render_Form {
                 <input type="submit" name="submit" value="<?php echo $form_settings['update_text']; ?>" />
             <?php } else { ?>
                 <input type="submit" name="submit" value="<?php echo $form_settings['submit_text']; ?>" />
+                <input type="hidden" name="wpuf_form_status" value="new">
             <?php } ?>
 
-            <a href="#" class="btn" id="wpuf-post-draft">Save Draft</a>
+            <a href="#" class="btn" id="wpuf-post-draft"><?php _e( 'Save Draft', 'wpuf' ); ?></a>
         </li>
         <?php
     }

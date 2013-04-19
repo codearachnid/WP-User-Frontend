@@ -191,6 +191,12 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             $postarr['post_author'] = $_POST['post_author'];
         }
 
+        // check the form status, it might be already a draft
+        // in that case, it already has the post_id field
+        // so, WPUF's add post action/filters won't work for new posts
+        if ( isset( $_POST['wpuf_form_status'] ) && $_POST['wpuf_form_status'] == 'new' ) {
+            $is_update = false;
+        }
 
         // ############ It's Time to Save the World ###############
         if ( $is_update ) {
