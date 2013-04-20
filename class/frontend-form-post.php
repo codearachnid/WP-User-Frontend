@@ -200,7 +200,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         // validation filter
         if ( $is_update ) {
-            $error = apply_filters( 'wpuf_add_post_validate', '' );
+            $error = apply_filters( 'wpuf_update_post_validate', '' );
         } else {
             $error = apply_filters( 'wpuf_add_post_validate', '' );
         }
