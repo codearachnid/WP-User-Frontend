@@ -71,6 +71,11 @@
                 }
 
                 self.next('span.wpuf-loading').remove();
+               
+                self.after('<span class="wpuf-draft-saved">&nbsp; Post Saved</span>');
+                $('.wpuf-draft-saved').delay(2500).fadeOut('fast', function(){
+                    $(this).remove();
+                });
             })
         },
 
