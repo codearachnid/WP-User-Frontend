@@ -1465,6 +1465,8 @@ class WPUF_Render_Form {
                         $input_area = $( '#wpuf-map-lat-<?php echo $attr['name']; ?>' ),
                         $input_add = $( '#wpuf-map-add-<?php echo $attr['name']; ?>' ),
                         $find_btn = $( '#wpuf-map-btn-<?php echo $attr['name']; ?>' );
+                        
+                    autoCompleteAddress();
 
                     $find_btn.on('click', function(e) {
                         e.preventDefault();
@@ -1521,6 +1523,41 @@ class WPUF_Render_Form {
                                 gmap.setZoom( 15 );
                             }
                         } );
+                    }
+                    
+                    function autoCompleteAddress(){
+                        if (!$input_add) return null;
+
+                        $input_add.autocomplete({
+                            source: function(request, response) {
+                                // TODO: add 'region' option, to help bias geocoder.
+                                geocoder.geocode( {'address': request.term }, function(results, status) {
+                                    response(jQuery.map(results, function(item) {
+                                        return {
+                                            label     : item.formatted_address,
+                                            value     : item.formatted_address,
+                                            latitude  : item.geometry.location.lat(),
+                                            longitude : item.geometry.location.lng()
+                                        };
+                                    }));
+                                });
+                            },
+                            select: function(event, ui) {
+
+                                $input_area.val(ui.item.latitude + ',' + ui.item.longitude );       
+
+                                var location = new window.google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+
+                                gmap.setCenter(location);
+                                // Drop the Marker
+                                setTimeout( function(){
+                                    marker.setValues({
+                                        position    : location,
+                                        animation   : window.google.maps.Animation.DROP
+                                    });
+                                }, 1500);
+                            }
+                        });
                     }
 
                 });

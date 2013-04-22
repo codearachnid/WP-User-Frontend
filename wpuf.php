@@ -165,6 +165,7 @@ class WP_User_Frontend {
         wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
         wp_enqueue_script( 'jquery-ui-slider' );
         wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
         wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
