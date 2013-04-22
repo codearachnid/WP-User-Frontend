@@ -85,7 +85,7 @@
             var form = $(this),
                 submitButton = form.find('input[type=submit]')
                 form_data = WP_User_Frontend.validateForm(form);
-
+                
             if (form_data) {
 
                 // send the request
@@ -271,7 +271,7 @@
                 temp = $(item).data('id');
                 val = $.trim( tinyMCE.get(temp).getContent() );
 
-                rich_texts.push(temp + '=' + val);
+                rich_texts.push(temp + '=' + encodeURIComponent( val ) );
             });
 
             // append them to the form var
