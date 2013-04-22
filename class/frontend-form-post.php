@@ -30,7 +30,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         $form_settings = get_post_meta( $id, 'wpuf_form_settings', true );
         $info = apply_filters( 'wpuf_addpost_notice', '' );
-        $user_can_post = apply_filters( 'wpuf_can_post', 'yes' );
+        $user_can_post = apply_filters( 'wpuf_can_post', 'yes', $id, $form_settings );
 
         if ( $user_can_post == 'yes' ) {
             $this->render_form( $id );
