@@ -739,6 +739,10 @@ class WPUF_Render_Form {
                         if ( $uploaded_items ) {
                             foreach ($uploaded_items as $attach_id) {
                                 echo WPUF_Upload::attach_html( $attach_id, $attr['name'] );
+                                
+                                if ( is_admin() ) {
+                                    printf( '<a href="%s">%s</a>', wp_get_attachment_url( $attach_id ), __( 'Download File', 'wpuf' ) );
+                                }
                             }
                         }
                         ?>
