@@ -24,7 +24,7 @@ class WPUF_Admin_Posting_Profile extends WPUF_Admin_Posting {
         if ( $avatar ) {
             $upload_dir = wp_upload_dir();
 
-            $full_url = $upload_dir['basedir'] . $avatar;
+            $full_url = str_replace( $upload_dir['baseurl'],  $upload_dir['basedir'], $avatar );
 
             if ( file_exists( $full_url ) ) {
                 unlink( $full_url );

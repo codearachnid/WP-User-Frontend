@@ -503,11 +503,7 @@ function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
         return $avatar;
     }
 
-    // hmm, we found something
-    $upload_dir = wp_upload_dir();
-    $image_src = $upload_dir['baseurl'] . $user_avatar;
-
-    return sprintf( '<img src="%1$s" alt="%2$s" height="%3$s" width="%3$s" class="avatar">', esc_url( $image_src ), $alt, $size );
+    return sprintf( '<img src="%1$s" alt="%2$s" height="%3$s" width="%3$s" class="avatar">', esc_url( $user_avatar ), $alt, $size );
 }
 
 add_filter( 'get_avatar', 'wpuf_get_avatar', 99, 5 );
@@ -515,19 +511,18 @@ add_filter( 'get_avatar', 'wpuf_get_avatar', 99, 5 );
 function wpuf_update_avatar( $user_id, $attachment_id ) {
 
     $upload_dir = wp_upload_dir();
-    $uploaded_file = wp_get_attachment_url( $attachment_id );
-    $relative_url = str_replace( $upload_dir['baseurl'], '', $uploaded_file );
+    $relative_url = wp_get_attachment_url( $attachment_id );
 
     if ( function_exists( 'wp_get_image_editor' ) ) {
         // try to crop the photo if it's big
-        $file_path = $upload_dir['basedir'] . $relative_url;
+        $file_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $relative_url );
 
         // as the image upload process generated a bunch of images
         // try delete the intermediate sizes.
         $ext = strrchr( $file_path, '.' );
         $file_path_w_ext = str_replace( $ext, '', $file_path );
         $small_url = $file_path_w_ext . '-avatar' . $ext;
-        $relative_url = str_replace( $upload_dir['basedir'], '', $small_url );
+        $relative_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $small_url );
 
         $editor = wp_get_image_editor( $file_path );
 
@@ -546,13 +541,13 @@ function wpuf_update_avatar( $user_id, $attachment_id ) {
     $prev_avatar = get_user_meta( $user_id, 'user_avatar', true );
 
     if ( !empty( $prev_avatar ) ) {
-        $prev_avatar_path = $upload_dir['basedir'] . $prev_avatar;
+        $prev_avatar_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $prev_avatar );
 
         if ( file_exists( $prev_avatar_path ) ) {
             unlink( $prev_avatar_path );
         }
     }
-
+    
     // now update new user avatar
     update_user_meta( $user_id, 'user_avatar', $relative_url );
 }
