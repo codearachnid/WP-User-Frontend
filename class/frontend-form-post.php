@@ -52,12 +52,30 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
      * @return string
      */
     function edit_post_shortcode( $atts ) {
+        global $userdata;
+        
         extract( shortcode_atts( array('post_id' => 0), $atts ) );
 
         ob_start();
 
         if ( !$post_id ) {
             $post_id = isset( $_GET['pid'] ) ? intval( $_GET['pid'] ) : 0;
+        }
+        
+        //is editing enabled?
+        if ( wpuf_get_option( 'enable_post_edit', 'wpuf_dashboard', 'yes' ) != 'yes' ) {
+            return __( 'Post Editing is disabled', 'wpuf' );
+        }
+        
+        $curpost = get_post( $post_id );
+ 
+        if ( !$curpost ) {
+            return __( 'Invalid post', 'wpuf' );
+        }
+ 
+        //has permission?
+        if ( !current_user_can( 'delete_others_posts' ) && ( $userdata->ID != $curpost->post_author ) ) {
+            return __( 'You are not allowed to edit', 'wpuf' );
         }
 
         $form_id = get_post_meta( $post_id, self::$config_id, true );
