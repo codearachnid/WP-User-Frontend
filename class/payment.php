@@ -20,7 +20,7 @@ class WPUF_Payment {
         // default, built-in gateways
         $gateways = array(
             'paypal' => array(
-                'admin_label' => __( 'PayPal', 'wpuf' ), 
+                'admin_label' => __( 'PayPal', 'wpuf' ),
                 'checkout_label' => __( 'PayPal', 'wpuf' ),
                 'icon' => apply_filters( 'wpuf_paypal_checkout_icon', plugins_url( '/images/paypal.png', dirname( __FILE__ ) ) )
              ),
@@ -88,17 +88,17 @@ class WPUF_Payment {
                                         <input name="wpuf_payment_method" type="radio" value="<?php echo esc_attr( $gateway_id ); ?>">
                                         <?php
                                         echo $gateway['label'];
-                                        
+
                                         if ( !empty( $gateway['icon'] ) ) {
-                                            printf('<img src="%s" alt="image">', $gateway['icon'] );
+                                            printf(' <img src="%s" alt="image">', $gateway['icon'] );
                                         }
                                         ?>
                                     </label>
-                                    
+
                                     <div class="wpuf-payment-instruction" style="display: none;">
                                         <?php echo wpuf_get_option( 'gate_instruct_' . $gateway_id, 'wpuf_payment' ); ?>
                                     </div>
-                                    
+
                                     <?php do_action( 'wpuf_gateway_form_' . $gateway_id, $type, $post_id, $pack_id ); ?>
                                 </li>
                             <?php } ?>
