@@ -115,21 +115,26 @@ class WPUF_Frontend_Dashboard {
                     <?php
                     while ($dashboard_query->have_posts()) {
                         $dashboard_query->the_post();
+                        $show_link = !in_array( $post->post_status, array('draft', 'future', 'pending') );
                         ?>
                         <tr>
                             <?php if ( 'on' == $featured_img ) { ?>
                                 <td>
                                     <?php
+                                    echo $show_link ? '<a href="' . get_permalink( $post->ID ) . '">' : '';
+                                    
                                     if ( has_post_thumbnail() ) {
                                         the_post_thumbnail( $featured_img_size );
                                     } else {
                                         printf( '<img src="%1$s" class="attachment-thumbnail wp-post-image" alt="%2$s" title="%2$s" />', apply_filters( 'wpuf_no_image', plugins_url( '/images/no-image.png', dirname( __FILE__ ) ) ), __( 'No Image', 'wpuf' ) );
                                     }
+                                    
+                                    echo $show_link ? '</a>' : '';
                                     ?>
                                 </td>
                             <?php } ?>
                             <td>
-                                <?php if ( in_array( $post->post_status, array('draft', 'future', 'pending') ) ) { ?>
+                                <?php if ( !$show_link ) { ?>
 
                                     <?php the_title(); ?>
 
