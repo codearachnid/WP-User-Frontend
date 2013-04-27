@@ -520,6 +520,7 @@ class WPUF_Admin_Form {
         $post_type_selected = isset( $form_settings['post_type'] ) ? $form_settings['post_type'] : 'post';
         $post_status_selected = isset( $form_settings['post_status'] ) ? $form_settings['post_status'] : 'publish';
         $post_format_selected = isset( $form_settings['post_format'] ) ? $form_settings['post_format'] : 0;
+        $default_cat = isset( $form_settings['default_cat'] ) ? $form_settings['default_cat'] : -1;
 
         $guest_post = isset( $form_settings['guest_post'] ) ? $form_settings['guest_post'] : 'false';
         $guest_details = isset( $form_settings['guest_details'] ) ? $form_settings['guest_details'] : 'true';
@@ -589,6 +590,23 @@ class WPUF_Admin_Form {
                         }
                         ?>
                     </select>
+                </td>
+            </tr>
+            </tr>
+
+            <tr class="wpuf-default-cat">
+                <th><?php _e( 'Default Post Category', 'wpuf' ); ?></th>
+                <td>
+                    <?php
+                    wp_dropdown_categories( array( 
+                        'hide_empty' => false,
+                        'hierarchical' => true,
+                        'selected' => $default_cat,
+                        'name' => 'wpuf_settings[default_cat]',
+                        'show_option_none' => __( '- None -', 'wpuf' )
+                    ) );
+                    ?>
+                    <div class="description"><?php echo __( 'If users are not allowed to choose any category, this category will be used instead (if post type supports)', 'wpuf' ); ?></div>
                 </td>
             </tr>
 

@@ -64,25 +64,25 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         
         //is editing enabled?
         if ( wpuf_get_option( 'enable_post_edit', 'wpuf_dashboard', 'yes' ) != 'yes' ) {
-            return __( 'Post Editing is disabled', 'wpuf' );
+            return '<div class="wpuf-info">' . __( 'Post Editing is disabled', 'wpuf' ) . '</div>';
         }
         
         $curpost = get_post( $post_id );
  
         if ( !$curpost ) {
-            return __( 'Invalid post', 'wpuf' );
+            return '<div class="wpuf-info">' . __( 'Invalid post', 'wpuf' );
         }
  
         //has permission?
         if ( !current_user_can( 'delete_others_posts' ) && ( $userdata->ID != $curpost->post_author ) ) {
-            return __( 'You are not allowed to edit', 'wpuf' );
+            return '<div class="wpuf-info">' . __( 'You are not allowed to edit', 'wpuf' ) . '</div>';
         }
 
         $form_id = get_post_meta( $post_id, self::$config_id, true );
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
 
         if ( !$form_id ) {
-            return __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' );
+            return '<div class="wpuf-info">' . __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' ) . '</div>';
         }
 
         if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'post_updated' ) {
@@ -195,7 +195,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             $category = $_POST['category'];
             $postarr['post_category'] = is_array( $category ) ? $category : array($category);
         }
-
+        
         if ( isset( $_POST['tags'] ) ) {
             $postarr['tags_input'] = explode( ',', $_POST['tags'] );
         }
@@ -214,6 +214,11 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         // so, WPUF's add post action/filters won't work for new posts
         if ( isset( $_POST['wpuf_form_status'] ) && $_POST['wpuf_form_status'] == 'new' ) {
             $is_update = false;
+        }
+        
+        // set default post category if it's not been set yet and if post type supports
+        if ( !isset( $postarr['post_category'] ) && isset( $form_settings['default_cat'] ) && is_object_in_taxonomy( $form_settings['post_type'], 'category' ) ) {
+            $postarr['post_category'] = array( $form_settings['default_cat'] );
         }
 
         // validation filter
