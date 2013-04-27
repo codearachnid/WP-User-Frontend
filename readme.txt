@@ -8,6 +8,22 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.4 =
+
+* [bugfix] edit post permission checking
+* [bugfix] WYSIWYG Text cut off after using "&"
+* [improve] user avatar image url changed from relative to full url. fixes multisite bug
+* [improve] `wpuf_can_post` filter gets more parameters
+* [improve] repeatable fields separator changed from comma(,) to pipe(|)
+* [improve] featured image in dashboard is now linked to posts
+* [new] google map autocomplete address feature
+* [new] file links added in admin panel post edit custom fields area
+* [new] payment gateway bank added
+* [new] validation filter added on new/edit post
+* [new] private post status added on dashboard query
+* [new] dashboard table hooks added: wpuf_dashboard_head_col, wpuf_dashboard_row_col
+* [new] post draft option added. posts now can set to draft for later usage
+
 = version 2.1.3 =
 
 * [bugfix] comment issue fixed
