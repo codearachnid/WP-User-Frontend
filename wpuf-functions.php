@@ -569,7 +569,10 @@ function wpuf_get_gateways( $context = 'admin' ) {
         if ( $context == 'admin' ) {
             $return[$id] = $gate['admin_label'];
         } else {
-            $return[$id] = $gate['checkout_label'];
+            $return[$id] = array( 
+                'label' => $gate['checkout_label'], 
+                'icon' => isset( $gate['icon'] ) ? $gate['icon'] : ''
+            );
         }
     }
 

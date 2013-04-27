@@ -19,7 +19,15 @@ class WPUF_Payment {
 
         // default, built-in gateways
         $gateways = array(
-            'paypal' => array('admin_label' => 'PayPal', 'checkout_label' => 'PayPal')
+            'paypal' => array(
+                'admin_label' => __( 'PayPal', 'wpuf' ), 
+                'checkout_label' => __( 'PayPal', 'wpuf' ),
+                'icon' => apply_filters( 'wpuf_paypal_checkout_icon', plugins_url( '/images/paypal.png', dirname( __FILE__ ) ) )
+             ),
+            'bank' => array(
+                'admin_label' => __( 'Bank Payment', 'wpuf' ),
+                'checkout_label' => __( 'Bank Payment', 'wpuf' ),
+            )
         );
 
         $gateways = apply_filters( 'wpuf_payment_gateways', $gateways );
@@ -73,13 +81,28 @@ class WPUF_Payment {
                     <p>
                         <label for="wpuf-payment-method"><?php _e( 'Choose Your Payment Method', 'wpuf' ); ?></label><br />
 
-                        <select name="wpuf_payment_method" id="wpuf-payment-method">
-                            <?php
-                            foreach ($gateways as $gateway_id => $gateway) {
-                                echo '<option value="' . $gateway_id . '">' . $gateway . '</option>';
-                            }
-                            ?>
-                        </select>
+                        <ul class="wpuf-payment-gateways">
+                            <?php foreach ($gateways as $gateway_id => $gateway) { ?>
+                                <li class="wpuf-gateway-<?php echo $gateway_id; ?>">
+                                    <label>
+                                        <input name="wpuf_payment_method" type="radio" value="<?php echo esc_attr( $gateway_id ); ?>">
+                                        <?php
+                                        echo $gateway['label'];
+                                        
+                                        if ( !empty( $gateway['icon'] ) ) {
+                                            printf('<img src="%s" alt="image">', $gateway['icon'] );
+                                        }
+                                        ?>
+                                    </label>
+                                    
+                                    <div class="wpuf-payment-instruction" style="display: none;">
+                                        <?php echo wpuf_get_option( 'gate_instruct_' . $gateway_id, 'wpuf_payment' ); ?>
+                                    </div>
+                                    
+                                    <?php do_action( 'wpuf_gateway_form_' . $gateway_id, $type, $post_id, $pack_id ); ?>
+                                </li>
+                            <?php } ?>
+                        </ul>
 
                     </p>
                     <?php do_action( 'wpuf_after_payment_gateway' ); ?>

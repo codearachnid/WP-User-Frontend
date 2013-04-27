@@ -11,6 +11,7 @@
 
 require_once dirname( __FILE__ ) . '/wpuf-functions.php';
 require_once dirname( __FILE__ ) . '/lib/gateway/paypal.php';
+require_once dirname( __FILE__ ) . '/lib/gateway/bank.php';
 
 if ( is_admin() ) {
     require_once dirname( __FILE__ ) . '/admin/settings-options.php';

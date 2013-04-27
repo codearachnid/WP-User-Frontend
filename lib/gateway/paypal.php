@@ -27,9 +27,17 @@ class WPUF_Paypal {
      * @return string
      */
     function payment_options( $options ) {
+        
         $options[] = array(
             'name' => 'paypal_email',
             'label' => __( 'Paypal Email', 'wpuf' )
+        );
+        
+        $options[] = array(
+            'name' => 'gate_instruct_paypal',
+            'label' => __( 'PayPal Instruction', 'wpuf' ),
+            'type' => 'textarea',
+            'default' => "Pay via PayPal; you can pay with your credit card if you don't have a PayPal account"
         );
 
         return $options;

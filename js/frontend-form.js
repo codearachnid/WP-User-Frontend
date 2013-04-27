@@ -71,7 +71,7 @@
                 }
 
                 self.next('span.wpuf-loading').remove();
-               
+
                 self.after('<span class="wpuf-draft-saved">&nbsp; Post Saved</span>');
                 $('.wpuf-draft-saved').delay(2500).fadeOut('fast', function(){
                     $(this).remove();
@@ -85,7 +85,7 @@
             var form = $(this),
                 submitButton = form.find('input[type=submit]')
                 form_data = WP_User_Frontend.validateForm(form);
-                
+
             if (form_data) {
 
                 // send the request
@@ -403,6 +403,16 @@
     $(function() {
         WP_User_Frontend.init();
         WP_User_Frontend.insertImage();
+
+        // payment gateway selection
+        $('ul.wpuf-payment-gateways').on('click', 'input[type=radio]', function(e) {
+            $('.wpuf-payment-instruction').slideUp(250);
+
+            $(this).parents('li').find('.wpuf-payment-instruction').slideDown(250);
+        });
+
+        // click the first one
+        $('ul.wpuf-payment-gateways li').first().find('input[type=radio]').click()
     });
 
 })(jQuery);

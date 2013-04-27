@@ -1,6 +1,53 @@
 <?php
 global $wpdb;
 
+$base_url = admin_url( 'admin.php?page=wpuf_transaction' );
+
+if ( isset( $_GET['action'] ) && $_GET['action'] == 'order_accept' ) {
+    $order_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+    $info = get_post_meta( $order_id, '_data', true );
+
+    if ( $info ) {
+
+        switch ($info['type']) {
+            case 'post':
+                $post_id = $info['item_number'];
+                $pack_id = 0;
+                break;
+
+            case 'pack':
+                $post_id = 0;
+                $pack_id = $info['item_number'];
+                break;
+        }
+
+        $transaction = array(
+            'user_id' => $info['user_info']['id'],
+            'status' => 'completed',
+            'cost' => $info['price'],
+            'post_id' => $post_id,
+            'pack_id' => $pack_id,
+            'payer_first_name' => $info['user_info']['first_name'],
+            'payer_last_name' => $info['user_info']['last_name'],
+            'payer_email' => $info['user_info']['email'],
+            'payment_type' => 'Bank/Manual',
+            'transaction_id' => $order_id,
+            'created' => current_time( 'mysql' )
+        );
+
+        do_action( 'wpuf_gateway_bank_order_complete', $transaction, $order_id );
+
+        WPUF_Payment::insert_payment( $transaction );
+        wp_delete_post( $order_id, true );
+    }
+}
+
+if ( isset( $_GET['action'] ) && $_GET['action'] == 'order_reject' ) {
+    $order_id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : 0;
+    do_action( 'wpuf_gateway_bank_order_reject', $order_id );
+    wp_delete_post( $order_id, true );
+}
+
 $total_income = $wpdb->get_var( "SELECT SUM(cost) FROM {$wpdb->prefix}wpuf_transaction WHERE status = 'completed'" );
 $month_income = $wpdb->get_var( "SELECT SUM(cost) FROM {$wpdb->prefix}wpuf_transaction WHERE YEAR(`created`) = YEAR(NOW()) AND MONTH(`created`) = MONTH(NOW()) AND status = 'completed'" );
 $transactions = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpuf_transaction ORDER BY `created` DESC LIMIT 0, 60", OBJECT );
@@ -75,4 +122,67 @@ $transactions = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wpuf_transacti
         <?php } ?>
 
     </table>
+
+
+    <h2 style="margin-top: 30px;"><?php _e( 'Pending Orders', 'wpuf' ); ?></h2>
+    <?php
+    $args = array(
+        'post_type' => 'wpuf_order',
+        'post_status' => array( 'publish', 'pending' ),
+        'posts_per_page' => -1
+    );
+    $wpuf_order_query = new WP_Query( apply_filters( 'wpuf_order_query', $args ) );
+    $orders = $wpuf_order_query->get_posts();
+
+    if ( $orders ) {
+    ?>
+
+        <table class="widefat meta" style="margin-top: 10px;">
+            <thead>
+                <tr>
+                    <th scope="col"><?php _e( 'ID', 'wpuf' ); ?></th>
+                    <th scope="col"><?php _e( 'User', 'wpuf' ); ?></th>
+                    <th scope="col"><?php _e( 'Type', 'wpuf' ); ?></th>
+                    <th scope="col"><?php _e( 'Cost', 'wpuf' ); ?></th>
+                    <th scope="col"><?php _e( 'Item Details', 'wpuf' ); ?></th>
+                    <th scope="col"><?php _e( 'Date', 'wpuf' ); ?></th>
+                    <th scope="col"><?php _e( 'Action', 'wpuf' ); ?></th>
+                </tr>
+            </thead>
+            <?php
+            if ( $orders ) {
+                $count = 0;
+                foreach ($orders as $order) {
+                    $data = get_post_meta( $order->ID, '_data', true );
+                    // var_dump( $data );
+                    ?>
+                    <tr valign="top" <?php echo ( ($count % 2) == 0) ? 'class="alternate"' : ''; ?>>
+                        <td>#<?php echo $order->ID; ?></td>
+                        <td><?php printf('<a href="%s">%s %s</a>', admin_url( 'edit-user.php?id=' . $data['user_info']['id'] ), $data['user_info']['first_name'], $data['user_info']['last_name'] ); ?></td>
+                        <td><?php echo ucfirst( $data['type'] ); ?></td>
+                        <td><?php echo $data['price'] . ' ' . $data['currency']; ?></td>
+                        <td><?php echo $data['item_name']; ?></td>
+                        <td><?php echo $data['date']; ?></td>
+                        <td>
+                            <a class="button" onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'order_accept', 'id' => $order->ID ), $base_url), 'wpuf_order_accept' ); ?>"><?php _e( 'Accept', 'wpuf' ); ?></a>
+                            <a class="button" onclick="return confirm('Are you sure?');" href="<?php echo wp_nonce_url( add_query_arg( array( 'action' => 'order_reject', 'id' => $order->ID ), $base_url), 'wpuf_order_accept' ); ?>"><?php _e( 'Reject', 'wpuf' ); ?></a>
+                        </td>
+
+                    </tr>
+                    <?php
+                    $count++;
+                }
+                ?>
+            <?php } else { ?>
+                <tr>
+                    <td colspan="11"><?php _e( 'Nothing Found', 'wpuf' ); ?></td>
+                </tr>
+            <?php } ?>
+
+        </table>
+    <?php } else { ?>
+
+        <h3><?php _e( 'No pending orders found', 'wpuf' ); ?></h3>
+
+    <?php } ?>
 </div>
