@@ -23,6 +23,7 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 * [new] private post status added on dashboard query
 * [new] dashboard table hooks added: wpuf_dashboard_head_col, wpuf_dashboard_row_col
 * [new] post draft option added. posts now can set to draft for later usage
+* [new] default post category option
 
 = version 2.1.3 =
 
