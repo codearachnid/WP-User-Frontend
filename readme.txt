@@ -10,6 +10,8 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 = version 2.1.4 =
 
+date: 27 April, 2013
+
 * [bugfix] edit post permission checking
 * [bugfix] WYSIWYG Text cut off after using "&"
 * [improve] user avatar image url changed from relative to full url. fixes multisite bug
@@ -19,15 +21,17 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 * [new] google map autocomplete address feature
 * [new] file links added in admin panel post edit custom fields area
 * [new] payment gateway bank added
-* [new] validation filter added on new/edit post
+* [new] validation filter added on new/edit post: `wpuf_update_post_validate`, `wpuf_add_post_validate`
 * [new] private post status added on dashboard query
 * [new] dashboard table hooks added: wpuf_dashboard_head_col, wpuf_dashboard_row_col
 * [new] post draft option added. posts now can set to draft for later usage
 * [new] default post category option
-* [new] dashboard query filter added
+* [new] dashboard query filter added: `wpuf_dashboard_query`
 * [new] teeny rich textarea added
 
 = version 2.1.3 =
+
+date: 18 April, 2013
 
 * [bugfix] comment issue fixed
 * [bugfix] date issue fixed
@@ -41,6 +45,8 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 = version 2.1.2 =
 
+date: 5 April, 2013
+
 * [bugfix] post edit area captcha fix
 * [bugifx] Featured default image path fix
 * [new] Show post status filter added
@@ -50,9 +56,13 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 = version 2.1.1 =
 
+date: 23 March, 2013
+
 * [bugfix] License check bug fix
 
 = version 2.1 =
+
+date: 22 March, 2013
 
 * Subscription feature put back
 * Auto update feature
