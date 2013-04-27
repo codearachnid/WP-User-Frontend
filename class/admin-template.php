@@ -180,11 +180,12 @@ class WPUF_Admin_Template {
         </div> <!-- .wpuf-form-rows -->
 
         <div class="wpuf-form-rows">
-            <label><?php _e( 'Enable Rich textarea', 'wpuf' ); ?></label>
+            <label><?php _e( 'Textarea', 'wpuf' ); ?></label>
 
             <div class="wpuf-form-sub-fields">
-                <label><input type="radio" name="<?php echo $rich_name; ?>" value="yes"<?php checked( $rich_value, 'yes' ); ?>> Yes </label>
-                <label><input type="radio" name="<?php echo $rich_name; ?>" value="no"<?php checked( $rich_value, 'no' ); ?>> No </label>
+                <label><input type="radio" name="<?php echo $rich_name; ?>" value="no"<?php checked( $rich_value, 'no' ); ?>> <?php _e( 'Normal', 'wpuf' ); ?></label>
+                <label><input type="radio" name="<?php echo $rich_name; ?>" value="yes"<?php checked( $rich_value, 'yes' ); ?>> <?php _e( 'Rich textarea', 'wpuf' ); ?></label>
+                <label><input type="radio" name="<?php echo $rich_name; ?>" value="teeny"<?php checked( $rich_value, 'teeny' ); ?>> <?php _e( 'Teeny Rich textarea', 'wpuf' ); ?></label>
             </div>
         </div> <!-- .wpuf-form-rows -->
         <?php
