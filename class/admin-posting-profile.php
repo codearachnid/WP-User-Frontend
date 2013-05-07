@@ -67,7 +67,7 @@ class WPUF_Admin_Posting_Profile extends WPUF_Admin_Posting {
                     $this->render_item_after( $avatar );
                 }
 
-                $this->render_items( $custom_fields, $userdata->ID, 'user' );
+                $this->render_items( $custom_fields, $userdata->ID, 'user', $form_id, get_post_meta( $form_id, 'wpuf_form', true ) );
                 ?>
             </tbody>
         </table>
