@@ -60,6 +60,8 @@ class WPUF_Admin_Form {
         if ( !in_array( $pagenow, array( 'post.php', 'post-new.php') ) ) {
             return;
         }
+        
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
 
         if ( !in_array( $post->post_type, array( 'wpuf_forms', 'wpuf_profile' ) ) ) {
             return;
