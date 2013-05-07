@@ -178,7 +178,12 @@ class WPUF_Frontend_Dashboard {
                                 <?php } ?>
                             </td>
                         </tr>
-                    <?php } ?>
+                    <?php
+                    }
+                    
+                    wp_reset_postdata();
+                    ?>
+                      
                 </tbody>
             </table>
 
