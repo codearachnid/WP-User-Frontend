@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP User Frontend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-27 07:46+0600\n"
-"PO-Revision-Date: 2013-04-27 07:46+0600\n"
+"POT-Creation-Date: 2013-05-08 19:58+0600\n"
+"PO-Revision-Date: 2013-05-08 19:59+0600\n"
 "Last-Translator: Tareq Hasan <tareq@wedevs.com>\n"
 "Language-Team: Tareq Hasan <tareq@wedevs.com>\n"
 "Language: en_BD\n"
@@ -24,7 +24,7 @@ msgid "You don't have permission for this purpose"
 msgstr ""
 
 #: ../wpuf-edit-user.php:37 ../class/edit-profile.php:31
-#: ../class/frontend-dashboard.php:32
+#: ../class/frontend-dashboard.php:35
 #, php-format
 msgid "This page is restricted. Please %s to view this page."
 msgstr ""
@@ -34,7 +34,7 @@ msgid "User Deleted"
 msgstr ""
 
 #: ../wpuf-edit-user.php:92 ../wpuf-edit-user.php:144
-#: ../class/admin-form.php:1209 ../class/admin-form.php:1457
+#: ../class/admin-form.php:1211 ../class/admin-form.php:1459
 #: ../class/edit-profile.php:100
 msgid "Username"
 msgstr ""
@@ -45,13 +45,13 @@ msgid "Action"
 msgstr ""
 
 #: ../wpuf-edit-user.php:99 ../admin/subscription.php:71
-#: ../class/admin-form.php:140 ../class/admin-form.php:178
-#: ../class/frontend-dashboard.php:170
+#: ../class/admin-form.php:142 ../class/admin-form.php:180
+#: ../class/frontend-dashboard.php:177
 msgid "Edit"
 msgstr ""
 
 #: ../wpuf-edit-user.php:100 ../admin/subscription.php:75
-#: ../class/frontend-dashboard.php:177 ../class/render-form.php:822
+#: ../class/frontend-dashboard.php:184 ../class/render-form.php:822
 #: ../class/upload.php:131
 msgid "Delete"
 msgstr ""
@@ -65,7 +65,7 @@ msgid "User Added"
 msgstr ""
 
 #: ../wpuf-edit-user.php:152 ../admin/transaction.php:78
-#: ../class/admin-form.php:528 ../class/admin-form.php:1130
+#: ../class/admin-form.php:530 ../class/admin-form.php:1132
 msgid "Email"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgid ""
 "WordPress back-office."
 msgstr ""
 
-#: ../wpuf.php:226 ../class/admin-form.php:963
+#: ../wpuf.php:226 ../class/admin-form.php:965
 msgid "Register"
 msgstr ""
 
@@ -274,14 +274,14 @@ msgid ""
 msgstr ""
 
 #: ../admin/settings-options.php:118 ../admin/settings-options.php:152
-#: ../admin/settings-options.php:163 ../admin/settings-options.php:225
-#: ../class/admin-form.php:285 ../class/admin-template.php:69
+#: ../admin/settings-options.php:163 ../admin/settings-options.php:231
+#: ../class/admin-form.php:287 ../class/admin-template.php:69
 msgid "Yes"
 msgstr ""
 
 #: ../admin/settings-options.php:119 ../admin/settings-options.php:153
-#: ../admin/settings-options.php:164 ../admin/settings-options.php:226
-#: ../class/admin-form.php:285 ../class/admin-template.php:70
+#: ../admin/settings-options.php:164 ../admin/settings-options.php:232
+#: ../class/admin-form.php:287 ../class/admin-template.php:70
 msgid "No"
 msgstr ""
 
@@ -363,11 +363,19 @@ msgstr ""
 msgid "Featured Image size"
 msgstr ""
 
-#: ../admin/settings-options.php:204
+#: ../admin/settings-options.php:202 ../class/admin-form.php:660
+msgid "Unauthorized Message"
+msgstr ""
+
+#: ../admin/settings-options.php:203 ../class/admin-form.php:663
+msgid "Not logged in users will see this message"
+msgstr ""
+
+#: ../admin/settings-options.php:210
 msgid "Registration link override"
 msgstr ""
 
-#: ../admin/settings-options.php:205
+#: ../admin/settings-options.php:211
 msgid ""
 "Override registration link. <span class=\"description\">(check if you have "
 "any custom registration page. Compatible with <strong>Theme My Login</"
@@ -375,101 +383,101 @@ msgid ""
 "plugin.)</span>"
 msgstr ""
 
-#: ../admin/settings-options.php:211
+#: ../admin/settings-options.php:217
 msgid "Registration Page"
 msgstr ""
 
-#: ../admin/settings-options.php:212
+#: ../admin/settings-options.php:218
 msgid ""
 "Select the page you want to use as registration page override <em>(should "
 "have shortcode)</em>"
 msgstr ""
 
-#: ../admin/settings-options.php:220
+#: ../admin/settings-options.php:226
 msgid "Charge for posting"
 msgstr ""
 
-#: ../admin/settings-options.php:221
+#: ../admin/settings-options.php:227
 msgid "Charge user for submitting a post"
 msgstr ""
 
-#: ../admin/settings-options.php:231
+#: ../admin/settings-options.php:237
 msgid "Force pack purchase"
 msgstr ""
 
-#: ../admin/settings-options.php:232
+#: ../admin/settings-options.php:238
 msgid "When active, users must have to buy a pack for posting"
 msgstr ""
 
-#: ../admin/settings-options.php:236
+#: ../admin/settings-options.php:242
 msgid "Disable"
 msgstr ""
 
-#: ../admin/settings-options.php:237
+#: ../admin/settings-options.php:243
 msgid "Enable"
 msgstr ""
 
-#: ../admin/settings-options.php:242
+#: ../admin/settings-options.php:248
 msgid "Currency"
 msgstr ""
 
-#: ../admin/settings-options.php:274
+#: ../admin/settings-options.php:280
 msgid "Currency Symbol"
 msgstr ""
 
-#: ../admin/settings-options.php:280 ../admin/subscription.php:51
+#: ../admin/settings-options.php:286 ../admin/subscription.php:51
 #: ../admin/transaction.php:74 ../admin/transaction.php:146
 msgid "Cost"
 msgstr ""
 
-#: ../admin/settings-options.php:281
+#: ../admin/settings-options.php:287
 msgid "Cost per post"
 msgstr ""
 
-#: ../admin/settings-options.php:287
+#: ../admin/settings-options.php:293
 msgid "Enable demo/sandbox mode"
 msgstr ""
 
-#: ../admin/settings-options.php:288
+#: ../admin/settings-options.php:294
 msgid ""
 "When sandbox mode is active, all payment gateway will be used in demo mode"
 msgstr ""
 
-#: ../admin/settings-options.php:294
+#: ../admin/settings-options.php:300
 msgid "Payment Page"
 msgstr ""
 
-#: ../admin/settings-options.php:295
+#: ../admin/settings-options.php:301
 msgid "This page will be used to process payment options"
 msgstr ""
 
-#: ../admin/settings-options.php:301
+#: ../admin/settings-options.php:307
 msgid "Payment Success Page"
 msgstr ""
 
-#: ../admin/settings-options.php:302 ../lib/gateway/bank.php:37
+#: ../admin/settings-options.php:308 ../lib/gateway/bank.php:37
 msgid "After payment users will be redirected here"
 msgstr ""
 
-#: ../admin/settings-options.php:308
+#: ../admin/settings-options.php:314
 msgid "Payment Gateways"
 msgstr ""
 
-#: ../admin/settings-options.php:309
+#: ../admin/settings-options.php:315
 msgid "Active payment gateways"
 msgstr ""
 
-#: ../admin/settings-options.php:317
+#: ../admin/settings-options.php:323
 msgid "Need Help?"
 msgstr ""
 
-#: ../admin/settings-options.php:348
+#: ../admin/settings-options.php:354
 msgid ""
 "Select profile/registration forms for user roles. These forms will be used "
 "to populate extra edit profile fields in backend."
 msgstr ""
 
-#: ../admin/settings-options.php:359
+#: ../admin/settings-options.php:365
 msgid " - select - "
 msgstr ""
 
@@ -477,7 +485,7 @@ msgstr ""
 msgid "Pack Deleted"
 msgstr ""
 
-#: ../admin/subscription.php:49 ../class/admin-form.php:527
+#: ../admin/subscription.php:49 ../class/admin-form.php:529
 #: ../class/admin-template-post.php:154 ../class/edit-profile.php:96
 msgid "Name"
 msgstr ""
@@ -590,7 +598,7 @@ msgstr ""
 msgid "User ID"
 msgstr ""
 
-#: ../admin/transaction.php:73 ../class/frontend-dashboard.php:102
+#: ../admin/transaction.php:73 ../class/frontend-dashboard.php:109
 msgid "Status"
 msgstr ""
 
@@ -635,7 +643,7 @@ msgstr ""
 msgid "Item Details"
 msgstr ""
 
-#: ../admin/transaction.php:148 ../class/admin-form.php:1123
+#: ../admin/transaction.php:148 ../class/admin-form.php:1125
 msgid "Date"
 msgstr ""
 
@@ -651,568 +659,560 @@ msgstr ""
 msgid "No pending orders found"
 msgstr ""
 
-#: ../class/admin-form.php:115 ../class/admin-form.php:135
-#: ../class/admin-form.php:137 ../class/admin-form.php:173
+#: ../class/admin-form.php:117 ../class/admin-form.php:137
+#: ../class/admin-form.php:139 ../class/admin-form.php:175
 msgid "Forms"
 msgstr ""
 
-#: ../class/admin-form.php:136 ../class/admin-form.php:174
+#: ../class/admin-form.php:138 ../class/admin-form.php:176
 msgid "Form"
 msgstr ""
 
-#: ../class/admin-form.php:138 ../class/admin-form.php:176
+#: ../class/admin-form.php:140 ../class/admin-form.php:178
 msgid "Add Form"
 msgstr ""
 
-#: ../class/admin-form.php:139 ../class/admin-form.php:177
+#: ../class/admin-form.php:141 ../class/admin-form.php:179
 msgid "Add New Form"
 msgstr ""
 
-#: ../class/admin-form.php:141 ../class/admin-form.php:179
+#: ../class/admin-form.php:143 ../class/admin-form.php:181
 msgid "Edit Form"
 msgstr ""
 
-#: ../class/admin-form.php:142 ../class/admin-form.php:180
+#: ../class/admin-form.php:144 ../class/admin-form.php:182
 msgid "New Form"
 msgstr ""
 
-#: ../class/admin-form.php:143 ../class/admin-form.php:144
-#: ../class/admin-form.php:181 ../class/admin-form.php:182
+#: ../class/admin-form.php:145 ../class/admin-form.php:146
+#: ../class/admin-form.php:183 ../class/admin-form.php:184
 msgid "View Form"
 msgstr ""
 
-#: ../class/admin-form.php:145 ../class/admin-form.php:183
+#: ../class/admin-form.php:147 ../class/admin-form.php:185
 msgid "Search Form"
 msgstr ""
 
-#: ../class/admin-form.php:146 ../class/admin-form.php:184
+#: ../class/admin-form.php:148 ../class/admin-form.php:186
 msgid "No Form Found"
 msgstr ""
 
-#: ../class/admin-form.php:147 ../class/admin-form.php:185
+#: ../class/admin-form.php:149 ../class/admin-form.php:187
 msgid "No Form Found in Trash"
 msgstr ""
 
-#: ../class/admin-form.php:148 ../class/admin-form.php:186
+#: ../class/admin-form.php:150 ../class/admin-form.php:188
 msgid "Parent Form"
 msgstr ""
 
-#: ../class/admin-form.php:153
+#: ../class/admin-form.php:155
 msgid "Registraton Forms"
 msgstr ""
 
-#: ../class/admin-form.php:175
+#: ../class/admin-form.php:177
 msgid "Registration Forms"
 msgstr ""
 
-#: ../class/admin-form.php:194 ../class/admin-form.php:197
+#: ../class/admin-form.php:196 ../class/admin-form.php:199
 msgid "Form updated."
 msgstr ""
 
-#: ../class/admin-form.php:195
+#: ../class/admin-form.php:197
 msgid "Custom field updated."
 msgstr ""
 
-#: ../class/admin-form.php:196
+#: ../class/admin-form.php:198
 msgid "Custom field deleted."
 msgstr ""
 
-#: ../class/admin-form.php:198
+#: ../class/admin-form.php:200
 #, php-format
 msgid "Form restored to revision from %s"
 msgstr ""
 
-#: ../class/admin-form.php:199
+#: ../class/admin-form.php:201
 msgid "Form published."
 msgstr ""
 
-#: ../class/admin-form.php:200
+#: ../class/admin-form.php:202
 msgid "Form saved."
 msgstr ""
 
-#: ../class/admin-form.php:201
+#: ../class/admin-form.php:203
 msgid "Form submitted."
 msgstr ""
 
-#: ../class/admin-form.php:203
+#: ../class/admin-form.php:205
 msgid "Form draft updated."
 msgstr ""
 
-#: ../class/admin-form.php:232 ../class/admin-form.php:251
+#: ../class/admin-form.php:234 ../class/admin-form.php:253
 msgid "Form Name"
 msgstr ""
 
-#: ../class/admin-form.php:233 ../class/admin-form.php:544
+#: ../class/admin-form.php:235 ../class/admin-form.php:546
 msgid "Post Type"
 msgstr ""
 
-#: ../class/admin-form.php:234 ../class/admin-form.php:564
+#: ../class/admin-form.php:236 ../class/admin-form.php:566
 msgid "Post Status"
 msgstr ""
 
-#: ../class/admin-form.php:235 ../class/admin-form.php:614
+#: ../class/admin-form.php:237 ../class/admin-form.php:616
 msgid "Guest Post"
 msgstr ""
 
-#: ../class/admin-form.php:236 ../class/admin-form.php:253
+#: ../class/admin-form.php:238 ../class/admin-form.php:255
 msgid "Shortcode"
 msgstr ""
 
-#: ../class/admin-form.php:252
+#: ../class/admin-form.php:254
 msgid "User Role"
 msgstr ""
 
-#: ../class/admin-form.php:331
+#: ../class/admin-form.php:333
 msgid "Duplicate form"
 msgstr ""
 
-#: ../class/admin-form.php:331
+#: ../class/admin-form.php:333
 msgid "Duplicate"
 msgstr ""
 
-#: ../class/admin-form.php:390
+#: ../class/admin-form.php:392
 msgid "WPUF Form"
 msgstr ""
 
-#: ../class/admin-form.php:400 ../class/admin-form.php:410
-#: ../class/admin-form.php:1061 ../class/admin-form.php:1095
+#: ../class/admin-form.php:402 ../class/admin-form.php:412
+#: ../class/admin-form.php:1063 ../class/admin-form.php:1097
 msgid "Form Editor"
 msgstr ""
 
-#: ../class/admin-form.php:401 ../class/admin-form.php:411
+#: ../class/admin-form.php:403 ../class/admin-form.php:413
 msgid "Form Elements"
 msgstr ""
 
-#: ../class/admin-form.php:425
+#: ../class/admin-form.php:427
 msgid "Preview Form"
 msgstr ""
 
-#: ../class/admin-form.php:435
+#: ../class/admin-form.php:437
 msgid "Schedule"
 msgstr ""
 
-#: ../class/admin-form.php:438
+#: ../class/admin-form.php:440
 msgid "Publish"
 msgstr ""
 
-#: ../class/admin-form.php:443
+#: ../class/admin-form.php:445
 msgid "Submit for Review"
 msgstr ""
 
-#: ../class/admin-form.php:518
+#: ../class/admin-form.php:520
 msgid "This page is restricted. Please Log in / Register to view this page."
 msgstr ""
 
-#: ../class/admin-form.php:532
+#: ../class/admin-form.php:534
 msgid "Post saved"
 msgstr ""
 
-#: ../class/admin-form.php:533 ../class/admin-form.php:753
+#: ../class/admin-form.php:535 ../class/admin-form.php:755
 msgid "Post updated successfully"
 msgstr ""
 
-#: ../class/admin-form.php:537
+#: ../class/admin-form.php:539
 msgid "Submit"
 msgstr ""
 
-#: ../class/admin-form.php:538 ../class/render-form.php:455
+#: ../class/admin-form.php:540 ../class/render-form.php:455
 msgid "Save Draft"
 msgstr ""
 
-#: ../class/admin-form.php:539
+#: ../class/admin-form.php:541
 msgid "Preview"
 msgstr ""
 
-#: ../class/admin-form.php:579
+#: ../class/admin-form.php:581
 msgid "Post Format"
 msgstr ""
 
-#: ../class/admin-form.php:582 ../class/admin-form.php:606
+#: ../class/admin-form.php:584 ../class/admin-form.php:608
 msgid "- None -"
 msgstr ""
 
-#: ../class/admin-form.php:598
+#: ../class/admin-form.php:600
 msgid "Default Post Category"
 msgstr ""
 
-#: ../class/admin-form.php:609
+#: ../class/admin-form.php:611
 msgid ""
 "If users are not allowed to choose any category, this category will be used "
 "instead (if post type supports)"
 msgstr ""
 
-#: ../class/admin-form.php:619
+#: ../class/admin-form.php:621
 msgid "Enable Guest Post"
 msgstr ""
 
-#: ../class/admin-form.php:621
+#: ../class/admin-form.php:623
 msgid "Unregistered users will be able to submit posts"
 msgstr ""
 
-#: ../class/admin-form.php:626
+#: ../class/admin-form.php:628
 msgid "User Details"
 msgstr ""
 
-#: ../class/admin-form.php:631
+#: ../class/admin-form.php:633
 msgid "Require Name and Email address"
 msgstr ""
 
-#: ../class/admin-form.php:633
+#: ../class/admin-form.php:635
 msgid ""
 "If requires, users will be automatically registered to the site using the "
 "name and email address"
 msgstr ""
 
-#: ../class/admin-form.php:638
+#: ../class/admin-form.php:640
 msgid "Name Label"
 msgstr ""
 
-#: ../class/admin-form.php:643
+#: ../class/admin-form.php:645
 msgid "Label text for name field"
 msgstr ""
 
-#: ../class/admin-form.php:648
+#: ../class/admin-form.php:650
 msgid "E-Mail Label"
 msgstr ""
 
-#: ../class/admin-form.php:653
+#: ../class/admin-form.php:655
 msgid "Label text for email field"
 msgstr ""
 
-#: ../class/admin-form.php:658
-msgid "Unauthorized Message"
-msgstr ""
-
-#: ../class/admin-form.php:661
-msgid "Not logged in users will see this message"
-msgstr ""
-
-#: ../class/admin-form.php:666 ../class/admin-form.php:776
-#: ../class/admin-form.php:983
+#: ../class/admin-form.php:668 ../class/admin-form.php:778
+#: ../class/admin-form.php:985
 msgid "Redirect To"
 msgstr ""
 
-#: ../class/admin-form.php:671 ../class/admin-form.php:781
-msgid "Newly created post"
-msgstr ""
-
-#: ../class/admin-form.php:672 ../class/admin-form.php:782
-#: ../class/admin-form.php:988
-msgid "Same Page"
-msgstr ""
-
 #: ../class/admin-form.php:673 ../class/admin-form.php:783
-#: ../class/admin-form.php:989
-msgid "To a page"
+msgid "Newly created post"
 msgstr ""
 
 #: ../class/admin-form.php:674 ../class/admin-form.php:784
 #: ../class/admin-form.php:990
+msgid "Same Page"
+msgstr ""
+
+#: ../class/admin-form.php:675 ../class/admin-form.php:785
+#: ../class/admin-form.php:991
+msgid "To a page"
+msgstr ""
+
+#: ../class/admin-form.php:676 ../class/admin-form.php:786
+#: ../class/admin-form.php:992
 msgid "To a custom URL"
 msgstr ""
 
-#: ../class/admin-form.php:683 ../class/admin-form.php:793
-#: ../class/admin-form.php:999
+#: ../class/admin-form.php:685 ../class/admin-form.php:795
+#: ../class/admin-form.php:1001
 msgid "After successfull submit, where the page will redirect to"
 msgstr ""
 
-#: ../class/admin-form.php:689
+#: ../class/admin-form.php:691
 msgid "Message to show"
 msgstr ""
 
-#: ../class/admin-form.php:697 ../class/admin-form.php:806
-#: ../class/admin-form.php:1019
+#: ../class/admin-form.php:699 ../class/admin-form.php:808
+#: ../class/admin-form.php:1021
 msgid "Page"
 msgstr ""
 
-#: ../class/admin-form.php:712 ../class/admin-form.php:821
-#: ../class/admin-form.php:1034
+#: ../class/admin-form.php:714 ../class/admin-form.php:823
+#: ../class/admin-form.php:1036
 msgid "Custom URL"
 msgstr ""
 
-#: ../class/admin-form.php:719
+#: ../class/admin-form.php:721
 msgid "Submit Post Button text"
 msgstr ""
 
-#: ../class/admin-form.php:726
+#: ../class/admin-form.php:728
 msgid "Post Draft"
 msgstr ""
 
-#: ../class/admin-form.php:731
+#: ../class/admin-form.php:733
 msgid "Enable Saving as draft"
 msgstr ""
 
-#: ../class/admin-form.php:733
+#: ../class/admin-form.php:735
 msgid "It will show a button to save as draft"
 msgstr ""
 
-#: ../class/admin-form.php:756
+#: ../class/admin-form.php:758
 msgid "Update"
 msgstr ""
 
-#: ../class/admin-form.php:761
+#: ../class/admin-form.php:763
 msgid "Set Post Status to"
 msgstr ""
 
-#: ../class/admin-form.php:799
+#: ../class/admin-form.php:801
 msgid "Post Update Message"
 msgstr ""
 
-#: ../class/admin-form.php:828
+#: ../class/admin-form.php:830
 msgid "Update Post Button text"
 msgstr ""
 
-#: ../class/admin-form.php:862
+#: ../class/admin-form.php:864
 msgid "New post created"
 msgstr ""
 
-#: ../class/admin-form.php:867
+#: ../class/admin-form.php:869
 msgid "A post has been edited"
 msgstr ""
 
-#: ../class/admin-form.php:871
+#: ../class/admin-form.php:873
 msgid "New Post Notificatoin"
 msgstr ""
 
-#: ../class/admin-form.php:875 ../class/admin-form.php:909
-#: ../class/admin-form.php:1064
+#: ../class/admin-form.php:877 ../class/admin-form.php:911
+#: ../class/admin-form.php:1066
 msgid "Notification"
 msgstr ""
 
-#: ../class/admin-form.php:880 ../class/admin-form.php:914
+#: ../class/admin-form.php:882 ../class/admin-form.php:916
 msgid "Enable post notification"
 msgstr ""
 
-#: ../class/admin-form.php:886 ../class/admin-form.php:920
+#: ../class/admin-form.php:888 ../class/admin-form.php:922
 msgid "To"
 msgstr ""
 
-#: ../class/admin-form.php:893 ../class/admin-form.php:925
+#: ../class/admin-form.php:895 ../class/admin-form.php:927
 msgid "Subject"
 msgstr ""
 
-#: ../class/admin-form.php:898 ../class/admin-form.php:930
+#: ../class/admin-form.php:900 ../class/admin-form.php:932
 msgid "Message"
 msgstr ""
 
-#: ../class/admin-form.php:905
+#: ../class/admin-form.php:907
 msgid "Update Post Notificatoin"
 msgstr ""
 
-#: ../class/admin-form.php:937
+#: ../class/admin-form.php:939
 msgid "You may use in message:"
 msgstr ""
 
-#: ../class/admin-form.php:959
+#: ../class/admin-form.php:961
 msgid "Registration successful"
 msgstr ""
 
-#: ../class/admin-form.php:960
+#: ../class/admin-form.php:962
 msgid "Profile updated successfully"
 msgstr ""
 
-#: ../class/admin-form.php:964 ../class/edit-profile.php:225
+#: ../class/admin-form.php:966 ../class/edit-profile.php:225
 msgid "Update Profile"
 msgstr ""
 
-#: ../class/admin-form.php:969
+#: ../class/admin-form.php:971
 msgid "New User Role"
 msgstr ""
 
-#: ../class/admin-form.php:1005
+#: ../class/admin-form.php:1007
 msgid "Registration success message"
 msgstr ""
 
-#: ../class/admin-form.php:1012
+#: ../class/admin-form.php:1014
 msgid "Update profile message"
 msgstr ""
 
-#: ../class/admin-form.php:1041
+#: ../class/admin-form.php:1043
 msgid "Submit Button text"
 msgstr ""
 
-#: ../class/admin-form.php:1048
+#: ../class/admin-form.php:1050
 msgid "Update Button text"
 msgstr ""
 
-#: ../class/admin-form.php:1062
+#: ../class/admin-form.php:1064
 msgid "Post Settings"
 msgstr ""
 
-#: ../class/admin-form.php:1063
+#: ../class/admin-form.php:1065
 msgid "Edit Settings"
 msgstr ""
 
-#: ../class/admin-form.php:1096 ../class/settings.php:55
+#: ../class/admin-form.php:1098 ../class/settings.php:55
 msgid "Settings"
 msgstr ""
 
-#: ../class/admin-form.php:1116 ../class/admin-form.php:1164
-#: ../class/admin-form.php:1165 ../class/admin-form.php:1166
+#: ../class/admin-form.php:1118 ../class/admin-form.php:1166
 #: ../class/admin-form.php:1167 ../class/admin-form.php:1168
-#: ../class/admin-form.php:1169 ../class/admin-form.php:1182
+#: ../class/admin-form.php:1169 ../class/admin-form.php:1170
+#: ../class/admin-form.php:1171 ../class/admin-form.php:1184
 msgid "Click to add to the editor"
 msgstr ""
 
-#: ../class/admin-form.php:1118
+#: ../class/admin-form.php:1120
 msgid "Custom Fields"
 msgstr ""
 
-#: ../class/admin-form.php:1120
+#: ../class/admin-form.php:1122
 msgid "Text"
 msgstr ""
 
-#: ../class/admin-form.php:1121 ../class/admin-template.php:183
+#: ../class/admin-form.php:1123 ../class/admin-template.php:183
 msgid "Textarea"
 msgstr ""
 
-#: ../class/admin-form.php:1122 ../class/admin-template-post.php:145
+#: ../class/admin-form.php:1124 ../class/admin-template-post.php:145
 msgid "Dropdown"
 msgstr ""
 
-#: ../class/admin-form.php:1124 ../class/admin-template-post.php:146
+#: ../class/admin-form.php:1126 ../class/admin-template-post.php:146
 msgid "Multi Select"
 msgstr ""
 
-#: ../class/admin-form.php:1125
+#: ../class/admin-form.php:1127
 msgid "Radio"
 msgstr ""
 
-#: ../class/admin-form.php:1126 ../class/admin-template-post.php:147
+#: ../class/admin-form.php:1128 ../class/admin-template-post.php:147
 msgid "Checkbox"
 msgstr ""
 
-#: ../class/admin-form.php:1127
+#: ../class/admin-form.php:1129
 msgid "Image Upload"
 msgstr ""
 
-#: ../class/admin-form.php:1128
+#: ../class/admin-form.php:1130
 msgid "File Upload"
 msgstr ""
 
-#: ../class/admin-form.php:1129
+#: ../class/admin-form.php:1131
 msgid "URL"
 msgstr ""
 
-#: ../class/admin-form.php:1131
+#: ../class/admin-form.php:1133
 msgid "Repeat Field"
 msgstr ""
 
-#: ../class/admin-form.php:1133
+#: ../class/admin-form.php:1135
 msgid "Google Maps"
 msgstr ""
 
-#: ../class/admin-form.php:1138
+#: ../class/admin-form.php:1140
 msgid "Others"
 msgstr ""
 
-#: ../class/admin-form.php:1140
+#: ../class/admin-form.php:1142
 msgid "reCaptcha"
 msgstr ""
 
-#: ../class/admin-form.php:1141
+#: ../class/admin-form.php:1143
 msgid "Really Simple Captcha"
 msgstr ""
 
-#: ../class/admin-form.php:1142
+#: ../class/admin-form.php:1144
 msgid "Section Break"
 msgstr ""
 
-#: ../class/admin-form.php:1143
+#: ../class/admin-form.php:1145
 msgid "HTML"
 msgstr ""
 
-#: ../class/admin-form.php:1144
+#: ../class/admin-form.php:1146
 msgid "Action Hook"
 msgstr ""
 
-#: ../class/admin-form.php:1145
+#: ../class/admin-form.php:1147
 msgid "Term &amp; Conditions"
 msgstr ""
 
-#: ../class/admin-form.php:1162
+#: ../class/admin-form.php:1164
 msgid "Post Fields"
 msgstr ""
 
-#: ../class/admin-form.php:1164
+#: ../class/admin-form.php:1166
 msgid "Post Title"
 msgstr ""
 
-#: ../class/admin-form.php:1165
+#: ../class/admin-form.php:1167
 msgid "Post Body"
 msgstr ""
 
-#: ../class/admin-form.php:1166
+#: ../class/admin-form.php:1168
 msgid "Excerpt"
 msgstr ""
 
-#: ../class/admin-form.php:1167
+#: ../class/admin-form.php:1169
 msgid "Tags"
 msgstr ""
 
-#: ../class/admin-form.php:1168
+#: ../class/admin-form.php:1170
 msgid "Category"
 msgstr ""
 
-#: ../class/admin-form.php:1169 ../class/frontend-dashboard.php:98
+#: ../class/admin-form.php:1171 ../class/frontend-dashboard.php:105
 msgid "Featured Image"
 msgstr ""
 
-#: ../class/admin-form.php:1175
+#: ../class/admin-form.php:1177
 msgid "Custom Taxonomies"
 msgstr ""
 
-#: ../class/admin-form.php:1186
+#: ../class/admin-form.php:1188
 msgid "No custom taxonomies found"
 msgstr ""
 
-#: ../class/admin-form.php:1207
+#: ../class/admin-form.php:1209
 msgid "Profile Fields"
 msgstr ""
 
-#: ../class/admin-form.php:1210 ../class/admin-form.php:1461
+#: ../class/admin-form.php:1212 ../class/admin-form.php:1463
 #: ../class/edit-profile.php:104
 msgid "First Name"
 msgstr ""
 
-#: ../class/admin-form.php:1211 ../class/admin-form.php:1465
+#: ../class/admin-form.php:1213 ../class/admin-form.php:1467
 #: ../class/edit-profile.php:109
 msgid "Last Name"
 msgstr ""
 
-#: ../class/admin-form.php:1212 ../class/admin-form.php:1469
+#: ../class/admin-form.php:1214 ../class/admin-form.php:1471
 #: ../class/edit-profile.php:114
 msgid "Nickname"
 msgstr ""
 
-#: ../class/admin-form.php:1213 ../class/admin-form.php:1473
+#: ../class/admin-form.php:1215 ../class/admin-form.php:1475
 #: ../class/edit-profile.php:155
 msgid "E-mail"
 msgstr ""
 
-#: ../class/admin-form.php:1214 ../class/admin-form.php:1477
+#: ../class/admin-form.php:1216 ../class/admin-form.php:1479
 #: ../class/edit-profile.php:160
 msgid "Website"
 msgstr ""
 
-#: ../class/admin-form.php:1215 ../class/admin-form.php:1481
+#: ../class/admin-form.php:1217 ../class/admin-form.php:1483
 #: ../class/edit-profile.php:182
 msgid "Biographical Info"
 msgstr ""
 
-#: ../class/admin-form.php:1216 ../class/admin-form.php:1485
+#: ../class/admin-form.php:1218 ../class/admin-form.php:1487
 msgid "Password"
 msgstr ""
 
-#: ../class/admin-form.php:1217 ../class/admin-form.php:1489
+#: ../class/admin-form.php:1219 ../class/admin-form.php:1491
 msgid "Avatar"
 msgstr ""
 
-#: ../class/admin-form.php:1269 ../class/admin-form.php:1314
+#: ../class/admin-form.php:1271 ../class/admin-form.php:1316
 msgid "Toggle All"
 msgstr ""
 
-#: ../class/admin-form.php:1273 ../class/admin-form.php:1318
+#: ../class/admin-form.php:1275 ../class/admin-form.php:1320
 msgid "Click on a form element to add to the editor"
 msgstr ""
 
@@ -1422,7 +1422,7 @@ msgstr ""
 
 #: ../class/admin-template.php:342 ../class/admin-template.php:364
 #: ../class/admin-template.php:394 ../class/admin-template.php:424
-#: ../class/frontend-dashboard.php:111
+#: ../class/frontend-dashboard.php:118
 msgid "Options"
 msgstr ""
 
@@ -1450,7 +1450,7 @@ msgstr ""
 
 #: ../class/admin-template.php:643 ../class/admin-template.php:670
 #: ../class/admin-template.php:697 ../class/admin-template.php:726
-#: ../class/frontend-dashboard.php:101
+#: ../class/frontend-dashboard.php:108
 msgid "Title"
 msgstr ""
 
@@ -1616,46 +1616,46 @@ msgstr ""
 msgid "Validity:"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:60
+#: ../class/frontend-dashboard.php:67
 msgid "Post Deleted"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:77
+#: ../class/frontend-dashboard.php:84
 #, php-format
 msgid "%s's Dashboard"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:81
+#: ../class/frontend-dashboard.php:88
 #, php-format
 msgid "You have created <span>%d</span> %s"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:108
+#: ../class/frontend-dashboard.php:115
 msgid "Payment"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:129
+#: ../class/frontend-dashboard.php:136
 msgid "No Image"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:190
+#: ../class/frontend-dashboard.php:202
 msgid "&laquo;"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:191
+#: ../class/frontend-dashboard.php:203
 msgid "&raquo;"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:204
+#: ../class/frontend-dashboard.php:216
 #, php-format
 msgid "No %s found"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:224
+#: ../class/frontend-dashboard.php:236
 msgid "Author Info"
 msgstr ""
 
-#: ../class/frontend-dashboard.php:260
+#: ../class/frontend-dashboard.php:272
 msgid "You are not the post author. Cheeting huh!"
 msgstr ""
 
@@ -1835,58 +1835,58 @@ msgstr ""
 msgid "You must purchase a pack before posting"
 msgstr ""
 
-#: ../class/updates.php:26
+#: ../class/updates.php:34
 msgid "Updates"
 msgstr ""
 
-#: ../class/updates.php:49
+#: ../class/updates.php:57
 #, php-format
 msgid ""
 "Please <a href=\"%s\">enter</a> your <strong>WP User Frontend</strong> "
 "plugin license key to get regular update and support."
 msgstr ""
 
-#: ../class/updates.php:64
+#: ../class/updates.php:72
 msgid "Pleae activate your copy"
 msgstr ""
 
-#: ../class/updates.php:91
+#: ../class/updates.php:99
 msgid "WP User Frontend Error:"
 msgstr ""
 
-#: ../class/updates.php:284
+#: ../class/updates.php:292
 msgid "Empty email address"
 msgstr ""
 
-#: ../class/updates.php:288
+#: ../class/updates.php:296
 msgid "Empty license key"
 msgstr ""
 
-#: ../class/updates.php:306
+#: ../class/updates.php:314
 msgid "Settings Saved"
 msgstr ""
 
-#: ../class/updates.php:316
+#: ../class/updates.php:324
 msgid "Plugin Activation"
 msgstr ""
 
-#: ../class/updates.php:339
+#: ../class/updates.php:347
 msgid "E-mail Address"
 msgstr ""
 
-#: ../class/updates.php:342
+#: ../class/updates.php:350
 msgid "Enter your purchase Email address"
 msgstr ""
 
-#: ../class/updates.php:346
+#: ../class/updates.php:354
 msgid "License Key"
 msgstr ""
 
-#: ../class/updates.php:349
+#: ../class/updates.php:357
 msgid "Enter your license key"
 msgstr ""
 
-#: ../class/updates.php:359
+#: ../class/updates.php:367
 msgid "Plugin is activated"
 msgstr ""
 
