@@ -29,7 +29,14 @@ class WPUF_Frontend_Dashboard {
         if ( is_user_logged_in() ) {
             $this->post_listing( $post_type );
         } else {
-            printf( __( "This page is restricted. Please %s to view this page.", 'wpuf' ), wp_loginout( '', false ) );
+            $message = wpuf_get_option( 'un_auth_msg', 'wpuf_dashboard' );
+
+            if ( empty( $message ) ) {
+                $msg = sprintf( __( "This page is restricted. Please %s to view this page.", 'wpuf' ), wp_loginout( '', false ) );
+                echo apply_filters( 'wpuf_dashboard_unauth', $msg, $post_type );
+            } else {
+                echo $message;
+            }
         }
 
         $content = ob_get_contents();

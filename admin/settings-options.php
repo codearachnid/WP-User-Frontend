@@ -197,6 +197,12 @@ function wpuf_settings_fields() {
                 'type' => 'select',
                 'options' => wpuf_get_image_sizes()
             ),
+             array(
+                'name' => 'un_auth_msg',
+                'label' => __( 'Unauthorized Message', 'wpuf' ),
+                'desc' => __( 'Not logged in users will see this message', 'wpuf' ),
+                'type' => 'textarea'
+            ),
         ) ),
         'wpuf_profile' => array(
             array(
