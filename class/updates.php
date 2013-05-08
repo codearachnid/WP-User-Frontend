@@ -10,8 +10,16 @@ class WPUF_Updates {
     function __construct() {
 
         add_action( 'wpuf_admin_menu', array($this, 'admin_menu'), 99 );
-        add_action( 'admin_notices', array($this, 'license_enter_notice') );
-        add_action( 'admin_notices', array($this, 'license_check_notice') );
+        
+        if ( is_multisite() ) {
+            if ( is_main_site() ) {
+                add_action( 'admin_notices', array($this, 'license_enter_notice') );
+                add_action( 'admin_notices', array($this, 'license_check_notice') );
+            }
+        } else {
+            add_action( 'admin_notices', array($this, 'license_enter_notice') );
+            add_action( 'admin_notices', array($this, 'license_check_notice') );
+        }
 
         add_filter( 'pre_set_site_transient_update_plugins', array($this, 'check_update') );
         add_filter( 'plugins_api', array(&$this, 'check_info'), 10, 3 );
