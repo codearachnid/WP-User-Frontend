@@ -30,6 +30,7 @@ class WPUF_Upload {
         wp_localize_script( 'wpuf-upload', 'wpuf_frontend_upload', array(
             'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
             'nonce' => wp_create_nonce( 'wpuf_nonce' ),
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'plupload' => array(
                 'url' => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'wpuf_featured_img' ),
                 'flash_swf_url' => includes_url( 'js/plupload/plupload.flash.swf' ),
