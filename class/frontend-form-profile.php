@@ -33,25 +33,34 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
         }
 
 
-        if ( $type == 'profile' && is_user_logged_in() ) {
+        if ( $type == 'profile' ) {
 
-            if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'profile_update' ) {
-                echo '<div class="wpuf-success">';
-                echo $form_settings['update_message'];
-                echo '</div>';
+            if ( is_user_logged_in() ) {
+                if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'profile_update' ) {
+                    echo '<div class="wpuf-success">';
+                    echo $form_settings['update_message'];
+                    echo '</div>';
+                }
+
+                $this->profile_edit( $id, $form_vars, $form_settings );
+            } else {
+                echo '<div class="wpuf-info">' . __( 'Please login to update your profile!', 'wpuf' ) . '</div>';
             }
+        } elseif ( $type == 'registration' ) {
 
-            $this->profile_edit( $id, $form_vars, $form_settings );
-        } elseif ( $type == 'registration' && !is_user_logged_in() ) {
+            if ( is_user_logged_in() ) {
+                echo '<div class="wpuf-info">' . __( 'You are already logged in!', 'wpuf' ) . '</div>';
+            } else {
 
-            if ( get_option( 'users_can_register' ) != '1' ) {
-                echo '<div class="wpuf-info">';
-                _e( 'User registration is currently not allowed.' );
-                echo '</div>';
-                return;
+                if ( get_option( 'users_can_register' ) != '1' ) {
+                    echo '<div class="wpuf-info">';
+                    _e( 'User registration is currently not allowed.' );
+                    echo '</div>';
+                    return;
+                }
+
+                $this->profile_edit( $id, $form_vars, $form_settings );
             }
-
-            $this->profile_edit( $id, $form_vars, $form_settings );
         }
         // var_dump( $id, $type, $form_vars, $form_settings );
 
