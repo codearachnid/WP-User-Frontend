@@ -8,6 +8,20 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.5 =
+
+date: 22 May, 2013
+
+* [fix] Comment form fix in dashboard
+* [fix] Google map fix in admin edit post area
+* [fix] insufficient arguments in admin profile area
+* [fix] feature image delete bug in edit post area
+* [improve] multisite license notice fix
+* [new] dashboard unauthorized message
+* [new] not logged in message in user profile form
+* [improve] updated language file
+
+
 = version 2.1.4 =
 
 date: 27 April, 2013
