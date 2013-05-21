@@ -43,7 +43,6 @@
             var form = $(this),
                 form_data = WP_User_Frontend.validateForm(form);
 
-                console.log(form_data);
             if (form_data) {
                 return true;
             }
