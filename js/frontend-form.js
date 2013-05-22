@@ -55,6 +55,20 @@
                 form = $(this).closest('form'),
                 form_data = form.serialize() + '&action=wpuf_draft_post',
                 post_id = form.find('input[type="hidden"][name="post_id"]').val();
+                
+            var rich_texts = []
+                temp, val;
+                
+            // grab rich texts from tinyMCE
+            $('.wpuf-rich-validation').each(function (index, item) {
+                temp = $(item).data('id');
+                val = $.trim( tinyMCE.get(temp).getContent() );
+
+                rich_texts.push(temp + '=' + encodeURIComponent( val ) );
+            });
+
+            // append them to the form var
+            form_data = form_data + '&' + rich_texts.join('&');
 
 
             self.after(' <span class="wpuf-loading"></span>');
