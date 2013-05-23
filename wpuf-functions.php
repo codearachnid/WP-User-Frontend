@@ -660,15 +660,17 @@ add_filter( 'the_content', 'wpuf_show_custom_fields' );
  * @param int $post_id
  * @param array $args
  */
-function wpuf_shortcode_map( $meta_key, $post_id = NULL, $args = array() ) {
-    if ( !$post_id ) {
-        $post_id = get_post()->ID;
+function wpuf_shortcode_map( $location, $post_id = null, $args = array() ) {
+    
+    // compatibility
+    if ( $post_id ) {
+        wpuf_shortcode_map_post( $location, $post_id, $args );
+        return;
     }
 
     $default = array('width' => 450, 'height' => 250, 'zoom' => 12);
     $args = wp_parse_args( $args, $default );
 
-    $location = get_post_meta( $post_id, $meta_key, true );
     list( $def_lat, $def_long ) = explode( ',', $location );
     $def_lat = $def_lat ? $def_lat : 0;
     $def_long = $def_long ? $def_long : 0;
@@ -695,6 +697,37 @@ function wpuf_shortcode_map( $meta_key, $post_id = NULL, $args = array() ) {
         });
     </script>
     <?php
+}
+
+/**
+ * Map shortcode for users
+ * 
+ * @param string $meta_key
+ * @param int $user_id
+ * @param array $args
+ */
+function wpuf_shortcode_map_user( $meta_key, $user_id = null, $args = array() ) {
+    $location = get_user_meta( $user_id, $meta_key, true );
+    wpuf_shortcode_map( $location, null, $args );
+}
+
+/**
+ * Map shortcode post posts
+ * 
+ * @global object $post
+ * @param string $meta_key
+ * @param int $post_id
+ * @param array $args
+ */
+function wpuf_shortcode_map_post( $meta_key, $post_id = null, $args = array() ) {
+    global $post;
+    
+    if ( !$post_id ) {
+        $post_id = $post->ID;
+    }
+    
+    $location = get_post_meta( $post_id, $meta_key, true );
+    wpuf_shortcode_map( $location, null, $args );
 }
 
 function wpuf_meta_shortcode( $atts ) {
