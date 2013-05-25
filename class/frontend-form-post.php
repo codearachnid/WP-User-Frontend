@@ -267,9 +267,24 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
                             $tax = array($tax);
                         }
 
-                        wp_set_post_terms( $post_id, $_POST[$taxonomy['name']], $taxonomy['name'] );
-                    }
-                }
+                        if ( is_taxonomy_hierarchical( $taxonomy['name'] ) ) {
+                            wp_set_post_terms( $post_id, $_POST[$taxonomy['name']], $taxonomy['name'] );
+                        } else {
+                            if ( $tax ) {
+                                $non_hierarchical = array();
+                                
+                                foreach ($tax as $value) {
+                                    $term = get_term_by( 'id', $value, $taxonomy['name'] );
+                                    if ( $term && !is_wp_error( $term ) ) {
+                                        $non_hierarchical[] = $term->name;
+                                    }
+                                }
+
+                                wp_set_post_terms( $post_id, $non_hierarchical, $taxonomy['name'] );
+                            }
+                        } // hierarchical
+                    } // is object tax
+                } // isset tax
             }
 
             if ( $is_update ) {
