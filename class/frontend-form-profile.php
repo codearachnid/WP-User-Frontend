@@ -224,7 +224,11 @@ class WPUF_Frontend_Form_Profile extends WPUF_Render_Form {
                 $this->update_user_meta( $meta_vars, $user_id );
 
                 // send user notification
-                wp_new_user_notification( $user_id, $password );
+                if ( class_exists( 'Theme_My_Login_Custom_Email') ) {
+                    do_action( 'tml_new_user_registered', $user_id, $password );
+                } else {
+                    wp_new_user_notification( $user_id, $password );
+                }
                 
                 do_action( 'wpuf_after_register', $user_id, $userdata, $form_id, $form_settings );
 
