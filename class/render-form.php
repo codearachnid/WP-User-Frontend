@@ -922,6 +922,7 @@ class WPUF_Render_Form {
             }
             ?>
 
+            <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
 
         <?php
