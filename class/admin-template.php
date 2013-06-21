@@ -653,6 +653,37 @@ class WPUF_Admin_Template {
         <?php
     }
 
+    public static function custom_hidden_field( $field_id, $label, $values = array() ) {
+        $meta_name = sprintf( '%s[%d][name]', self::$input_name, $field_id );
+        $value_name = sprintf( '%s[%d][meta_value]', self::$input_name, $field_id );
+        $is_meta_name = sprintf( '%s[%d][is_meta]', self::$input_name, $field_id );
+        $label_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
+
+        $meta_value = $values ? esc_attr( $values['name'] ) : '';
+        $value_value = $values ? esc_attr( $values['meta_value'] ) : '';
+        ?>
+        <li class="custom-field custom_hidden_field">
+            <?php self::legend( $label, $values ); ?>
+            <?php self::hidden_field( "[$field_id][input_type]", 'hidden' ); ?>
+            <?php self::hidden_field( "[$field_id][template]", 'custom_hidden_field' ); ?>
+
+            <div class="wpuf-form-holder">
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Meta Key', 'wpuf' ); ?></label>
+                    <input type="text" name="<?php echo $meta_name; ?>" value="<?php echo $meta_value; ?>" class="smallipopInput" title="<?php _e( 'Name of the meta key this field will save to', 'wpuf' ); ?>">
+                    <input type="hidden" name="<?php echo $is_meta_name; ?>" value="yes">
+                    <input type="hidden" name="<?php echo $label_name; ?>" value="">
+                </div> <!-- .wpuf-form-rows -->
+
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'Meta Value', 'wpuf' ); ?></label>
+                    <input type="text" class="smallipopInput" title="<?php esc_attr_e( 'Enter the meta value', 'wpuf' ); ?>" name="<?php echo $value_name; ?>" value="<?php echo $value_value; ?>">
+                </div>
+            </div> <!-- .wpuf-form-holder -->
+        </li>
+        <?php
+    }
+
     public static function section_break( $field_id, $label, $values = array() ) {
         $title_name = sprintf( '%s[%d][label]', self::$input_name, $field_id );
         $description_name = sprintf( '%s[%d][description]', self::$input_name, $field_id );

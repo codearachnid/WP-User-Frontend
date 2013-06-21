@@ -1131,6 +1131,7 @@ class WPUF_Admin_Form {
             <button class="button" data-name="custom_url" data-type="url" title="<?php echo $title; ?>"><?php _e( 'URL', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_email" data-type="email" title="<?php echo $title; ?>"><?php _e( 'Email', 'wpuf' ); ?></button>
             <button class="button" data-name="custom_repeater" data-type="repeat" title="<?php echo $title; ?>"><?php _e( 'Repeat Field', 'wpuf' ); ?></button>
+            <button class="button" data-name="custom_hidden" data-type="hidden" title="<?php echo $title; ?>"><?php _e( 'Hidden Field', 'wpuf' ); ?></button>
 
             <button class="button" data-name="custom_map" data-type="map" title="<?php echo $title; ?>"><?php _e( 'Google Maps', 'wpuf' ); ?></button>
 
@@ -1450,6 +1451,11 @@ class WPUF_Admin_Form {
             case 'custom_map':
                 WPUF_Admin_Template_Post::google_map( $field_id, 'Custom Field: Google Map' );
                 break;
+                break;
+
+            case 'custom_hidden':
+                WPUF_Admin_Template_Post::custom_hidden_field( $field_id, 'Hidden Field' );
+                break;
 
             case 'toc':
                 WPUF_Admin_Template_Post::toc( $field_id, 'TOC' );
@@ -1493,7 +1499,7 @@ class WPUF_Admin_Form {
 
 
             default:
-                # code...
+                do_action( 'wpuf_admin_field_' . $name, $type, $field_id );
                 break;
         }
 

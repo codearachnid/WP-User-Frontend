@@ -449,7 +449,7 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
     }
 
     public static function update_post_meta( $meta_vars, $post_id ) {
-
+        
         // prepare the meta vars
         list( $meta_key_value, $multi_repeated, $files ) = self::prepare_meta_fields( $meta_vars );
 

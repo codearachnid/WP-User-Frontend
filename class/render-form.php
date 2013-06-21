@@ -325,11 +325,18 @@ class WPUF_Render_Form {
      */
     function render_items( $form_vars, $post_id, $type = 'post', $form_id, $form_settings ) {
         $edit_ignore = array('recaptcha', 'really_simple_captcha');
+        $hidden_fields = array();
 
         foreach ($form_vars as $key => $form_field) {
 
             // don't show captcha in edit page
             if ( $post_id && in_array( $form_field['input_type'], $edit_ignore ) ) {
+                continue;
+            }
+            
+            // igonre the hidden fields
+            if ( $form_field['input_type'] == 'hidden' ) {
+                $hidden_fields[] = $form_field;
                 continue;
             }
 
@@ -423,6 +430,13 @@ class WPUF_Render_Form {
 
             $this->render_item_after( $form_field );
         } //end foreach
+        
+        if( $hidden_fields ) {
+            foreach($hidden_fields as $field) {
+                printf( '<input type="hidden" name="%s" value="%s">', esc_attr( $field['name'] ), esc_attr( $field['meta_value'] ) );
+                echo "\r\n";
+            }
+        }
     }
 
     function submit_button( $form_id, $form_settings, $post_id ) {
