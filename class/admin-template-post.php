@@ -125,11 +125,15 @@ class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
         $order_name = sprintf( '%s[%d][order]', self::$input_name, $field_id );
         $orderby_name = sprintf( '%s[%d][orderby]', self::$input_name, $field_id );
         $exclude_name = sprintf( '%s[%d][exclude]', self::$input_name, $field_id );
+        $woo_attr_name = sprintf( '%s[%d][woo_attr]', self::$input_name, $field_id );
+        $woo_attr_vis_name = sprintf( '%s[%d][woo_attr_vis]', self::$input_name, $field_id );
 
         $type_value = $values ? esc_attr( $values['type'] ) : 'select';
         $order_value = $values ? esc_attr( $values['order'] ) : 'ASC';
         $orderby_value = $values ? esc_attr( $values['orderby'] ) : 'name';
         $exclude_value = $values ? esc_attr( $values['exclude'] ) : '';
+        $woo_attr_value = $values ? esc_attr( $values['woo_attr'] ) : 'no';
+        $woo_attr_vis_value = $values ? esc_attr( $values['woo_attr_vis'] ) : 'no';
         ?>
         <li class="taxonomy <?php echo $taxonomy; ?>">
             <?php self::legend( $label, $values ); ?>
@@ -145,6 +149,7 @@ class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
                         <option value="select"<?php selected( $type_value, 'select' ); ?>><?php _e( 'Dropdown', 'wpuf' ); ?></option>
                         <option value="multiselect"<?php selected( $type_value, 'multiselect' ); ?>><?php _e( 'Multi Select', 'wpuf' ); ?></option>
                         <option value="checkbox"<?php selected( $type_value, 'checkbox' ); ?>><?php _e( 'Checkbox', 'wpuf' ); ?></option>
+                        <option value="text"<?php selected( $type_value, 'text' ); ?>><?php _e( 'Text Input', 'wpuf' ); ?></option>
                     </select>
                 </div> <!-- .wpuf-form-rows -->
                 
@@ -170,6 +175,30 @@ class WPUF_Admin_Template_Post extends WPUF_Admin_Template {
                 <div class="wpuf-form-rows">
                     <label><?php _e( 'Exclude terms', 'wpuf' ); ?></label>
                     <input type="text" class="smallipopInput" name="<?php echo $exclude_name; ?>" title="<?php _e( 'Enter the term IDs as comma separated (without space) to exclude in the form.', 'wpuf' ); ?>" value="<?php echo $exclude_value; ?>" />
+                </div> <!-- .wpuf-form-rows -->
+                
+                <div class="wpuf-form-rows">
+                    <label><?php _e( 'WooCommerce Attribute', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <label>
+                            <?php self::hidden_field( "[$field_id][woo_attr]", 'no' ); ?>
+                            <input type="checkbox" class="woo_attr" name="<?php echo $woo_attr_name ?>" value="yes"<?php checked( $woo_attr_value, 'yes' ); ?> />
+                            <?php _e( 'This taxonomy is a WooCommerce attribute', 'wpuf' ); ?>
+                        </label>
+                    </div>
+                </div> <!-- .wpuf-form-rows -->
+                
+                <div class="wpuf-form-rows<?php echo $woo_attr_value == 'no' ? ' wpuf-hide' : ''; ?>">
+                    <label><?php _e( 'Visibility', 'wpuf' ); ?></label>
+
+                    <div class="wpuf-form-sub-fields">
+                        <label>
+                            <?php self::hidden_field( "[$field_id][woo_attr_vis]", 'no' ); ?>
+                            <input type="checkbox" name="<?php echo $woo_attr_vis_name ?>" value="yes"<?php checked( $woo_attr_vis_value, 'yes' ); ?> />
+                            <?php _e( 'Visible on product page', 'wpuf' ); ?>
+                        </label>
+                    </div>
                 </div> <!-- .wpuf-form-rows -->
 
             </div> <!-- .wpuf-form-holder -->

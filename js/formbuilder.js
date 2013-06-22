@@ -70,6 +70,18 @@
                     $parent.next().hide().next().hide();
                 }
             });
+            
+            // woo attribute
+            $('#wpuf-form-editor').on('click', 'input[type=checkbox].woo_attr', function() {
+                var $self = $(this),
+                    $parent = $self.closest('.wpuf-form-rows');
+
+                if ($self.is(':checked')) {
+                    $parent.next().show();
+                } else {
+                    $parent.next().hide();
+                }
+            });
 
             // toggle form field
             $('#wpuf-form-editor').on('click', '.wpuf-toggle', this.toggleFormField);

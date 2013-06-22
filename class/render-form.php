@@ -1229,7 +1229,9 @@ class WPUF_Render_Form {
         $taxonomy = $attr['name'];
 
         $terms = array();
-        if ( $post_id ) {
+        if ( $post_id && $attr['type'] == 'text' ) {
+            $terms = wp_get_post_terms( $post_id, $taxonomy, array('fields' => 'names') );
+        } elseif( $post_id ) {
             $terms = wp_get_post_terms( $post_id, $taxonomy, array('fields' => 'ids') );
         }
         ?>
@@ -1288,6 +1290,14 @@ class WPUF_Render_Form {
                 case 'checkbox':
                     printf( '<span data-required="%s" data-type="tax-checkbox" />', $attr['required'] );
                     wpuf_category_checklist( $post_id, false, $taxonomy, $exclude, $attr );
+                    break;
+                
+                case 'text':
+                    ?>
+            
+                    <input class="textfield<?php echo $this->required_class( $attr ); ?>" id="<?php echo $attr['name']; ?>" type="text" data-required="<?php echo $attr['required'] ?>" data-type="text"<?php $this->required_html5( $attr ); ?> name="<?php echo esc_attr( $attr['name'] ); ?>" value="<?php echo esc_attr( implode( ', ', $terms ) ); ?>" size="40" />
+                    
+                    <?php
                     break;
 
                 default:
