@@ -8,6 +8,20 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.6 =
+
+date: 22 June, 2013
+
+* [fix] rich textarea post draft bug fix
+* [fix] checkbox help text was left out
+* [fix] help text for radio field
+* [improve] map short code updated and separated to user and post map functions
+* [new] non hierarchical taxonomy update support
+* [new] theme my login custom email notification action hook fire
+* [new] wp cli compatibility
+* [new] hidden custom field
+* [new] custom taxonomy text input field type added
+
 = version 2.1.5 =
 
 date: 22 May, 2013
