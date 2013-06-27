@@ -638,6 +638,11 @@ function wpuf_show_custom_fields( $content ) {
                 }
 
                 $html .= $image_html . '</li>';
+                
+            } elseif ( $attr['input_type'] == 'map' ) {
+                ob_start();
+                wpuf_shortcode_map_post($attr['name'], $post->ID);
+                $html .= ob_get_clean();
             } else {
 
                 $value = get_post_meta( $post->ID, $attr['name'] );
@@ -660,7 +665,7 @@ add_filter( 'the_content', 'wpuf_show_custom_fields' );
  * @param int $post_id
  * @param array $args
  */
-function wpuf_shortcode_map( $location, $post_id = null, $args = array() ) {
+function wpuf_shortcode_map( $location, $post_id = null, $args = array(), $meta_key = '' ) {
     
     // compatibility
     if ( $post_id ) {
@@ -708,7 +713,7 @@ function wpuf_shortcode_map( $location, $post_id = null, $args = array() ) {
  */
 function wpuf_shortcode_map_user( $meta_key, $user_id = null, $args = array() ) {
     $location = get_user_meta( $user_id, $meta_key, true );
-    wpuf_shortcode_map( $location, null, $args );
+    wpuf_shortcode_map( $location, null, $args, $meta_key );
 }
 
 /**
@@ -727,7 +732,7 @@ function wpuf_shortcode_map_post( $meta_key, $post_id = null, $args = array() ) 
     }
     
     $location = get_post_meta( $post_id, $meta_key, true );
-    wpuf_shortcode_map( $location, null, $args );
+    wpuf_shortcode_map( $location, null, $args, $meta_key );
 }
 
 function wpuf_meta_shortcode( $atts ) {
