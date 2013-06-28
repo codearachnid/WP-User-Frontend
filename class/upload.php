@@ -24,21 +24,24 @@ class WPUF_Upload {
 
     function enqueue_scripts() {
 
-        $path = plugins_url( '', dirname( __FILE__ ) );
-        wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery', 'plupload-handlers') );
+        if ( wpuf_has_shortcode( 'wpuf_form' ) || wpuf_has_shortcode( 'wpuf_edit' ) || wpuf_has_shortcode( 'wpuf_profile' ) ) {
 
-        wp_localize_script( 'wpuf-upload', 'wpuf_frontend_upload', array(
-            'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
-            'nonce' => wp_create_nonce( 'wpuf_nonce' ),
-            'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'plupload' => array(
-                'url' => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'wpuf_featured_img' ),
-                'flash_swf_url' => includes_url( 'js/plupload/plupload.flash.swf' ),
-                'filters' => array(array('title' => __( 'Allowed Files' ), 'extensions' => '*')),
-                'multipart' => true,
-                'urlstream_upload' => true,
-            )
-        ) );
+            $path = plugins_url( '', dirname( __FILE__ ) );
+            wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery', 'plupload-handlers') );
+
+            wp_localize_script( 'wpuf-upload', 'wpuf_frontend_upload', array(
+                'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
+                'nonce' => wp_create_nonce( 'wpuf_nonce' ),
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'plupload' => array(
+                    'url' => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'wpuf_featured_img' ),
+                    'flash_swf_url' => includes_url( 'js/plupload/plupload.flash.swf' ),
+                    'filters' => array(array('title' => __( 'Allowed Files' ), 'extensions' => '*')),
+                    'multipart' => true,
+                    'urlstream_upload' => true,
+                )
+            ) );
+        } // has_shortcode
     }
 
     function upload_file( $image_only = false ) {

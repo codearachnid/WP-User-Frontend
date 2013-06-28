@@ -161,21 +161,27 @@ class WP_User_Frontend {
     function enqueue_scripts() {
         $path = plugins_url( '', __FILE__ );
 
-        // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
-        wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
-        wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
+        if ( wpuf_has_shortcode( 'wpuf_form' ) || wpuf_has_shortcode( 'wpuf_edit' ) || wpuf_has_shortcode( 'wpuf_profile' ) ) {
+            
+            $scheme = is_ssl() ? 'https' : 'http';
 
-        wp_enqueue_script( 'jquery-ui-datepicker' );
-        wp_enqueue_script( 'jquery-ui-autocomplete' );
-        wp_enqueue_script( 'jquery-ui-slider' );
-        wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
-        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
+            // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
+            wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
+            wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
 
-        wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
-            'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'error_message' => __( 'Please fix the errors to proceed', 'wpuf' ),
-            'nonce' => wp_create_nonce( 'wpuf_nonce' )
-        ) );
+            wp_enqueue_script( 'jquery-ui-datepicker' );
+            wp_enqueue_script( 'jquery-ui-autocomplete' );
+            wp_enqueue_script( 'jquery-ui-slider' );
+            wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
+            wp_enqueue_script( 'google-maps', $scheme . '://maps.google.com/maps/api/js?sensor=true' );
+            wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
+
+            wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'error_message' => __( 'Please fix the errors to proceed', 'wpuf' ),
+                'nonce' => wp_create_nonce( 'wpuf_nonce' )
+            ) );
+        }
     }
 
     /**
