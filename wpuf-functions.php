@@ -682,23 +682,42 @@ function wpuf_shortcode_map( $location, $post_id = null, $args = array(), $meta_
     ?>
 
     <div class="google-map" style="margin: 10px 0; height: <?php echo $args['height']; ?>px; width: <?php echo $args['width']; ?>px;" id="wpuf-map-<?php echo $meta_key; ?>"></div>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
     <script type="text/javascript">
         jQuery(function($){
-            var curpoint = new google.maps.LatLng(<?php echo $def_lat; ?>, <?php echo $def_long; ?>);
+            (function(){
+                
+                window.wpuf_render_map = function() {
+                    var curpoint = new google.maps.LatLng(<?php echo $def_lat; ?>, <?php echo $def_long; ?>);
 
-            var gmap = new google.maps.Map( $('#wpuf-map-<?php echo $meta_key; ?>')[0], {
-                center: curpoint,
-                zoom: <?php echo $args['zoom']; ?>,
-                mapTypeId: window.google.maps.MapTypeId.ROADMAP
-            });
+                    var gmap = new google.maps.Map( $('#wpuf-map-<?php echo $meta_key; ?>')[0], {
+                        center: curpoint,
+                        zoom: <?php echo $args['zoom']; ?>,
+                        mapTypeId: window.google.maps.MapTypeId.ROADMAP
+                    });
 
-            var marker = new window.google.maps.Marker({
-                position: curpoint,
-                map: gmap,
-                draggable: true
-            });
+                    var marker = new window.google.maps.Marker({
+                        position: curpoint,
+                        map: gmap,
+                        draggable: true
+                    });
+                }
+                
+                function loadScript() {
+                    var script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.src = "//maps.googleapis.com/maps/api/js?&sensor=false&callback=wpuf_render_map";
+                    document.body.appendChild(script);
+                }
+                
+                if (typeof google === 'undefined') {
+                    loadScript();
+                } else {
+                    wpuf_render_map();
+                }
+                
+            })();
+            
         });
     </script>
     <?php
@@ -803,4 +822,36 @@ function wpuf_get_option( $option, $section, $default = '' ) {
     }
 
     return $default;
+}
+
+/**
+ * check the current post for the existence of a short code
+ *
+ * @link http://wp.tutsplus.com/articles/quick-tip-improving-shortcodes-with-the-has_shortcode-function/
+ * @param string $shortcode
+ * @return boolean
+ */
+function wpuf_has_shortcode( $shortcode = '', $post_id = false ) {
+  
+    $post_to_check = ( $post_id == false ) ? get_post( get_the_ID() ) : get_post( $post_id );
+  
+    if ( !$post_to_check ) {
+        return false;
+    }
+  
+    // false because we have to search through the post content first
+    $found = false;
+  
+    // if no short code was provided, return false
+    if ( !$shortcode ) {
+        return $found;
+    }
+  
+    // check the post content for the short code
+    if ( stripos( $post_to_check->post_content, '[' . $shortcode ) !== false ) {
+        // we have found the short code
+        $found = true;
+    }
+  
+    return $found;
 }
