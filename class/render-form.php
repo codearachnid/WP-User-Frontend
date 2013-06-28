@@ -1485,7 +1485,6 @@ class WPUF_Render_Form {
             <div class="google-map" style="margin: 10px 0; height: 250px; width: 450px;" id="wpuf-map-<?php echo $attr['name']; ?>"></div>
             <span class="wpuf-help"><?php echo $attr['help']; ?></span>
         </div>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script type="text/javascript">
 
             (function($) {
