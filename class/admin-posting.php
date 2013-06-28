@@ -25,12 +25,14 @@ class WPUF_Admin_Posting extends WPUF_Render_Form {
         }
 
         $path = plugins_url( '', dirname( __FILE__ ) );
+        $scheme = is_ssl() ? 'https' : 'http';
 
         wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'jquery-ui-slider' );
         wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
+        wp_enqueue_script( 'google-maps', $scheme . '://maps.google.com/maps/api/js?sensor=true' );
 
         wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery', 'plupload-handlers') );
         wp_localize_script( 'wpuf-upload', 'wpuf_frontend_upload', array(
