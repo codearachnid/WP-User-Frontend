@@ -666,6 +666,7 @@ add_filter( 'the_content', 'wpuf_show_custom_fields' );
  * @param array $args
  */
 function wpuf_shortcode_map( $location, $post_id = null, $args = array(), $meta_key = '' ) {
+    global $post;
     
     // compatibility
     if ( $post_id ) {
@@ -681,42 +682,23 @@ function wpuf_shortcode_map( $location, $post_id = null, $args = array(), $meta_
     $def_long = $def_long ? $def_long : 0;
     ?>
 
-    <div class="google-map" style="margin: 10px 0; height: <?php echo $args['height']; ?>px; width: <?php echo $args['width']; ?>px;" id="wpuf-map-<?php echo $meta_key; ?>"></div>
+    <div class="google-map" style="margin: 10px 0; height: <?php echo $args['height']; ?>px; width: <?php echo $args['width']; ?>px;" id="wpuf-map-<?php echo $meta_key . $post->ID; ?>"></div>
 
     <script type="text/javascript">
         jQuery(function($){
-            (function(){
-                
-                window.wpuf_render_map = function() {
-                    var curpoint = new google.maps.LatLng(<?php echo $def_lat; ?>, <?php echo $def_long; ?>);
+            var curpoint = new google.maps.LatLng(<?php echo $def_lat; ?>, <?php echo $def_long; ?>);
 
-                    var gmap = new google.maps.Map( $('#wpuf-map-<?php echo $meta_key; ?>')[0], {
-                        center: curpoint,
-                        zoom: <?php echo $args['zoom']; ?>,
-                        mapTypeId: window.google.maps.MapTypeId.ROADMAP
-                    });
+            var gmap = new google.maps.Map( $('#wpuf-map-<?php echo $meta_key . $post->ID; ?>')[0], {
+                center: curpoint,
+                zoom: <?php echo $args['zoom']; ?>,
+                mapTypeId: window.google.maps.MapTypeId.ROADMAP
+            });
 
-                    var marker = new window.google.maps.Marker({
-                        position: curpoint,
-                        map: gmap,
-                        draggable: true
-                    });
-                }
-                
-                function loadScript() {
-                    var script = document.createElement("script");
-                    script.type = "text/javascript";
-                    script.src = "//maps.googleapis.com/maps/api/js?&sensor=false&callback=wpuf_render_map";
-                    document.body.appendChild(script);
-                }
-                
-                if (typeof google === 'undefined') {
-                    loadScript();
-                } else {
-                    wpuf_render_map();
-                }
-                
-            })();
+            var marker = new window.google.maps.Marker({
+                position: curpoint,
+                map: gmap,
+                draggable: true
+            });
             
         });
     </script>
