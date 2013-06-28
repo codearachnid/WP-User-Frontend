@@ -57,6 +57,10 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         extract( shortcode_atts( array('post_id' => 0), $atts ) );
 
         ob_start();
+        
+        if ( !is_user_logged_in() ) {
+            return '<div class="wpuf-info">' . __( 'You are not logged in', 'wpuf' ) . '</div>';
+        }
 
         if ( !$post_id ) {
             $post_id = isset( $_GET['pid'] ) ? intval( $_GET['pid'] ) : 0;
