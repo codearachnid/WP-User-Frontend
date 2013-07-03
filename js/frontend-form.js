@@ -56,7 +56,7 @@
                 form_data = form.serialize() + '&action=wpuf_draft_post',
                 post_id = form.find('input[type="hidden"][name="post_id"]').val();
                 
-            var rich_texts = []
+            var rich_texts = [],
                 temp, val;
                 
             // grab rich texts from tinyMCE
