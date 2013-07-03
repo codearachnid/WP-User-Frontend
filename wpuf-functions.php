@@ -619,6 +619,10 @@ function wpuf_show_custom_fields( $content ) {
 
         foreach ($meta as $attr) {
             $field_value = get_post_meta( $post->ID, $attr['name'] );
+            
+            if ( $attr['input_type'] == 'hidden' ) {
+                continue;
+            }
 
             if ( $attr['input_type'] == 'image_upload' || $attr['input_type'] == 'file_upload' ) {
                 $image_html = '<li><label>' . $attr['label'] . ':</label> ';
