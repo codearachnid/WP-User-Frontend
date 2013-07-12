@@ -8,6 +8,18 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.7 =
+
+date: 12 July, 2013
+
+* [fix] accidental input field on checkbox removed
+* [improve] shortcode for map in post
+* [improve] login checking on edit pages
+* [improve] inline google maps script removed
+* [new] scripts loading option added
+* [new] pagination style in dashboard
+* [improve] flash runtime removed from plupload runtime
+
 = version 2.1.6 =
 
 date: 22 June, 2013
