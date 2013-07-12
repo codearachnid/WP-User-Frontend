@@ -159,29 +159,48 @@ class WP_User_Frontend {
      * @since 0.2
      */
     function enqueue_scripts() {
-        $path = plugins_url( '', __FILE__ );
         
         $scheme = is_ssl() ? 'https' : 'http';
         wp_enqueue_script( 'google-maps', $scheme . '://maps.google.com/maps/api/js?sensor=true' );
-
-        if ( wpuf_has_shortcode( 'wpuf_form' ) || wpuf_has_shortcode( 'wpuf_edit' ) || wpuf_has_shortcode( 'wpuf_profile' ) ) {
-
-            // wp_enqueue_style( 'wpuf', $path . '/css/wpuf.css' );
-            wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
-            wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
-
-            wp_enqueue_script( 'jquery-ui-datepicker' );
-            wp_enqueue_script( 'jquery-ui-autocomplete' );
-            wp_enqueue_script( 'jquery-ui-slider' );
-            wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
-            wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
-
-            wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'error_message' => __( 'Please fix the errors to proceed', 'wpuf' ),
-                'nonce' => wp_create_nonce( 'wpuf_nonce' )
-            ) );
+        
+        if ( wpuf_get_option( 'load_script', 'wpuf_general', 'on') == 'on') {
+            $this->plugin_scripts();
+        } else if ( wpuf_has_shortcode( 'wpuf_form' ) || wpuf_has_shortcode( 'wpuf_edit' ) || wpuf_has_shortcode( 'wpuf_profile' ) || wpuf_has_shortcode( 'wpuf_dashboard' ) ) {
+            $this->plugin_scripts();
         }
+    }
+    
+    function plugin_scripts() {
+        $path = plugins_url( '', __FILE__ );
+        
+        wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
+        wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
+
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
+        wp_enqueue_script( 'jquery-ui-slider' );
+        wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
+        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
+        wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery', 'plupload-handlers') );
+
+        wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'error_message' => __( 'Please fix the errors to proceed', 'wpuf' ),
+            'nonce' => wp_create_nonce( 'wpuf_nonce' )
+        ) );
+        
+        wp_localize_script( 'wpuf-upload', 'wpuf_frontend_upload', array(
+            'confirmMsg' => __( 'Are you sure?', 'wpuf' ),
+            'nonce' => wp_create_nonce( 'wpuf_nonce' ),
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'plupload' => array(
+                'url' => admin_url( 'admin-ajax.php' ) . '?nonce=' . wp_create_nonce( 'wpuf_featured_img' ),
+                'flash_swf_url' => includes_url( 'js/plupload/plupload.flash.swf' ),
+                'filters' => array(array('title' => __( 'Allowed Files' ), 'extensions' => '*')),
+                'multipart' => true,
+                'urlstream_upload' => true,
+            )
+        ) );
     }
 
     /**
