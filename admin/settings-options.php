@@ -127,6 +127,13 @@ function wpuf_settings_fields() {
                 'default' => 'off'
             ),
             array(
+                'name' => 'load_script',
+                'label' => __( 'Load Scripts', 'wpuf' ),
+                'desc' => __( 'Load scripts/styles in all pages', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'on'
+            ),
+            array(
                 'name' => 'recaptcha_public',
                 'label' => __( 'reCAPTCHA Public Key', 'wpuf' ),
             ),
