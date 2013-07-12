@@ -518,3 +518,83 @@ table.wpuf-table {
         }
     }
 }
+
+.wpuf-pagination {
+    div.pagination{
+        text-align:center;
+        padding:7px;
+        margin:3px;
+    }
+
+    .page-numbers{
+        padding:2px 8px;
+        margin:2px;
+        border:1px solid #4A5154;
+        text-decoration:none;
+        color:#4A5154;
+        background: #fff;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+
+        &:hover,
+        &:active{
+            border:1px solid #4A5154;
+            background-color:#4A5154;
+            color:#fff;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
+        }
+
+        &.current{
+            padding:2px 8px;
+            margin:2px;
+            border:1px solid #4A5154;
+            font-weight:bold;
+            background-color:#4A5154;
+            color:#FFF;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
+        }
+    }
+}
+
+/** author info **/
+.wpuf-author {
+    clear: both;
+    margin: 10px 0;
+
+    h3{
+        margin: 0 !important;
+        background: #CFCFCF;
+        text-align: left;
+        padding: 3px 10px;
+    }
+
+    .wpuf-author-inside {
+        background: none repeat scroll 0 0 #F0F0F0;
+        border-bottom: 2px solid #DDDDDD;
+        height: 90px;
+        padding-left: 10px;
+        padding-top: 15px;
+        margin-bottom: 15px;
+
+        .wpuf-user-image {
+            float: left;
+            padding-right: 15px;
+        }
+
+        p {
+            margin-bottom: 10px !important;
+        }
+
+        p.wpuf-author-info {
+            padding-top: 8px;
+        }
+
+        p.wpuf-user-name a {
+            color: #335160;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    }
+}
