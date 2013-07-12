@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP User Frontend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-27 20:06+0600\n"
-"PO-Revision-Date: 2013-06-27 20:06+0600\n"
+"POT-Creation-Date: 2013-07-12 15:00+0600\n"
+"PO-Revision-Date: 2013-07-12 15:00+0600\n"
 "Last-Translator: Tareq Hasan <tareq@wedevs.com>\n"
 "Language-Team: Tareq Hasan <tareq@wedevs.com>\n"
 "Language: en_BD\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: ../wpuf-edit-user.php:100 ../admin/subscription.php:75
 #: ../class/frontend-dashboard.php:184 ../class/render-form.php:836
-#: ../class/upload.php:132
+#: ../class/upload.php:111
 msgid "Delete"
 msgstr ""
 
@@ -174,17 +174,26 @@ msgstr ""
 msgid "CSV"
 msgstr ""
 
-#: ../wpuf.php:176
+#: ../wpuf.php:188
 msgid "Please fix the errors to proceed"
 msgstr ""
 
-#: ../wpuf.php:198
+#: ../wpuf.php:193 ../class/admin-posting.php:39 ../class/render-form.php:836
+msgid "Are you sure?"
+msgstr ""
+
+#: ../wpuf.php:199 ../class/admin-posting.php:45
+#: ../class/admin-template.php:502
+msgid "Allowed Files"
+msgstr ""
+
+#: ../wpuf.php:223
 msgid ""
 "Access Denied. Your site administrator has blocked your access to the "
 "WordPress back-office."
 msgstr ""
 
-#: ../wpuf.php:231 ../class/admin-form.php:965
+#: ../wpuf.php:256 ../class/admin-form.php:965
 msgid "Register"
 msgstr ""
 
@@ -273,14 +282,14 @@ msgid ""
 "link in frontend"
 msgstr ""
 
-#: ../admin/settings-options.php:118 ../admin/settings-options.php:152
-#: ../admin/settings-options.php:163 ../admin/settings-options.php:231
+#: ../admin/settings-options.php:118 ../admin/settings-options.php:159
+#: ../admin/settings-options.php:170 ../admin/settings-options.php:238
 #: ../class/admin-form.php:287 ../class/admin-template.php:69
 msgid "Yes"
 msgstr ""
 
-#: ../admin/settings-options.php:119 ../admin/settings-options.php:153
-#: ../admin/settings-options.php:164 ../admin/settings-options.php:232
+#: ../admin/settings-options.php:119 ../admin/settings-options.php:160
+#: ../admin/settings-options.php:171 ../admin/settings-options.php:239
 #: ../class/admin-form.php:287 ../class/admin-template.php:70
 msgid "No"
 msgstr ""
@@ -294,88 +303,96 @@ msgid "Show custom fields on post content area"
 msgstr ""
 
 #: ../admin/settings-options.php:131
+msgid "Load Scripts"
+msgstr ""
+
+#: ../admin/settings-options.php:132
+msgid "Load scripts/styles in all pages"
+msgstr ""
+
+#: ../admin/settings-options.php:138
 msgid "reCAPTCHA Public Key"
 msgstr ""
 
-#: ../admin/settings-options.php:135
+#: ../admin/settings-options.php:142
 msgid "reCAPTCHA Private Key"
 msgstr ""
 
-#: ../admin/settings-options.php:139
+#: ../admin/settings-options.php:146
 msgid "Custom CSS codes"
 msgstr ""
 
-#: ../admin/settings-options.php:140
+#: ../admin/settings-options.php:147
 msgid ""
 "If you want to add your custom CSS code, it will be added on page header "
 "wrapped with style tag"
 msgstr ""
 
-#: ../admin/settings-options.php:147
+#: ../admin/settings-options.php:154
 msgid "Users can edit post?"
 msgstr ""
 
-#: ../admin/settings-options.php:148
+#: ../admin/settings-options.php:155
 msgid "Users will be able to edit their own posts"
 msgstr ""
 
-#: ../admin/settings-options.php:158
+#: ../admin/settings-options.php:165
 msgid "User can delete post?"
 msgstr ""
 
-#: ../admin/settings-options.php:159
+#: ../admin/settings-options.php:166
 msgid "Users will be able to delete their own posts"
 msgstr ""
 
-#: ../admin/settings-options.php:169
+#: ../admin/settings-options.php:176
 msgid "Posts per page"
 msgstr ""
 
-#: ../admin/settings-options.php:170
+#: ../admin/settings-options.php:177
 msgid "How many posts will be listed in a page"
 msgstr ""
 
-#: ../admin/settings-options.php:176
+#: ../admin/settings-options.php:183
 msgid "Show user bio"
 msgstr ""
 
-#: ../admin/settings-options.php:177
+#: ../admin/settings-options.php:184
 msgid "Users biographical info will be shown"
 msgstr ""
 
-#: ../admin/settings-options.php:183
+#: ../admin/settings-options.php:190
 msgid "Show post count"
 msgstr ""
 
-#: ../admin/settings-options.php:184
+#: ../admin/settings-options.php:191
 msgid "Show how many posts are created by the user"
 msgstr ""
 
-#: ../admin/settings-options.php:190
+#: ../admin/settings-options.php:197
 msgid "Show Featured Image"
 msgstr ""
 
-#: ../admin/settings-options.php:191
+#: ../admin/settings-options.php:198
 msgid "Show featured image of the post"
 msgstr ""
 
-#: ../admin/settings-options.php:196
+#: ../admin/settings-options.php:203
 msgid "Featured Image size"
 msgstr ""
 
-#: ../admin/settings-options.php:202 ../class/admin-form.php:660
+#: ../admin/settings-options.php:209 ../class/admin-form.php:660
 msgid "Unauthorized Message"
 msgstr ""
 
-#: ../admin/settings-options.php:203 ../class/admin-form.php:663
+#: ../admin/settings-options.php:210 ../class/admin-form.php:663
 msgid "Not logged in users will see this message"
 msgstr ""
 
-#: ../admin/settings-options.php:210
+#: ../admin/settings-options.php:217
 msgid "Registration link override"
 msgstr ""
 
-#: ../admin/settings-options.php:211
+#: ../admin/settings-options.php:218
 msgid ""
 "Override registration link. <span class=\"description\">(check if you have "
 "any custom registration page. Compatible with <strong>Theme My Login</"
@@ -383,101 +400,101 @@ msgid ""
 "plugin.)</span>"
 msgstr ""
 
-#: ../admin/settings-options.php:217
+#: ../admin/settings-options.php:224
 msgid "Registration Page"
 msgstr ""
 
-#: ../admin/settings-options.php:218
+#: ../admin/settings-options.php:225
 msgid ""
 "Select the page you want to use as registration page override <em>(should "
 "have shortcode)</em>"
 msgstr ""
 
-#: ../admin/settings-options.php:226
+#: ../admin/settings-options.php:233
 msgid "Charge for posting"
 msgstr ""
 
-#: ../admin/settings-options.php:227
+#: ../admin/settings-options.php:234
 msgid "Charge user for submitting a post"
 msgstr ""
 
-#: ../admin/settings-options.php:237
+#: ../admin/settings-options.php:244
 msgid "Force pack purchase"
 msgstr ""
 
-#: ../admin/settings-options.php:238
+#: ../admin/settings-options.php:245
 msgid "When active, users must have to buy a pack for posting"
 msgstr ""
 
-#: ../admin/settings-options.php:242
+#: ../admin/settings-options.php:249
 msgid "Disable"
 msgstr ""
 
-#: ../admin/settings-options.php:243
+#: ../admin/settings-options.php:250
 msgid "Enable"
 msgstr ""
 
-#: ../admin/settings-options.php:248
+#: ../admin/settings-options.php:255
 msgid "Currency"
 msgstr ""
 
-#: ../admin/settings-options.php:280
+#: ../admin/settings-options.php:287
 msgid "Currency Symbol"
 msgstr ""
 
-#: ../admin/settings-options.php:286 ../admin/subscription.php:51
+#: ../admin/settings-options.php:293 ../admin/subscription.php:51
 #: ../admin/transaction.php:74 ../admin/transaction.php:146
 msgid "Cost"
 msgstr ""
 
-#: ../admin/settings-options.php:287
+#: ../admin/settings-options.php:294
 msgid "Cost per post"
 msgstr ""
 
-#: ../admin/settings-options.php:293
+#: ../admin/settings-options.php:300
 msgid "Enable demo/sandbox mode"
 msgstr ""
 
-#: ../admin/settings-options.php:294
+#: ../admin/settings-options.php:301
 msgid ""
 "When sandbox mode is active, all payment gateway will be used in demo mode"
 msgstr ""
 
-#: ../admin/settings-options.php:300
+#: ../admin/settings-options.php:307
 msgid "Payment Page"
 msgstr ""
 
-#: ../admin/settings-options.php:301
+#: ../admin/settings-options.php:308
 msgid "This page will be used to process payment options"
 msgstr ""
 
-#: ../admin/settings-options.php:307
+#: ../admin/settings-options.php:314
 msgid "Payment Success Page"
 msgstr ""
 
-#: ../admin/settings-options.php:308 ../lib/gateway/bank.php:37
+#: ../admin/settings-options.php:315 ../lib/gateway/bank.php:37
 msgid "After payment users will be redirected here"
 msgstr ""
 
-#: ../admin/settings-options.php:314
+#: ../admin/settings-options.php:321
 msgid "Payment Gateways"
 msgstr ""
 
-#: ../admin/settings-options.php:315
+#: ../admin/settings-options.php:322
 msgid "Active payment gateways"
 msgstr ""
 
-#: ../admin/settings-options.php:323
+#: ../admin/settings-options.php:330
 msgid "Need Help?"
 msgstr ""
 
-#: ../admin/settings-options.php:354
+#: ../admin/settings-options.php:361
 msgid ""
 "Select profile/registration forms for user roles. These forms will be used "
 "to populate extra edit profile fields in backend."
 msgstr ""
 
-#: ../admin/settings-options.php:365
+#: ../admin/settings-options.php:372
 msgid " - select - "
 msgstr ""
 
@@ -1236,21 +1253,11 @@ msgstr ""
 msgid "Lock Reason:"
 msgstr ""
 
-#: ../class/admin-posting.php:37 ../class/render-form.php:836
-#: ../class/upload.php:31
-msgid "Are you sure?"
-msgstr ""
-
-#: ../class/admin-posting.php:43 ../class/admin-template.php:502
-#: ../class/upload.php:37
-msgid "Allowed Files"
-msgstr ""
-
-#: ../class/admin-posting.php:54
+#: ../class/admin-posting.php:56
 msgid "WPUF Custom Fields"
 msgstr ""
 
-#: ../class/admin-posting.php:82
+#: ../class/admin-posting.php:84
 msgid "No custom fields found."
 msgstr ""
 
@@ -1687,27 +1694,31 @@ msgstr ""
 msgid "You are not the post author. Cheeting huh!"
 msgstr ""
 
-#: ../class/frontend-form-post.php:67
+#: ../class/frontend-form-post.php:62 ../class/payment.php:66
+msgid "You are not logged in"
+msgstr ""
+
+#: ../class/frontend-form-post.php:71
 msgid "Post Editing is disabled"
 msgstr ""
 
-#: ../class/frontend-form-post.php:73
+#: ../class/frontend-form-post.php:77
 msgid "Invalid post"
 msgstr ""
 
-#: ../class/frontend-form-post.php:78
+#: ../class/frontend-form-post.php:82
 msgid "You are not allowed to edit"
 msgstr ""
 
-#: ../class/frontend-form-post.php:85
+#: ../class/frontend-form-post.php:89
 msgid "I don't know how to edit this post, I don't have the form ID"
 msgstr ""
 
-#: ../class/frontend-form-post.php:144
+#: ../class/frontend-form-post.php:148
 msgid "Invalid email address."
 msgstr ""
 
-#: ../class/frontend-form-post.php:388 ../class/frontend-form-profile.php:267
+#: ../class/frontend-form-post.php:392 ../class/frontend-form-profile.php:267
 msgid "Something went wrong"
 msgstr ""
 
@@ -1756,10 +1767,6 @@ msgstr ""
 
 #: ../class/payment.php:28 ../class/payment.php:29
 msgid "Bank Payment"
-msgstr ""
-
-#: ../class/payment.php:66
-msgid "You are not logged in"
 msgstr ""
 
 #: ../class/payment.php:82
