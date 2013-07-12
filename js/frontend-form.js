@@ -328,7 +328,7 @@
             };
 
             var imageUploader = new plupload.Uploader({
-                runtimes: 'html5,flash,html4',
+                runtimes: 'html5,html4',
                 browse_button: button,
                 container: container,
                 multipart: true,

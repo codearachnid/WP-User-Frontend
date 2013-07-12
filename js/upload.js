@@ -21,7 +21,7 @@
 
         //instantiate the uploader
         this.uploader = new plupload.Uploader({
-            runtimes: 'html5,flash,html4',
+            runtimes: 'html5,html4',
             browse_button: browse_button,
             container: container,
             multipart: true,
