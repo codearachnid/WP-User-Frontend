@@ -71,6 +71,12 @@ class WPUF_Payment {
             $pack_id = isset( $_REQUEST['pack_id'] ) ? intval( $_REQUEST['pack_id'] ) : 0;
 
             $gateways = $this->get_active_gateways();
+            
+            if ( isset( $_REQUEST['wpuf_payment_submit'] ) ) {
+                $selected_gateway = $_REQUEST['wpuf_payment_method'];
+            } else {
+                $selected_gateway = 'paypal';
+            }
 
             ob_start();
             ?>
@@ -85,7 +91,7 @@ class WPUF_Payment {
                             <?php foreach ($gateways as $gateway_id => $gateway) { ?>
                                 <li class="wpuf-gateway-<?php echo $gateway_id; ?>">
                                     <label>
-                                        <input name="wpuf_payment_method" type="radio" value="<?php echo esc_attr( $gateway_id ); ?>">
+                                        <input name="wpuf_payment_method" type="radio" value="<?php echo esc_attr( $gateway_id ); ?>" <?php checked( $selected_gateway, $gateway_id ); ?>>
                                         <?php
                                         echo $gateway['label'];
 
@@ -96,10 +102,10 @@ class WPUF_Payment {
                                     </label>
 
                                     <div class="wpuf-payment-instruction" style="display: none;">
-                                        <?php echo wpuf_get_option( 'gate_instruct_' . $gateway_id, 'wpuf_payment' ); ?>
+                                        <div class="wpuf-instruction"><?php echo wpuf_get_option( 'gate_instruct_' . $gateway_id, 'wpuf_payment' ); ?></div>
+                                        
+                                        <?php do_action( 'wpuf_gateway_form_' . $gateway_id, $type, $post_id, $pack_id ); ?>
                                     </div>
-
-                                    <?php do_action( 'wpuf_gateway_form_' . $gateway_id, $type, $post_id, $pack_id ); ?>
                                 </li>
                             <?php } ?>
                         </ul>
