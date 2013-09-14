@@ -215,6 +215,11 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             $postarr['post_date'] = $_POST['post_date'];
             $postarr['comment_status'] = $_POST['comment_status'];
             $postarr['post_author'] = $_POST['post_author'];
+            $postarr['post_status'] = $form_settings['edit_post_status'];
+        } else {
+            if ( isset( $form_settings['comment_status'] ) ) {
+                $postarr['comment_status'] = $form_settings['comment_status'];
+            }
         }
 
         // check the form status, it might be already a draft
@@ -242,7 +247,6 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         // ############ It's Time to Save the World ###############
         if ( $is_update ) {
-            $postarr['post_status'] = $form_settings['edit_post_status'];
             $postarr = apply_filters( 'wpuf_update_post_args', $postarr, $form_id, $form_settings, $form_vars );
         } else {
             $postarr = apply_filters( 'wpuf_add_post_args', $postarr, $form_id, $form_settings, $form_vars );

@@ -514,7 +514,7 @@ class WPUF_Admin_Form {
      */
     function form_settings_posts() {
         global $post;
-
+        
         $form_settings = get_post_meta( $post->ID, 'wpuf_form_settings', true );
 
         $restrict_message = __( "This page is restricted. Please Log in / Register to view this page.", 'wpuf' );
@@ -535,6 +535,7 @@ class WPUF_Admin_Form {
         $update_message = isset( $form_settings['update_message'] ) ? $form_settings['update_message'] : __( 'Post updated successfully', 'wpuf' );
         $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
         $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
+        $comment_status = isset( $form_settings['comment_status'] ) ? $form_settings['comment_status'] : 'on';
 
         $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Submit', 'wpuf' );
         $draft_text = isset( $form_settings['draft_text'] ) ? $form_settings['draft_text'] : __( 'Save Draft', 'wpuf' );
@@ -714,6 +715,16 @@ class WPUF_Admin_Form {
                 <th><?php _e( 'Custom URL', 'wpuf' ); ?></th>
                 <td>
                     <input type="url" name="wpuf_settings[url]" value="<?php echo esc_attr( $url ); ?>">
+                </td>
+            </tr>
+
+            <tr class="wpuf-comment">
+                <th><?php _e( 'Comment Status', 'wpuf' ); ?></th>
+                <td>
+                    <select name="wpuf_settings[comment_status]">
+                        <option value="on" <?php selected( $comment_status, 'on'); ?>><?php _e('On'); ?></option>
+                        <option value="off" <?php selected( $comment_status, 'off'); ?>><?php _e('Off'); ?></option>
+                    </select>
                 </td>
             </tr>
 
