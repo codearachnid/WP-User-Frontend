@@ -88,6 +88,10 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
         if ( !$form_id ) {
             return '<div class="wpuf-info">' . __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' ) . '</div>';
         }
+        
+        if ( $curpost->post_status == 'pending' ) {
+            return '<div class="wpuf-info">' . __( 'You can\'t edit a post while in pending mode.', 'wpuf' );
+        }
 
         if ( isset( $_GET['msg'] ) && $_GET['msg'] == 'post_updated' ) {
             echo '<div class="wpuf-success">';

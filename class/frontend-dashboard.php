@@ -173,9 +173,14 @@ class WPUF_Frontend_Dashboard {
                                 if ( wpuf_get_option( 'enable_post_edit', 'wpuf_dashboard' ) == 'yes' ) {
                                     $edit_page = (int) wpuf_get_option( 'edit_page_id', 'wpuf_general' );
                                     $url = add_query_arg( array('pid' => $post->ID), get_permalink( $edit_page ) );
-                                    ?>
-                                    <a href="<?php echo wp_nonce_url( $url, 'wpuf_edit' ); ?>"><?php _e( 'Edit', 'wpuf' ); ?></a>
-                                <?php } ?>
+
+                                    if ( $post->post_status != 'pending' ) {
+                                        ?>
+                                        <a href="<?php echo wp_nonce_url( $url, 'wpuf_edit' ); ?>"><?php _e( 'Edit', 'wpuf' ); ?></a>
+                                        <?php
+                                    }
+                                }
+                                ?>
 
                                 <?php
                                 if ( wpuf_get_option( 'enable_post_del', 'wpuf_dashboard', 'yes' ) == 'yes' ) {
