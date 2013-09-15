@@ -203,7 +203,7 @@ function wpuf_get_pages( $post_type = 'page' ) {
     global $wpdb;
 
     $array = array();
-    $pages = get_pages( array('post_type' => $post_type) );
+    $pages = get_posts( array('post_type' => $post_type, 'numberposts' => -1) );
     if ( $pages ) {
         foreach ($pages as $page) {
             $array[$page->ID] = $page->post_title;

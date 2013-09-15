@@ -153,6 +153,13 @@ function wpuf_settings_fields() {
                 'default' => 'link'
             ),
             array(
+                'name' => 'default_post_form',
+                'label' => __( 'Default Post Form', 'wpuf' ),
+                'desc' => __( 'Fallback form for post editing if no associated form found', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_get_pages( 'wpuf_forms' )
+            ),
+            array(
                 'name' => 'recaptcha_public',
                 'label' => __( 'reCAPTCHA Public Key', 'wpuf' ),
             ),

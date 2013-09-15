@@ -84,6 +84,11 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         $form_id = get_post_meta( $post_id, self::$config_id, true );
         $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+        
+        // fallback to default form
+        if ( !$form_id ) {
+            $form_id = wpuf_get_option( 'default_post_form', 'wpuf_general' );
+        }
 
         if ( !$form_id ) {
             return '<div class="wpuf-info">' . __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' ) . '</div>';
