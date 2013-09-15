@@ -134,6 +134,25 @@ function wpuf_settings_fields() {
                 'default' => 'on'
             ),
             array(
+                'name' => 'insert_photo_size',
+                'label' => __( 'Insert Photo image size', 'wpuf' ),
+                'desc' => __( 'Default image size of "<strong>Insert Photo</strong>" button in post content area', 'wpuf' ),
+                'type' => 'select',
+                'options' => wpuf_get_image_sizes(),
+                'default' => 'thumbnail'
+            ),
+            array(
+                'name' => 'insert_photo_type',
+                'label' => __( 'Insert Photo image type', 'wpuf' ),
+                'desc' => __( 'Default image type of "<strong>Insert Photo</strong>" button in post content area', 'wpuf' ),
+                'type' => 'select',
+                'options' => array(
+                    'image' => __( 'Image only', 'wpuf' ),
+                    'link' => __( 'Image with link', 'wpuf' )
+                ),
+                'default' => 'link'
+            ),
+            array(
                 'name' => 'recaptcha_public',
                 'label' => __( 'reCAPTCHA Public Key', 'wpuf' ),
             ),
