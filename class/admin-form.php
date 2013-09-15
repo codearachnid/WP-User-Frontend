@@ -776,10 +776,12 @@ class WPUF_Admin_Form {
                     <select name="wpuf_settings[edit_post_status]">
                         <?php
                         $statuses = get_post_statuses();
-
+                        
                         foreach ($statuses as $status => $label) {
                             printf('<option value="%s"%s>%s</option>', $status, selected( $post_status_selected, $status, false ), $label );
                         }
+                        
+                        printf( '<option value="_nochange"%s>%s</option>', selected( $post_status_selected, '_nochange', false ), __( 'No Change', 'wpuf' ) );
                         ?>
                     </select>
                 </td>

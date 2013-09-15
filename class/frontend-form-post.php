@@ -215,7 +215,13 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             $postarr['post_date'] = $_POST['post_date'];
             $postarr['comment_status'] = $_POST['comment_status'];
             $postarr['post_author'] = $_POST['post_author'];
-            $postarr['post_status'] = $form_settings['edit_post_status'];
+            
+            if ( $form_settings['edit_post_status'] == '_nochange') {
+                $postarr['post_status'] = get_post_field( 'post_status', $_POST['post_id'] );
+            } else {
+                $postarr['post_status'] = $form_settings['edit_post_status'];
+            }
+            
         } else {
             if ( isset( $form_settings['comment_status'] ) ) {
                 $postarr['comment_status'] = $form_settings['comment_status'];
