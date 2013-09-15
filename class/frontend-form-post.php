@@ -89,7 +89,9 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
             return '<div class="wpuf-info">' . __( "I don't know how to edit this post, I don't have the form ID", 'wpuf' ) . '</div>';
         }
         
-        if ( $curpost->post_status == 'pending' ) {
+        $disable_pending_edit = wpuf_get_option( 'disable_pending_edit', 'wpuf_dashboard', 'on' );
+        
+        if ( $curpost->post_status == 'pending' && $disable_pending_edit == 'on' ) {
             return '<div class="wpuf-info">' . __( 'You can\'t edit a post while in pending mode.', 'wpuf' );
         }
 

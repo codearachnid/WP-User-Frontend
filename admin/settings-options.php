@@ -172,6 +172,13 @@ function wpuf_settings_fields() {
                 )
             ),
             array(
+                'name' => 'disable_pending_edit',
+                'label' => __( 'Pending Post Edit', 'wpuf' ),
+                'desc' => __( 'Disable post editing while post in "pending" status', 'wpuf' ),
+                'type' => 'checkbox',
+                'default' => 'on'
+            ),
+            array(
                 'name' => 'per_page',
                 'label' => __( 'Posts per page', 'wpuf' ),
                 'desc' => __( 'How many posts will be listed in a page', 'wpuf' ),
