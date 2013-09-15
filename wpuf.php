@@ -85,10 +85,10 @@ class WP_User_Frontend {
     function instantiate() {
 
         new WPUF_Upload();
-        new WPUF_Frontend_Form_Post(); // requires for form preview
+        WPUF_Frontend_Form_Post::init(); // requires for form preview
         new WPUF_Frontend_Form_Profile();
         new WPUF_Payment();
-        new WPUF_Subscription();
+        WPUF_Subscription::init();
 
         if ( is_admin() ) {
             WPUF_Settings::init();

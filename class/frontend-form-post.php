@@ -1,6 +1,8 @@
 <?php
 
 class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
+    
+    private static $_instance;
 
     function __construct() {
 
@@ -16,6 +18,14 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
 
         // form preview
         add_action( 'wp_ajax_wpuf_form_preview', array($this, 'preview_form') );
+    }
+    
+    public static function init() {
+        if ( !self::$_instance ) {
+            self::$_instance = new self;
+        }
+
+        return self::$_instance;
     }
 
     /**
