@@ -160,8 +160,12 @@ class WP_User_Frontend {
      */
     function enqueue_scripts() {
         
+        $path = plugins_url( '', __FILE__ );
         $scheme = is_ssl() ? 'https' : 'http';
+        
         wp_enqueue_script( 'google-maps', $scheme . '://maps.google.com/maps/api/js?sensor=true' );
+        wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
+        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery') );
         
         if ( wpuf_get_option( 'load_script', 'wpuf_general', 'on') == 'on') {
             $this->plugin_scripts();
@@ -173,14 +177,14 @@ class WP_User_Frontend {
     function plugin_scripts() {
         $path = plugins_url( '', __FILE__ );
         
-        wp_enqueue_style( 'wpuf-css', $path . '/css/frontend-forms.css' );
         wp_enqueue_style( 'jquery-ui', $path . '/css/jquery-ui-1.9.1.custom.css' );
 
+        wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'jquery-ui-autocomplete' );
         wp_enqueue_script( 'jquery-ui-slider' );
+        wp_enqueue_script( 'plupload-handlers' );
         wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
-        wp_enqueue_script( 'wpuf-form', $path . '/js/frontend-form.js', array('jquery', 'plupload-handlers') );
         wp_enqueue_script( 'wpuf-upload', $path . '/js/upload.js', array('jquery', 'plupload-handlers') );
 
         wp_localize_script( 'wpuf-form', 'wpuf_frontend', array(
@@ -264,6 +268,8 @@ class WP_User_Frontend {
         if ( $action == 'register' ) {
             return get_permalink( wpuf_get_option( 'reg_override_page', 'wpuf_profile' ) );
         }
+        
+        return $url;
     }
 
 }
