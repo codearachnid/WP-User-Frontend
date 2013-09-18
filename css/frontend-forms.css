@@ -61,3 +61,6 @@ table.wpuf-table td{border-top:1px solid #E7E7E7;padding:6px 24px;}
 .wpuf-author .wpuf-author-inside p{margin-bottom:10px !important;}
 .wpuf-author .wpuf-author-inside p.wpuf-author-info{padding-top:8px;}
 .wpuf-author .wpuf-author-inside p.wpuf-user-name a{color:#335160;font-size:1.2em;font-weight:bold;}
+.ac_results{padding:0;margin:0;list-style:none;position:absolute;z-index:10000;display:none;border:1px solid #ccc;}.ac_results li{padding:2px 5px;white-space:nowrap;text-align:left;}
+.ac_over{cursor:pointer;}
+.ac_match{text-decoration:underline;}

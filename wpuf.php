@@ -183,6 +183,7 @@ class WP_User_Frontend {
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'jquery-ui-autocomplete' );
+        wp_enqueue_script( 'suggest' );
         wp_enqueue_script( 'jquery-ui-slider' );
         wp_enqueue_script( 'plupload-handlers' );
         wp_enqueue_script( 'jquery-ui-timepicker', $path . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker') );
