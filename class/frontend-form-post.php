@@ -289,6 +289,23 @@ class WPUF_Frontend_Form_Post extends WPUF_Render_Form {
                     set_post_format( $post_id, $form_settings['post_format'] );
                 }
             }
+            
+            // find our if any images in post content and associate them
+            $dom = new DOMDocument();
+            $dom->loadHTML( $postarr['post_content'] );
+            $images = $dom->getElementsByTagName( 'img' );
+
+            if ( $images->length ) {
+                foreach ($images as $img) {
+                    $url = $img->getAttribute( 'src' );
+                    $url = str_replace(array('"', "'", "\\"), '', $url);
+                    $attachment_id = wpuf_get_attachment_id_from_url( $url );
+                    
+                    if ( $attachment_id ) {
+                        wpuf_associate_attachment( $attachment_id, $post_id );
+                    }
+                }
+            }
 
             // save any custom taxonomies
             $woo_attr = array();
