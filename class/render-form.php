@@ -1224,6 +1224,7 @@ class WPUF_Render_Form {
      * @param int|null $post_id
      */
     function taxonomy( $attr, $post_id ) {
+        $exclude_type = isset( $attr['exclude_type'] ) ? $attr['exclude_type'] : 'exclude';
         $exclude = $attr['exclude'];
         $taxonomy = $attr['name'];
 
@@ -1255,7 +1256,7 @@ class WPUF_Render_Form {
                         'echo' => 0,
                         'title_li' => '',
                         'class' => $taxonomy,
-                        'exclude' => $exclude,
+                        $exclude_type => $exclude,
                         'selected' => $selected,
                     ) );
                     echo str_replace( '<select', '<select ' . $required, $select );
