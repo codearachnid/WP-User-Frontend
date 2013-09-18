@@ -63,6 +63,7 @@ class WP_User_Frontend {
         add_action( 'admin_init', array($this, 'block_admin_access') );
 
         add_action( 'init', array($this, 'load_textdomain') );
+        add_action( 'init', array($this, 'signup_redirect' ) );
         add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
 
         add_filter( 'register', array($this, 'override_registration') );
@@ -270,6 +271,21 @@ class WP_User_Frontend {
         }
         
         return $url;
+    }
+    
+    function signup_redirect() {
+        global $pagenow;
+
+        if ( ! is_admin() && $pagenow == 'wp-login.php' && isset( $_GET['action'] ) && $_GET['action'] == 'register' ) {
+         
+            if ( wpuf_get_option( 'register_link_override', 'wpuf_profile' ) != 'on' ) {
+                return;
+            }
+            
+            $reg_page = get_permalink( wpuf_get_option( 'reg_override_page', 'wpuf_profile' ) );
+            wp_redirect( $reg_page );
+            exit;
+        }
     }
 
 }
