@@ -535,7 +535,7 @@ class WPUF_Admin_Form {
         $update_message = isset( $form_settings['update_message'] ) ? $form_settings['update_message'] : __( 'Post updated successfully', 'wpuf' );
         $page_id = isset( $form_settings['page_id'] ) ? $form_settings['page_id'] : 0;
         $url = isset( $form_settings['url'] ) ? $form_settings['url'] : '';
-        $comment_status = isset( $form_settings['comment_status'] ) ? $form_settings['comment_status'] : 'on';
+        $comment_status = isset( $form_settings['comment_status'] ) ? $form_settings['comment_status'] : 'open';
 
         $submit_text = isset( $form_settings['submit_text'] ) ? $form_settings['submit_text'] : __( 'Submit', 'wpuf' );
         $draft_text = isset( $form_settings['draft_text'] ) ? $form_settings['draft_text'] : __( 'Save Draft', 'wpuf' );
@@ -722,8 +722,8 @@ class WPUF_Admin_Form {
                 <th><?php _e( 'Comment Status', 'wpuf' ); ?></th>
                 <td>
                     <select name="wpuf_settings[comment_status]">
-                        <option value="on" <?php selected( $comment_status, 'on'); ?>><?php _e('On'); ?></option>
-                        <option value="off" <?php selected( $comment_status, 'off'); ?>><?php _e('Off'); ?></option>
+                        <option value="open" <?php selected( $comment_status, 'open'); ?>><?php _e('Open'); ?></option>
+                        <option value="closed" <?php selected( $comment_status, 'closed'); ?>><?php _e('Closed'); ?></option>
                     </select>
                 </td>
             </tr>
