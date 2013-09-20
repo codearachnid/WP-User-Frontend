@@ -333,10 +333,14 @@ class WPUF_Walker_Category_Checklist extends Walker {
  * @param int $post_id
  * @param array $selected_cats
  */
-function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = 'category', $exclude = false, $attr = array() ) {
+function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $attr = array() ) {
     require_once ABSPATH . '/wp-admin/includes/template.php';
 
     $walker = new WPUF_Walker_Category_Checklist();
+    
+    $exclude_type = isset( $attr['exclude_type'] ) ? $attr['exclude_type'] : 'exclude';
+    $exclude = $attr['exclude'];
+    $tax = $attr['name'];
 
     $args = array(
         'taxonomy' => $tax,
@@ -349,15 +353,14 @@ function wpuf_category_checklist( $post_id = 0, $selected_cats = false, $tax = '
     } else {
         $args['selected_cats'] = array();
     }
-
+    
     $categories = (array) get_terms( $tax, array(
-        'get' => 'all',
         'hide_empty' => false,
-        'exclude' => $exclude,
+        $exclude_type => (int) $exclude,
         'orderby' => isset( $attr['orderby'] ) ? $attr['orderby'] : 'name',
         'order' => isset( $attr['order'] ) ? $attr['order'] : 'ASC',
     ) );
-
+    
     echo '<ul class="wpuf-category-checklist">';
     echo call_user_func_array( array(&$walker, 'walk'), array($categories, 0, $args) );
     echo '</ul>';

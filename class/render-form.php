@@ -1293,7 +1293,7 @@ class WPUF_Render_Form {
                         'echo' => 0,
                         'title_li' => '',
                         'class' => $taxonomy . ' multiselect',
-                        'exclude' => $exclude,
+                        $exclude_type => $exclude,
                         'selected' => $selected,
                         'walker' => $walker
                     ) );
@@ -1303,7 +1303,7 @@ class WPUF_Render_Form {
 
                 case 'checkbox':
                     printf( '<span data-required="%s" data-type="tax-checkbox" />', $attr['required'] );
-                    wpuf_category_checklist( $post_id, false, $taxonomy, $exclude, $attr );
+                    wpuf_category_checklist( $post_id, false, $attr );
                     break;
                 
                 case 'text':
