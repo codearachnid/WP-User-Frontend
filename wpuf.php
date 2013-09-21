@@ -223,7 +223,7 @@ class WP_User_Frontend {
         }
 
         $access_level = wpuf_get_option( 'admin_access', 'wpuf_general', 'read' );
-        $valid_pages = array('admin-ajax.php', 'async-upload.php', 'media-upload.php');
+        $valid_pages = array('admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php');
         
         if ( !current_user_can( $access_level ) && !in_array( $pagenow, $valid_pages ) ) {
             wp_die( __( 'Access Denied. Your site administrator has blocked your access to the WordPress back-office.', 'wpuf' ) );
