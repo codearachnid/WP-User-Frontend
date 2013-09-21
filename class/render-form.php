@@ -966,7 +966,9 @@ class WPUF_Render_Form {
         $selected = isset( $attr['selected'] ) ? $attr['selected'] : array();
 
         if ( $post_id ) {
-            $selected = explode( self::$separator, $this->get_meta( $post_id, $attr['name'], $type, true ) );
+            if ( $value = $this->get_meta( $post_id, $attr['name'], $type, true ) ) {
+                $selected = explode( self::$separator, $value );
+            }
         }
         ?>
 
