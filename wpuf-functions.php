@@ -883,3 +883,40 @@ function wpuf_get_attachment_id_from_url( $attachment_url = '' ) {
 
     return $attachment_id;
 }
+
+/**
+ * Non logged in users tag autocomplete
+ * 
+ * @since 2.1.9
+ * @global object $wpdb
+ */
+function wpufe_ajax_tag_search() {
+    global $wpdb;
+    
+    $taxonomy = sanitize_key( $_GET['tax'] );
+    $tax = get_taxonomy( $taxonomy );
+    if ( !$tax ) {
+        wp_die( 0 );
+    }
+
+    $s = wp_unslash( $_GET['q'] );
+
+    $comma = _x( ',', 'tag delimiter' );
+    if ( ',' !== $comma )
+        $s = str_replace( $comma, ',', $s );
+    if ( false !== strpos( $s, ',' ) ) {
+        $s = explode( ',', $s );
+        $s = $s[count( $s ) - 1];
+    }
+    
+    $s = trim( $s );
+    if ( strlen( $s ) < 2 )
+        wp_die(); // require 2 chars for matching
+
+    $results = $wpdb->get_col( $wpdb->prepare( "SELECT t.name FROM $wpdb->term_taxonomy AS tt INNER JOIN $wpdb->terms AS t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s AND t.name LIKE (%s)", $taxonomy, '%' . like_escape( $s ) . '%' ) );
+
+    echo join( $results, "\n" );
+    wp_die();
+}
+
+add_action( 'wp_ajax_nopriv_ajax-tag-search', 'wpufe_ajax_tag_search' );
