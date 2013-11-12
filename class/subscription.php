@@ -256,9 +256,17 @@ class WPUF_Subscription {
         $post = self::post_by_orderid( $order_id );
 
         if ( $post && $post->post_status != 'publish' ) {
+            $post_status = 'publish';
+            $form_id = get_post_meta( $post->ID, '_wpuf_form_id', true );
+            
+            if ( $form_id ) {
+                $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+                $post_status = $form_settings['post_status'];
+            }
+            
             $update_post = array(
                 'ID' => $post->ID,
-                'post_status' => 'publish'
+                'post_status' => $post_status
             );
 
             wp_update_post( $update_post );
