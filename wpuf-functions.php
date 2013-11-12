@@ -487,7 +487,7 @@ function wpuf_get_user_roles() {
  * @return string image tag of the user avatar
  */
 function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
-
+    
     if ( is_numeric( $id_or_email ) ) {
         $user = get_user_by( 'id', $id_or_email );
     } elseif ( is_object( $id_or_email ) ) {
@@ -499,7 +499,11 @@ function wpuf_get_avatar( $avatar, $id_or_email, $size, $default, $alt ) {
     } else {
         $user = get_user_by( 'email', $id_or_email );
     }
-
+    
+    if ( !$user ) {
+        return $avatar;
+    }
+    
     // see if there is a user_avatar meta field
     $user_avatar = get_user_meta( $user->ID, 'user_avatar', true );
     if ( empty( $user_avatar ) ) {
