@@ -154,7 +154,7 @@ class WPUF_Subscription {
                 update_user_meta( $userdata->ID, 'wpuf_sub_pcount', $count - 1 );
 
                 //set the post status to publish
-                wp_update_post( array('ID' => $post_id, 'post_status' => 'publish') );
+                $this->set_post_status( $post_id );
             }
         }
     }
@@ -256,21 +256,31 @@ class WPUF_Subscription {
         $post = self::post_by_orderid( $order_id );
 
         if ( $post && $post->post_status != 'publish' ) {
-            $post_status = 'publish';
-            $form_id = get_post_meta( $post->ID, '_wpuf_form_id', true );
-            
-            if ( $form_id ) {
-                $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
-                $post_status = $form_settings['post_status'];
-            }
-            
-            $update_post = array(
-                'ID' => $post->ID,
-                'post_status' => $post_status
-            );
-
-            wp_update_post( $update_post );
+            $this->set_post_status( $post->ID );
         }
+    }
+        
+    /**
+     * Maintain post status from the form settings
+     * 
+     * @since 2.1.9
+     * @param int $post_id
+     */
+    function set_post_status( $post_id ) {
+        $post_status = 'publish';
+        $form_id = get_post_meta( $post_id, '_wpuf_form_id', true );
+
+        if ( $form_id ) {
+            $form_settings = get_post_meta( $form_id, 'wpuf_form_settings', true );
+            $post_status = $form_settings['post_status'];
+        }
+
+        $update_post = array(
+            'ID' => $post_id,
+            'post_status' => $post_status
+        );
+
+        wp_update_post( $update_post );
     }
 
     /**
