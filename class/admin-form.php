@@ -1298,9 +1298,15 @@ class WPUF_Admin_Form {
                 $name = ucwords( str_replace( '_', ' ', $input_field['template'] ) );
 
                 if ( $input_field['template'] == 'taxonomy') {
+                    
                     WPUF_Admin_Template_Post::$input_field['template']( $count, $name, $input_field['name'], $input_field );
-                } else {
+                    
+                } else if ( method_exists( 'WPUF_Admin_Template_Post', $input_field['template'] ) ) {
+                    
                     WPUF_Admin_Template_Post::$input_field['template']( $count, $name, $input_field );
+                    
+                } else {
+                    do_action( 'wpuf_admin_template_post_' . $input_field['template'], $name, $count, $input_field );
                 }
 
                 $count++;

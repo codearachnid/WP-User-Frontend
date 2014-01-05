@@ -426,6 +426,10 @@ class WPUF_Render_Form {
                 case 'toc':
                     $this->toc( $form_field, $post_id );
                     break;
+                
+                default:
+                    do_action( 'wpuf_render_form_' . $form_field['input_type'], $form_field, $form_id, $post_id, $form_settings );
+                    break;
             }
 
             $this->render_item_after( $form_field );
