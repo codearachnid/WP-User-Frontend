@@ -20,7 +20,7 @@ class WPUF_Admin_Posting extends WPUF_Render_Form {
     function enqueue_script() {
         global $pagenow;
 
-        if ( !in_array( $pagenow, array('profile.php', 'post-new.php', 'post.php') ) ) {
+        if ( !in_array( $pagenow, array('profile.php', 'post-new.php', 'post.php', 'user-edit.php') ) ) {
             return;
         }
 
