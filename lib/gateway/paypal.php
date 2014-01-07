@@ -65,7 +65,7 @@ class WPUF_Paypal {
             'no_note' => '1',
             'currency_code' => $data['currency'],
             'charset' => 'UTF-8',
-            'custom' => $data['type'],
+            'custom' => json_encode( array( 'user_id' => get_current_user_id(), 'type' => $data['type'] ) ),
             'rm' => '2',
             'return' => $return_url,
             'notify_url' => $listener_url,
@@ -111,8 +111,9 @@ class WPUF_Paypal {
 
             //verify payment
             $verified = $this->validateIpn();
-
-            switch ($type) {
+            $custom = json_decode( stripcslashes( $postdata['custom'] ) );
+            
+            switch ($custom->type ) {
                 case 'post':
                     $post_id = $item_number;
                     $pack_id = 0;
@@ -125,8 +126,9 @@ class WPUF_Paypal {
             }
 
             if ( $verified || $this->test_mode ) {
+                
                 $data = array(
-                    'user_id' => get_current_user_id(),
+                    'user_id' => (int) $custom->user_id,
                     'status' => 'completed',
                     'cost' => $postdata['mc_gross'],
                     'post_id' => $post_id,
