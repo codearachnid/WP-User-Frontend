@@ -5,7 +5,7 @@
   Plugin URI: http://wedevs.com/wp-user-frontend-pro/
   Description: Create, edit, delete, manages your post, pages or custom post types from frontend. Create registration forms, frontend profile and more...
   Author: Tareq Hasan
-  Version: 2.1.8
+  Version: 2.1.9
   Author URI: http://tareq.weDevs.com
  */
 

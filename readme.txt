@@ -8,6 +8,13 @@ http://docs.wedevs.com/wp-user-frontend-pro/
 
 == Changelog ==
 
+= version 2.1.9 =
+
+date: 9 January, 2014
+
+ * [fix] PayPal payment problem fixed.
+ * [updated] New version of Settings API class
+
 = version 2.1.8 =
 
 date: 18 September, 2013
